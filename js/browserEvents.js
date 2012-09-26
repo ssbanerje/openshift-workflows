@@ -1,3 +1,9 @@
+//On Load
+$(document).ready(function () {
+    // Alert of initial connection
+    SetError('<strong>Configure</strong> the system by setting <strong>connection</strong> parameters.');
+});
+
 // Get connection parameters for PaaS provider
 $('#connectionParam').click(function () {
     $('#listCartridges').hide();
