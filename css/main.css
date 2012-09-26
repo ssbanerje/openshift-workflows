@@ -7,11 +7,11 @@ body {
     color: #ddd;
 }
 
-body > .navbar .brand {
-    padding-right: 10px;
-    padding-left: 0;
-    margin-left: 20px;
-    font-weight: bold;
+body > .navbar .brand, body > .navbar .brand:hover {
+    color: #ccc;
+}
+
+body > .navbar li {
     color: #999;
     text-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 30px rgba(255,255,255,.125);
     -webkit-transition: all .2s linear;
@@ -19,7 +19,8 @@ body > .navbar .brand {
     transition: all .2s linear;
 }
 
-body > .navbar .brand:hover {
+body > .navbar li:hover {
+    color: #ddd;
     text-decoration: none;
     text-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 30px rgba(255,255,255,.4);
 }

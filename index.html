@@ -40,17 +40,18 @@
                 <a class="brand" href="#"><i class="icon-cloud"></i> OpenShift Workflows</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav pull-right">
-                        <li class="dropdown"><a href="https://openshift.redhat.com/app/"><img src="img/icons/openshift_logo.png"style="width:15px;"> OpenShift</a></li>
+                        <li><a href="https://openshift.redhat.com/app/"><img src="img/icons/openshift_logo.png"style="width:15px;"> OpenShift</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="icon-signal" style="font-size:13pt;"></i> Connect<b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li id="connectionParam"><a href="#"><i class="icon-edit"></i> Connection Details</a></li>
+                                <li id="connectionParam"><a href="#"><i class="icon-edit"></i> Connection Parameters</a></li>
                                 <li id="reconnect"><a href="#"><i class="icon-refresh"></i> Reconnect</a></li>
                                 <li id="reconnect"><a href="#"><i class="icon-magic"></i> Deploy</a></li>
                             </ul>
                         </li>
+                        <li><a href="#"><i class="icon-question-sign"></i> Help</a></li>
                     </ul>
                 </div>
             </div>
@@ -114,7 +115,7 @@
     <div class="modal hide fade" id="connectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3>Connection Details</h3>
+            <h3>Connection Parameters</h3>
         </div>
         <div class="modal-body">
             <form class="form-horizontal">
@@ -137,7 +138,7 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="inputApp"><i class="icon-cogs"></i></label>
+                    <label class="control-label" for="inputApp"><i class="icon-pencil"></i></label>
                     <div class="controls">
                         <input type="password" id="inputApp" placeholder="App Name">
                     </div>

@@ -17,7 +17,7 @@ OpenShiftWorkflows = {
 $(document).ready(function () {
     // Alert of initial connection
     OpenShiftWorkflows.setError('<strong>Configure</strong> the system by setting <strong>connection</strong> parameters.');
-    //OpenShiftWorkflows.setCartridges(null);
+    OpenShiftWorkflows.setCartridges(null);
 });
 
 // Get connection parameters for PaaS provider
