@@ -35,14 +35,6 @@ body > .navbar .brand:hover {
     position: relative;
 }
 
-.github {
-    position: absolute;
-    top: 55px;
-    right: 0;
-    border: 0;
-    z-index: -1;
-}
-
 #cartridges {
     position: fixed;
     overflow: visible !important;
