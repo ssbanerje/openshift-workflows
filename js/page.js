@@ -1,9 +1,6 @@
 OpenShiftWorkflows = {
     setError : function SetError(text) {
-        $('#errorPlaceHolder').html('<a class="close" data-dismiss="alert" href="#">&times;</a>'+text);
-        if(!$('#errorPlaceHolder').is(":visible")) {
-            $('#errorPlaceHolder').show();
-        }
+        $('#errorPlaceHolder').html('<div class="alert alert-error fade in">'+text+'<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
     },
     
     setCartridges : function(json) {
@@ -26,7 +23,7 @@ $('#connectionParam').click(function () {
     $('#connectionModal').modal('show');
 });
 
-// Reconnect to PaaS provider
+// Connect to PaaS provider and get all data
 $('#reconnect').click(function () {
     // Reconnect to host
 });
@@ -34,10 +31,13 @@ $('#reconnect').click(function () {
 // Show Cartridges
 $('#showCartridges').click(function () {
     $('#listCartridges').slideToggle('slow', function () {
+        var text = '<div class="realtive">';
         if($(this).is(":hidden")) {
-            $('span').html('<i class="icon-chevron-up"></i>');
+            text += 'Cartridges <i class="icon-chevron-up"></i>';
         } else {
-            $('span').html('<i class="icon-chevron-down"></i>');
+            text += 'Cartridges <i class="icon-chevron-down"></i>';
         }
+        text += '</div>';
+        $('#showCartridges').html(text)
     });
 });
