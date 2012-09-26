@@ -1,7 +1,23 @@
-//On Load
+OpenShiftWorkflows = {
+    setError : function SetError(text) {
+        $('#errorPlaceHolder').html('<a class="close" data-dismiss="alert" href="#">&times;</a>'+text);
+        if(!$('#errorPlaceHolder').is(":visible")) {
+            $('#errorPlaceHolder').show();
+        }
+    },
+    
+    setCartridges : function(json) {
+        $('#cartridges').show();
+    }
+}
+
+
+
+// What to do when document loads
 $(document).ready(function () {
     // Alert of initial connection
-    SetError('<strong>Configure</strong> the system by setting <strong>connection</strong> parameters.');
+    OpenShiftWorkflows.setError('<strong>Configure</strong> the system by setting <strong>connection</strong> parameters.');
+    //OpenShiftWorkflows.setCartridges(null);
 });
 
 // Get connection parameters for PaaS provider
