@@ -1,9 +1,14 @@
 {
     "name": "Openshift-Workflows",
+    "description": "Visual workflows for OpenShift",
+    "author": "Subho Sankar Banerjee <subs.zero@gmail.com>",
+    "keywords": [
+        "openshift", "paas", "workflows", "visual", "client", "rest"
+    ]
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-        "express": "3.x",
+        "express": "2.5.8",
         "ejs": ">= 0.0.1"
     }
 }

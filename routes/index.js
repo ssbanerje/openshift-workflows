@@ -1,8 +1,8 @@
 
 /*
- * GET home page.
+ * All routes for the application
  */
 
-exports.index = function(req, res){
-  res.render('index', { title: 'Express' })
+exports.proxy = function(req, res){
+    res.render('layout', { title: 'Express', body: 'hello world' })
 };
