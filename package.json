@@ -1,10 +1,32 @@
 {
     "name": "Openshift-Workflows",
     "description": "Visual workflows for OpenShift",
-    "author": "Subho Sankar Banerjee <subs.zero@gmail.com>",
+    "author": {
+        "name": "Subho Banerjee",
+        "email": "subs.zero@gmail.com"
+    },
+    "contributors": [
+        {
+            "name": "Subho Banerjee",
+            "email": "subs.zero@gmail.com"
+        },
+        {
+            "name": "Sandeep Panem"
+        },
+        {
+            "name": "Vijayendra"
+        },
+        {
+            "name": "Sanchit Agarwal"
+        }
+    ],
     "keywords": [
         "openshift", "paas", "workflows", "visual", "client", "rest"
-    ]
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/subszero/openshift-workflows.git"
+    }
     "version": "0.0.1",
     "private": true,
     "dependencies": {
