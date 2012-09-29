@@ -1,20 +1,26 @@
-OpenShift_Workflows = {
+Page = {
     setError : function SetError(text) {
-        $('#errorPlaceHolder').html('<div class="alert alert-error fade in">'+text+'<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
+        $('#errorPlaceHolder').html('<div class="alert alert-error fade in">'+text
+                                    +'<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
     },
     
-    setCartridges : function(json) {
-        $('#cartridges').show();
+    ConnectionParams : function ($scope) {
+        $scope.host = '';
+        $scope.username = '';
+        $scope.password = '';
+        $scope.appName = '';
+        $scope.namespace = '';
+        $scope.submit = function () {
+            alert($scope.host + ', ' + $scope.username + ', ' + $scope.password + ', ' + $scope.appName + ', ' + $scope.namespace);
+        };
     }
 }
 
 
-
 // What to do when document loads
-$(document).ready(function () {
+$(function () {
     // Alert of initial connection
-    OpenShift_Workflows.setError('<strong>Configure</strong> the system by setting <strong>connection</strong> parameters.');
-    OpenShift_Workflows.setCartridges(null);
+    Page.setError('<strong>Configure</strong> the system by setting <strong>connection</strong> parameters.');
 });
 
 // Get connection parameters for PaaS provider

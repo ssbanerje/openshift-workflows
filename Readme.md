@@ -10,6 +10,8 @@ to the Broker-API for simple deployments as well as more complicated workflows.
 $ git clone https://github.com/subszero/openshift-workflows.git
 ```
 
+* Install NodeJS and NPM from [here](http://nodejs.org)
+
 * Install all dependencies
 
 ```bash
