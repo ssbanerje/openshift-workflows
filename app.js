@@ -20,15 +20,14 @@ app.configure(function () {
     app.use(express.static(path.join(__dirname, 'public')));
     app.use(function (req, res, next) {
         if (req.accepts('html')) {
-            res.status(404);
-            res.render('404', { url: req.url });
+            res.status(404).render('404', { url: req.url });
             return;
         }
         if (req.accepts('json')) {
-            res.send({ error: 'Not found' });
+            res.send(404, { error: 'Not found' });
             return;
         }
-        res.type('txt').send('Not found');
+        res.type('txt').send(404, 'Not found');
     });
 });
 
