@@ -12,6 +12,7 @@ Icon
 
 #Linux
 .*
+!.travis.yml
 !.gitignore
 *~
 
