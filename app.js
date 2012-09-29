@@ -1,19 +1,23 @@
 var express = require('express'),
-    routes = require('./routes');
+    routes = require('./routes'),
+    http = require('http'),
+    path = require('path');
 
-var app = module.exports = express.createServer();
+var app = express();
 
 // Configuration
 app.configure(function () {
+    app.set('port', process.env.PORT || 3000);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'ejs');
-    app.set("view options", { layout: false });
+    app.use(express.favicon());
+    app.use(express.logger('dev'));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    app.use(express.cookieParser());
-    app.use(express.session({ secret: 'visualWorkflow@IIITH' }));
+    app.use(express.cookieParser('visualWorkflow@IIITH'));
+    app.use(express.session());
     app.use(app.router);
-    app.use(express.static(__dirname + '/public'));
+    app.use(express.static(path.join(__dirname, 'public')));
     app.use(function (req, res, next) {
         if (req.accepts('html')) {
             res.status(404);
@@ -28,23 +32,17 @@ app.configure(function () {
     });
 });
 
-app.configure('development', function () {
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-
-app.configure('production', function () {
+app.configure('development', function(){
     app.use(express.errorHandler());
 });
+
 
 // Routes
 app.get('/proxy', routes.proxy);
 
 
 // Bind
-app.listen(3000, function () {
-    console.log("Express server listening on port %d in %s mode\n", app.address().port, app.settings.env);
-    if (app.settings.env === 'development') {
-        console.log('Starting browser');
-        require('./browser').open('http://localhost:' + app.address().port);
-    }
+http.createServer(app).listen(app.get('port'), function () {
+    console.log("Express server listening on port " + app.get('port'));
+    require('./browser').open('http://localhost:' + app.get('port'));
 });
