@@ -18,6 +18,8 @@ $ git clone https://github.com/subszero/openshift-workflows.git
 $ npm install
 ```
 
+* Generate new SSL certificates in the `certs/` folder
+
 * Run the application
 
 ```bash

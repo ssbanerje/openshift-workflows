@@ -6,6 +6,9 @@ function proxify(data) {
 // The required rest interface
 var Rest = {
     authenticate : function(domain, username, password) {
-        var encodedString = window.btoa(username+':'+password);
+        var data = {
+            "Authorization": "Basic "+window.btoa(username+':'+password),
+            "Domain": domain
+        };
     }
 };

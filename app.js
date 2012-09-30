@@ -1,13 +1,16 @@
 var express = require('express'),
     routes = require('./routes'),
     http = require('http'),
+    https = require('https'),
+    fs = require('fs'),
     path = require('path');
 
 var app = express();
 
 // Configuration
 app.configure(function () {
-    app.set('port', process.env.PORT || 8000);
+    app.set('httpPort', process.env.HTTP_PORT || 3000);
+    app.set('httpsPort', process.env.HTTPS_PORT || 4000);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'ejs');
     app.use(express.favicon());
@@ -40,8 +43,15 @@ app.configure('development', function(){
 app.get('/proxy', routes.proxy);
 
 
-// Bind
-http.createServer(app).listen(app.get('port'), function () {
-    console.log("Express server listening on port " + app.get('port'));
-    require('./browser').open('http://localhost:' + app.get('port'));
+// Bind HTTP Server
+http.createServer(app).listen(app.get('httpPort'), function () {
+    console.log("Express HTTP server listening on port " + app.get('httpPort'));
+});
+
+// Bind HTTPS Server
+var privateKey = fs.readFileSync('certs/key.pem').toString();
+var certificate = fs.readFileSync('certs/certificate.pem').toString();
+https.createServer({key: privateKey, cert: certificate}, app).listen(app.get('httpsPort'), function() {
+    console.log("Express HTTPS server listening on port " + app.get('httpsPort'));
+    require('./browser').open('https://localhost:' + app.get('httpsPort'));
 });
