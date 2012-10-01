@@ -1,14 +1,19 @@
 // Send data to host through the proxy
 function proxify(data) {
-    $.ajax({});
+    $.ajax({
+        'url': '/proxy',
+        'body': data
+    });
 }
 
 // The required rest interface
 var Rest = {
-    authenticate : function(domain, username, password) {
+    authenticate : function (domain, username, password) {
         var data = {
-            "Authorization": "Basic "+window.btoa(username+':'+password),
-            "Domain": domain
+            "username": username,
+            "password": password,
+            "url": domain,
+            "method": "GET"
         };
     }
 };

@@ -1,9 +1,9 @@
 var express = require('express'),
-    routes = require('./routes'),
     http = require('http'),
     https = require('https'),
     fs = require('fs'),
-    path = require('path');
+    path = require('path'),
+    routes = require('./routes');
 
 var app = express();
 
@@ -34,7 +34,7 @@ app.configure(function () {
     });
 });
 
-app.configure('development', function(){
+app.configure('development', function () {
     app.use(express.errorHandler());
 });
 
@@ -51,7 +51,7 @@ http.createServer(app).listen(app.get('httpPort'), function () {
 // Bind HTTPS Server
 var privateKey = fs.readFileSync('certs/key.pem').toString();
 var certificate = fs.readFileSync('certs/certificate.pem').toString();
-https.createServer({key: privateKey, cert: certificate}, app).listen(app.get('httpsPort'), function() {
+https.createServer({key: privateKey, cert: certificate}, app).listen(app.get('httpsPort'), function () {
     console.log("Express HTTPS server listening on port " + app.get('httpsPort'));
     require('./browser').open('https://localhost:' + app.get('httpsPort'));
 });
