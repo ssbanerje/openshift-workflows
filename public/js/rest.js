@@ -1,5 +1,5 @@
 // Send data to host through the proxy
-function proxify(data) {
+function proxify(data, callback) {
     $.ajax({
         'url': '/proxy',
         'body': data
@@ -15,5 +15,8 @@ var Rest = {
             "url": domain,
             "method": "GET"
         };
+        var callback = function (d) {
+        };
+        proxify(data, callback);
     }
 };

@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-<html ng-app>
+<html ng-app="workflows">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -47,8 +47,8 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li id="connectionParam"><a href="#"><i class="icon-edit"></i> Connection Parameters</a></li>
-                                <li id="reconnect"><a href="#"><i class="icon-refresh"></i> Reconnect</a></li>
-                                <li id="reconnect"><a href="#"><i class="icon-magic"></i> Deploy</a></li>
+                                <!--<li id="reconnect"><a href="#"><i class="icon-refresh"></i> Reconnect</a></li>-->
+                                <li id="deploy"><a href="#"><i class="icon-magic"></i> Deploy</a></li>
                             </ul>
                         </li>
                         <li><a href="#"><i class="icon-question-sign"></i> Help</a></li>
@@ -68,51 +68,24 @@
         <div id="errorPlaceHolder"></div>
     </div>
 
-    <div id="cartridges" style="display:none">
+    <div id="cartridges" style="display:none;">
         <div class="relative">
             <div id="showCartridges">
                 <div class="realtive">
                     Cartridges <span><i class="icon-chevron-up"></i></span>
                 </div>
             </div>
-            <div id="listCartridges" style="display: none;">
+            <div id="listCartridges" style="display: none;" ng-controller="Cartridges">
                 <ul>
-                    <li><img src="img/icons/openshift_logo.png"></li>
-                    <li><img src="http://4.bp.blogspot.com/-dxDKlrr2Oe4/T9wkNoATkHI/AAAAAAAABM8/1_woWzunk2k/s320/2000px-php-logo-svg_.png"></li>
-                    <li><img src="http://sidelab.com/wp-content/uploads/2012/01/nodejs-light.png"></li>
-                    <li><img src="http://rubyonrails.org/images/rails.png"></li>
-                    <li><img src="http://4.bp.blogspot.com/-EMppjKV3JgQ/T88FwkeP1OI/AAAAAAAABCM/xCH9r9kcams/s400/2000px-python_logo-svg_.png"></li>
-                    <li><img src="http://4.bp.blogspot.com/-L6v3vXhedLk/T8wJcH1xEMI/AAAAAAAAA_A/SCUfiKVs9uk/s320/Rlogo-1.png"></li>
-                    <li><img src="http://info.10gen.com/rs/10gen/images/mongodb%20badge.png"></li>
-                    <li><img src="http://www.mysql.com/common/logos/logo-mysql-110x57.png"></li>
-                    <li><img src="http://upload.wikimedia.org/wikipedia/commons/a/a5/Couchdb-logo.png"></li>
-                    <li><img src="http://slashdot.org/topic/wp-content/uploads/2012/07/hadoop-elephant.png"></li>
-                    <li><img src="img/icons/openshift_logo.png"></li>
-                    <li><img src="http://4.bp.blogspot.com/-dxDKlrr2Oe4/T9wkNoATkHI/AAAAAAAABM8/1_woWzunk2k/s320/2000px-php-logo-svg_.png"></li>
-                    <li><img src="http://sidelab.com/wp-content/uploads/2012/01/nodejs-light.png"></li>
-                    <li><img src="http://rubyonrails.org/images/rails.png"></li>
-                    <li><img src="http://4.bp.blogspot.com/-EMppjKV3JgQ/T88FwkeP1OI/AAAAAAAABCM/xCH9r9kcams/s400/2000px-python_logo-svg_.png"></li>
-                    <li><img src="http://4.bp.blogspot.com/-L6v3vXhedLk/T8wJcH1xEMI/AAAAAAAAA_A/SCUfiKVs9uk/s320/Rlogo-1.png"></li>
-                    <li><img src="http://info.10gen.com/rs/10gen/images/mongodb%20badge.png"></li>
-                    <li><img src="http://www.mysql.com/common/logos/logo-mysql-110x57.png"></li>
-                    <li><img src="http://upload.wikimedia.org/wikipedia/commons/a/a5/Couchdb-logo.png"></li>
-                    <li><img src="http://slashdot.org/topic/wp-content/uploads/2012/07/hadoop-elephant.png"></li>
-                    <li><img src="img/icons/openshift_logo.png"></li>
-                    <li><img src="http://4.bp.blogspot.com/-dxDKlrr2Oe4/T9wkNoATkHI/AAAAAAAABM8/1_woWzunk2k/s320/2000px-php-logo-svg_.png"></li>
-                    <li><img src="http://sidelab.com/wp-content/uploads/2012/01/nodejs-light.png"></li>
-                    <li><img src="http://rubyonrails.org/images/rails.png"></li>
-                    <li><img src="http://4.bp.blogspot.com/-EMppjKV3JgQ/T88FwkeP1OI/AAAAAAAABCM/xCH9r9kcams/s400/2000px-python_logo-svg_.png"></li>
-                    <li><img src="http://4.bp.blogspot.com/-L6v3vXhedLk/T8wJcH1xEMI/AAAAAAAAA_A/SCUfiKVs9uk/s320/Rlogo-1.png"></li>
-                    <li><img src="http://info.10gen.com/rs/10gen/images/mongodb%20badge.png"></li>
-                    <li><img src="http://www.mysql.com/common/logos/logo-mysql-110x57.png"></li>
-                    <li><img src="http://upload.wikimedia.org/wikipedia/commons/a/a5/Couchdb-logo.png"></li>
-                    <li><img src="http://slashdot.org/topic/wp-content/uploads/2012/07/hadoop-elephant.png"></li>
+                    <li ng-repeat="c in cartridges">
+                        <img src="{{c.src}}">
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <div class="modal hide fade" id="connectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="Page.ConnectionParams">
+    <div class="modal hide fade" id="connectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="ConnectionParams">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3>Connection Parameters</h3>
