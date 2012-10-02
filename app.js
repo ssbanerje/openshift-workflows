@@ -9,8 +9,8 @@ var app = express();
 
 // Configuration
 app.configure(function () {
-    app.set('httpPort', process.env.HTTP_PORT || 3000);
-    app.set('httpsPort', process.env.HTTPS_PORT || 4000);
+    app.set('httpPort', process.env.HTTP_PORT || 8000);
+    app.set('httpsPort', process.env.HTTPS_PORT || 9000);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'ejs');
     app.use(express.favicon());

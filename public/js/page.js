@@ -77,6 +77,7 @@ var ConnectionParams = function ($scope, messageBoard) {
         $('#connectionModal').modal('hide')
     };
 }
+ConnectionParams.$inject = ['$scope', 'messageBoard'];
 
 // The AngularJS Controller for the listed cartridges
 var Cartridges = function ($scope, messageBoard) {
@@ -86,8 +87,6 @@ var Cartridges = function ($scope, messageBoard) {
         console.log(messageBoard.cartridges);
     });
 }
-    
-ConnectionParams.$inject = ['$scope', 'messageBoard'];
 Cartridges.$inject = ['$scope', 'messageBoard'];
 
     
