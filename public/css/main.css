@@ -36,27 +36,26 @@ body > .navbar li:hover {
     position: relative;
 }
 
-#drawingboard {
-    background: rgba(200,200,200,0.5);
+aside {    
+    position: absolute;
+    background: rgba(255,255,255,0.66);
+    border: 2px  solid rgba(0,0,0,0.5);
+    border-radius: 4px; padding: 8px;
     -moz-box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
 					0 25px 50px 0 rgba(0, 0, 0, 0.15);
     -webkit-box-shadow:0 2px 6px 0 rgba(0, 0, 0, 0.2),
 					0 25px 50px 0 rgba(0, 0, 0, 0.15);
     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
 					0 25px 50px 0 rgba(0, 0, 0, 0.15);
+    z-index: -1;
 }
 
-#drawingboard > relative {
-    width: 100%;
-    height: 100%;
-}
-
-#gearController {
+.controller {
     position: absolute;
-    bottom: -30px;
-    right: 10px;
+    top: 0;
+    right: 5px;
     height: 25px;
-    z-index: 9001;
+    z-index: 1;
     padding: 3px;
     display: block;
 }

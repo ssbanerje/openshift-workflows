@@ -113,6 +113,13 @@ $(function () {
         $('#connection').css('color','#0d0');
     });
     
+    // All features for aside tags
+    $('aside').hover(function () {
+        $(this).find('.controller').show();
+    }, function () {
+        $(this).find('.controller').hide();
+    });
+    
     // Show Cartridges
     $('#showCartridges').click(function () {
         $('#listCartridges').slideToggle('slow', function () {
