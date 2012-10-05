@@ -103,8 +103,8 @@ $(function () {
     }, 1000);
 
     // Get connection parameters for PaaS provider
-    $('#connectionParam').click(function () {
-        $('#listCartridges').hide();
+    $('.connectionParam').click(function () {
+        //$('#listCartridges').hide();
         $('#connectionModal').modal('show');
     });
     
@@ -113,8 +113,8 @@ $(function () {
         $('#connection').css('color','#0d0');
     });
     
-    // All features for aside tags
-    $('aside').hover(function () {
+    // All features for node tags
+    $('.node').hover(function () {
         $(this).find('.controller').show();
     }, function () {
         $(this).find('.controller').hide();

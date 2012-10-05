@@ -40,13 +40,13 @@
                 <a class="brand" href="#"><i class="icon-cloud"></i> OpenShift Workflows</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav pull-right">
-                        <li><a href="https://openshift.redhat.com/app/"><img src="img/icons/openshift_logo.png"style="width:15px;"> OpenShift</a></li>
+                        <li><a href="https://openshift.redhat.com/app/"><img src="img/icons/openshift_logo.png" style="width:15px;"> OpenShift</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i id="connection" class="icon-signal" style="font-size:13pt;color:#d00;"></i> Connect<b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li id="connectionParam"><a href="#"><i class="icon-edit"></i> Connection Parameters</a></li>
+                                <li class="connectionParam"><a href="#"><i class="icon-wrench"></i> Connection Parameters</a></li>
                                 <!--<li id="reconnect"><a href="#"><i class="icon-refresh"></i> Reconnect</a></li>-->
                                 <li id="deploy"><a href="#"><i class="icon-magic"></i> Deploy</a></li>
                             </ul>
@@ -56,26 +56,42 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="github-fork-ribbon-wrapper right" style="top: 55px;z-index: -1;">
-        <div class="github-fork-ribbon">
-            <a href="https://github.com/subszero/openshift-workflows"> Fork me on GitHub</a>
+        <div class=relative>
+            <div class="github-fork-ribbon-wrapper right">
+            <div class="github-fork-ribbon">
+                <a href="https://github.com/subszero/openshift-workflows"> Fork me on GitHub</a>
+            </div>
         </div>
+    </div>
     </div>
 
     <div class="container">
-        <div id="errorPlaceHolder" style="z-index:10000"></div>
+        <div id="errorPlaceHolder"></div>
     </div>
     
     <div id="drawingboard">
-        <aside draggable="true" style="left:100px;top:100px;">
-                <div class="controller" style="display: none">
-                        <span class="btn btn-success btn-mini"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></span>
-                        <span class="btn btn-danger btn-mini"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></span>
-                </div>
-            <img src="img/user-icon.png" draggable="false">
-        </aside>
+        <div class="node" draggable="true" style="left:45%;top:300px;">
+            <div class="controller" style="display: none">
+                <button class="btn btn-success btn-mini"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
+                <button class="btn btn-danger btn-mini"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></button>
+                <button class="btn btn-info btn-mini connectionParam"><i class="icon-wrench"></i></button>
+            </div>
+            <div class="subnode">
+                <img src="img/user.png" draggable="false">
+            </div>
+        </div>
+        <div class="node" draggable="true" style="left:45%;top:500px;">
+            <div class="controller" style="display: none">
+                <button class="btn btn-success btn-mini"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
+                <button class="btn btn-danger btn-mini"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></button>
+            </div>
+            <div class="subnode">
+                <img src="img/icons/openshift_logo.png" draggable="false">
+            </div>            
+            <div class="subnode">
+                <img src="img/user.png" draggable="false">
+            </div>
+        </div>
     </div>
         
     <div id="cartridges" style="display:none;">
