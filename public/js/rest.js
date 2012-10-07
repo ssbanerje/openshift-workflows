@@ -2,7 +2,10 @@
 function proxify(data, callback) {
     $.ajax({
         'url': '/proxy',
-        'body': data
+        'dataType': 'json',
+        'data': data,
+        'success': function (data, textStatus, jqXHR) {
+        }
     });
 }
 
