@@ -42,7 +42,7 @@ app.configure('development', function () {
 
 
 // Routes
-app.get('/proxy', routes.proxy);
+app.post('/proxy', routes.proxy);
 
 
 // Bind HTTP Server
