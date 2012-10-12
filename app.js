@@ -1,9 +1,21 @@
-var express = require('express'),
+/**
+*
+* OpenShift Workflows
+*
+*/
+
+var program = require('commander')
+    express = require('express')
     http = require('http'),
     https = require('https'),
     fs = require('fs'),
     path = require('path'),
     routes = require('./routes');
+
+program
+  .version(JSON.parse(fs.readFileSync(__dirname+'/package.json', 'utf-8')).version)
+  .option('-b, --browser', 'Open the app in a browser window')
+  .parse(process.argv);
 
 var app = express();
 
@@ -53,5 +65,7 @@ var privateKey = fs.readFileSync('certs/key.pem').toString();
 var certificate = fs.readFileSync('certs/certificate.pem').toString();
 https.createServer({key: privateKey, cert: certificate}, app).listen(app.get('httpsPort'), function () {
     console.log("Express HTTPS server listening on port " + app.get('httpsPort'));
-    require('./browser').open('https://localhost:' + app.get('httpsPort'));
+    if (program.browser) {
+        require('./browser').open('https://localhost:' + app.get('httpsPort'));
+    }
 });
