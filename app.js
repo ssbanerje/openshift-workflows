@@ -1,11 +1,13 @@
+#!/usr/bin/env node
+
 /**
 *
 * OpenShift Workflows
 *
 */
 
-var program = require('commander')
-    express = require('express')
+var program = require('commander'),
+    express = require('express'),
     http = require('http'),
     https = require('https'),
     fs = require('fs'),
@@ -52,7 +54,7 @@ app.configure('development', function () {
 
 
 // Routes
-app.get('/proxy', routes.proxy);
+app.post('/proxy', routes.proxy);
 
 
 // Bind HTTP Server
