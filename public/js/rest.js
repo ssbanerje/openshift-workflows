@@ -4,11 +4,12 @@
 *
 */
 var Rest = function(dom) {
-    var authString = '', // The authstring which needs to be passed to OpenShift
-        domain = dom; // Domain of openshift broker
+    var domain = dom; // Domain of openshift broker
+    this.authString = ''; // The authstring which needs to be passed to OpenShift
     this.api = {}; // API of the Broker 
     
-    var proxify = function (data, callback) { // Send data to host through the proxy
+    this.proxify = function (data, callback) { // Send data to host through the proxy
+        var _this = this;
         $.ajax({
             'url': '/proxy',
             'dataType': 'json',
@@ -17,7 +18,7 @@ var Rest = function(dom) {
                 options: JSON.stringify(data)
             },
             'success': function (data, textStatus, jqXHR) {
-                callback(data);
+                callback(data, _this);
             }
         });
     };
@@ -30,25 +31,26 @@ var Rest = function(dom) {
             },
             method: 'GET'
         };
-        var callback = function (d) {
-            this.api = d;
+        var callback = function (d, _this) {
+            _this.api = d;
         };
-        proxify(data, callback);
+        this.proxify(data, callback);
     };
     
     this.authenticate = function (username, password) { // Authenticate user on domain
         var auth = 'Basic ' + window.btoa(username + ':' + password);
         var data = {
-            uri: domain+'/broker/rest/domains',
+            uri: domain+'/broker/rest/user',
             headers: {
                 accept: 'application/json',
                 Authorization: auth
             },
             method: 'GET'
         };
-        var callback = function (d) {
-            authString = auth;
+        var callback = function (d, _this) {
+            _this.authString = auth;
+            console.log(d.data);
         };
-        proxify(data, callback);
+        this.proxify(data, callback);
     };
 };
