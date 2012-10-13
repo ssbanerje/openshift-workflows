@@ -5,9 +5,10 @@
 */
 var Rest = function(dom) {
     var domain = dom; // Domain of openshift broker
-    this.authString = ''; // The authstring which needs to be passed to OpenShift
-    this.api = {}; // API of the Broker
-    this.cartridges = []; //List of cartridges supported by broker
+    this.authString = undefined; // The authstring which needs to be passed to OpenShift
+    this.connected = false; // Is this connected to the server?
+    this.api = undefined; // API of the Broker
+    this.cartridges = undefined; //List of cartridges supported by broker
 
     this.proxify = function (data, callback) { // Send data to host through the proxy
         var _this = this;
@@ -50,22 +51,22 @@ var Rest = function(dom) {
         };
         var callback = function (d, _this) {
             _this.authString = auth;
-            console.log(d.data);
+            _this.connected = true;
         };
         this.proxify(data, callback);
     };
 
-    this.getCatridges = function () { // Get a list of cartrdges from the broker
-       var data = {
-           uri: domain+'/broker/rest/cartridges',
-           headers: {
-              accept: 'application/json',
-           },
-           method: 'GET'
-       };
-       var callback=function (d, _this) {
-          _this.cartridges=d.data;
-       };
-       this.proxify(data,callback);
-   };
+    this.getCartridges = function () { // Get a list of cartrdges from the broker
+        var data = {
+            uri: domain+'/broker/rest/cartridges',
+            headers: {
+                accept: 'application/json',
+            },
+            method: 'GET'
+        };
+        var callback=function (d, _this) {
+            _this.cartridges = d.data;
+        };
+        this.proxify(data,callback);
+    };
 };
