@@ -4,14 +4,9 @@
 *
 */
 var Rest = function(dom) {
-    var username = '', // Openshift username
-        password = '', // Openshift password
+    var authString = '', // The authstring which needs to be passed to OpenShift
         domain = dom; // Domain of openshift broker
     this.api = {}; // API of the Broker 
-    
-    var authString = function (username, password) { // Get the user authentcation/authorzation string
-        return 'Basic ' + window.btoa(username + ':' + password);
-    };
     
     var proxify = function (data, callback) { // Send data to host through the proxy
         $.ajax({
@@ -41,18 +36,18 @@ var Rest = function(dom) {
         proxify(data, callback);
     };
     
-    this.authenticate = function (u, p) { // Authenticate user on domain
+    this.authenticate = function (username, password) { // Authenticate user on domain
+        var auth = 'Basic ' + window.btoa(username + ':' + password);
         var data = {
             uri: domain+'/broker/rest/domains',
             headers: {
                 accept: 'application/json',
-                Authorization: authString(u, p)
+                Authorization: auth
             },
             method: 'GET'
         };
         var callback = function (d) {
-            username = u;
-            password = p;
+            authString = auth;
         };
         proxify(data, callback);
     };
