@@ -55,7 +55,7 @@ var Rest = function(dom) {
         this.proxify(data, callback);
     };
 
-    this.listCatridges = function () { // listing catridges....
+    this.getCatridges = function () { // Get a list of cartrdges from the broker
        var data = {
            uri: domain+'/broker/rest/cartridges',
            headers: {
