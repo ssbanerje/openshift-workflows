@@ -9,6 +9,8 @@ exports.proxify = function (req, res) {
         request(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 res.send(body);
+            } else {
+                res.status(response.statusCode).send({error: body});
             }
         });
     } else {
