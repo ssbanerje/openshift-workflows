@@ -7,6 +7,7 @@ var Rest = function(dom) {
     var domain = dom; // Domain of openshift broker
     this.authString = ''; // The authstring which needs to be passed to OpenShift
     this.api = {}; // API of the Broker 
+    this.cartridges = []; //List of cartridges supported by broker
     
     this.proxify = function (data, callback) { // Send data to host through the proxy
         var _this = this;
