@@ -1,11 +1,7 @@
 var Page = {
     State : {
-        connected: false,
-        username: '',
-        password: '',
-        host: '',
-        app: '',
-        namespace: ''
+        rapi: undefined,
+        connected: false
     },
 
     setError : function SetError(text) {
@@ -36,45 +32,29 @@ var ConnectionParams = function ($scope, messageBoard) {
     $scope.password = '';
     $scope.appName = '';
     $scope.namespace = '';
-    $scope.submit = function () {
-        //alert($scope.host + ', ' + $scope.username + ', ' + $scope.password + ', ' + $scope.appName + ', ' + $scope.namespace);
-        cartridges = [
-            { src: "img/icons/openshift_logo.png" }, 
-            { src : "http://4.bp.blogspot.com/-dxDKlrr2Oe4/T9wkNoATkHI/AAAAAAAABM8/1_woWzunk2k/s320/2000px-php-logo-svg_.png" },
-            { src : "http://sidelab.com/wp-content/uploads/2012/01/nodejs-light.png" },
-            { src : "http://rubyonrails.org/images/rails.png" },
-            { src : "http://4.bp.blogspot.com/-EMppjKV3JgQ/T88FwkeP1OI/AAAAAAAABCM/xCH9r9kcams/s400/2000px-python_logo-svg_.png" },
-            { src : "http://4.bp.blogspot.com/-L6v3vXhedLk/T8wJcH1xEMI/AAAAAAAAA_A/SCUfiKVs9uk/s320/Rlogo-1.png" },
-            { src : "http://info.10gen.com/rs/10gen/images/mongodb%20badge.png" },
-            { src : "http://www.mysql.com/common/logos/logo-mysql-110x57.png" },
-            { src : "http://upload.wikimedia.org/wikipedia/commons/a/a5/Couchdb-logo.png" },
-            { src : "http://slashdot.org/topic/wp-content/uploads/2012/07/hadoop-elephant.png" },
-            { src : "img/icons/openshift_logo.png" },
-            { src : "http://4.bp.blogspot.com/-dxDKlrr2Oe4/T9wkNoATkHI/AAAAAAAABM8/1_woWzunk2k/s320/2000px-php-logo-svg_.png" },
-            { src : "http://sidelab.com/wp-content/uploads/2012/01/nodejs-light.png" },
-            { src : "http://rubyonrails.org/images/rails.png" },
-            { src : "http://4.bp.blogspot.com/-EMppjKV3JgQ/T88FwkeP1OI/AAAAAAAABCM/xCH9r9kcams/s400/2000px-python_logo-svg_.png" },
-            { src : "http://4.bp.blogspot.com/-L6v3vXhedLk/T8wJcH1xEMI/AAAAAAAAA_A/SCUfiKVs9uk/s320/Rlogo-1.png" },
-            { src : "http://info.10gen.com/rs/10gen/images/mongodb%20badge.png" },
-            { src : "http://www.mysql.com/common/logos/logo-mysql-110x57.png" },
-            { src : "http://upload.wikimedia.org/wikipedia/commons/a/a5/Couchdb-logo.png" },
-            { src : "http://slashdot.org/topic/wp-content/uploads/2012/07/hadoop-elephant.png" },
-            { src : "img/icons/openshift_logo.png" },
-            { src : "http://4.bp.blogspot.com/-dxDKlrr2Oe4/T9wkNoATkHI/AAAAAAAABM8/1_woWzunk2k/s320/2000px-php-logo-svg_.png" },
-            { src : "http://sidelab.com/wp-content/uploads/2012/01/nodejs-light.png" },
-            { src : "http://rubyonrails.org/images/rails.png" },
-            { src : "http://4.bp.blogspot.com/-EMppjKV3JgQ/T88FwkeP1OI/AAAAAAAABCM/xCH9r9kcams/s400/2000px-python_logo-svg_.png" },
-            { src : "http://4.bp.blogspot.com/-L6v3vXhedLk/T8wJcH1xEMI/AAAAAAAAA_A/SCUfiKVs9uk/s320/Rlogo-1.png" },
-            { src : "http://info.10gen.com/rs/10gen/images/mongodb%20badge.png" },
-            { src : "http://www.mysql.com/common/logos/logo-mysql-110x57.png" },
-            { src : "http://upload.wikimedia.org/wikipedia/commons/a/a5/Couchdb-logo.png" },
-            { src : "http://slashdot.org/topic/wp-content/uploads/2012/07/hadoop-elephant.png" }
-        ];
-        Page.State.connected = true;
-        $('#cartridges').show();
-        $('#connection').css('color','#0d0');
-        messageBoard.broadcastCartridges(cartridges);
-        $('#connectionModal').modal('hide')
+    
+    $scope.submit = function () { // Check the connection details and get the cartridge list
+        var restObj = new Rest($scope.host);
+        restObj.getApi();
+        restObj.authenticate($scope.username, $scope.password);
+        var interval = setInterval(function () {
+            if(restObj.connected) {
+                Page.State.connected = true;
+                restObj.getCartridges();
+                Page.State.rapi = restObj;
+                var cartridges = []; // <<<<<<< Set cartridges from broker
+                $('#connection').css('color','#0d0');
+                messageBoard.broadcastCartridges(cartridges);
+                $('#cartridges').show();
+            }
+        }, 1000);
+        $('#connectionModal').modal('hide');
+        setTimeout(function () {
+            window.clearInterval(interval);
+            if(!Page.State.rapi || !Page.State.connected) {
+                Page.setError('<strong>Incorrect</strong> connection parameters.');
+            }
+        }, 15000);
     };
 }
 ConnectionParams.$inject = ['$scope', 'messageBoard'];
