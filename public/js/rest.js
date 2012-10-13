@@ -6,9 +6,9 @@
 var Rest = function(dom) {
     var domain = dom; // Domain of openshift broker
     this.authString = ''; // The authstring which needs to be passed to OpenShift
-    this.api = {}; // API of the Broker 
+    this.api = {}; // API of the Broker
     this.cartridges = []; //List of cartridges supported by broker
-    
+
     this.proxify = function (data, callback) { // Send data to host through the proxy
         var _this = this;
         $.ajax({
@@ -23,7 +23,7 @@ var Rest = function(dom) {
             }
         });
     };
-    
+
     this.getApi = function () { // Get the API reference
         var data = {
             uri: domain+'/broker/rest/api',
@@ -37,7 +37,7 @@ var Rest = function(dom) {
         };
         this.proxify(data, callback);
     };
-    
+
     this.authenticate = function (username, password) { // Authenticate user on domain
         var auth = 'Basic ' + window.btoa(username + ':' + password);
         var data = {
@@ -54,4 +54,18 @@ var Rest = function(dom) {
         };
         this.proxify(data, callback);
     };
+
+    this.listCatridges = function () { // listing catridges....
+       var data = {
+           uri: domain+'/broker/rest/cartridges',
+           headers: {
+              accept: 'application/json',
+           },
+           method: 'GET'
+       };
+       var callback=function (d, _this) {
+          _this.cartridges=d.data;
+       };
+       this.proxify(data,callback);
+   };
 };
