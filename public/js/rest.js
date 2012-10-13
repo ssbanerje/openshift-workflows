@@ -15,8 +15,8 @@ function proxify(data, callback) {
 
 // The required rest interface
 var Rest = {
-    test : function () {
-        var data = { // Get options from request <<-- TODO
+    api : function () {
+        var data = {
             uri: 'https://openshift.redhat.com/broker/rest/api',
             headers: {
                 accept: 'application/json'
