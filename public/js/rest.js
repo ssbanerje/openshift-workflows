@@ -21,6 +21,17 @@ var Rest = function (dom) {
             },
             'success': function (data, textStatus, jqXHR) {
                 callback(data, _this);
+            },
+            'error': function (jqXHR, text, error) {
+                switch (error) {
+                        case 'Unauthorized':
+                            Page.setError('<strong> Unauthorized </strong>: Incorrect username or password.');
+                            break;
+                        default:
+                            Page.setError('Could not connect to server.');
+                            break;
+                }
+                Page.stopSpinner();
             }
         });
     };
