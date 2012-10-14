@@ -16,7 +16,13 @@ angApp.factory('messageBoard', function ($rootScope) {
     var board = {};
     board.cartridges = [];
     board.broadcastCartridges = function (cartridges) {
+        var i;
         this.cartridges = cartridges;
+        // Gets the output of the REST API of the Broker
+        // We cant consume it just yet...
+        for (i = 0; i < this.cartridges.length; i = i + 1) {
+            this.cartridges[i].img = 'http://placehold.it/100x100';
+        }
         this.pushCartridges();
     };
     board.pushCartridges = function () {
@@ -60,15 +66,15 @@ ConnectionParams.$inject = ['$scope', 'messageBoard'];
 
 // The AngularJS Controller for the listed cartridges
 var Cartridges = function ($scope, messageBoard) {
-    $scope.cartridges = [];
+    $scope.cartridges = [{img : 'http://placehold.it/100x100'}];
     
     $scope.$on('newCartridgesListed', function () {
-        var i, carts = messageBoard.cartridges;
-        for (i = 0; i < carts.length; i = i + 1) {
-            carts[i].img = 'http://placehold.it/100x100';
-        }
-        $scope.cartridges = carts;
+        $scope.cartridges = messageBoard.cartridges;
     });
+    
+    $scope.click = function () {
+        console.log($scope.cartridges); 
+    }
 };
 Cartridges.$inject = ['$scope', 'messageBoard'];
 

@@ -80,32 +80,19 @@
                 <img src="img/user.png" draggable="false">
             </div>
         </div>
-        <div class="node" draggable="true" style="left:45%;top:500px;">
-            <div class="controller" style="display: none">
-                <button class="btn btn-success btn-mini"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
-                <button class="btn btn-danger btn-mini"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></button>
-            </div>
-            <div class="subnode">
-                <img src="img/icons/openshift_logo.png" draggable="false">
-            </div>
-            <div class="subnode">
-                <img src="img/user.png" draggable="false">
-            </div>
-        </div>
     </div>
 
-    <div id="cartridges" style="display:none;">
+    <div id="cartridges" style="display:none;" ng-controller="Cartridges">
         <div class="relative">
             <div id="showCartridges">
-                <div class="realtive">
+                <div class="realtive"  ng-click="click()">
                     Cartridges <span><i class="icon-chevron-up"></i></span>
                 </div>
             </div>
-            <div id="listCartridges" style="display: none;" ng-controller="Cartridges">
-                {{cartridges}}
+            <div id="listCartridges" style="display: none;">
                 <ul>
                     <li ng-repeat="c in cartridges">
-                        <img src="{{c.img}}">
+                        <img src="{{c.img}}" alt="{{c.description}}">
                     </li>
                 </ul>
             </div>
