@@ -42,9 +42,8 @@ var ConnectionParams = function ($scope, messageBoard) {
                 Page.State.connected = true;
                 restObj.getCartridges();
                 Page.State.rapi = restObj;
-                var cartridges = []; // <<<<<<< Set cartridges from broker
                 $('#connection').css('color', '#0d0');
-                messageBoard.broadcastCartridges(cartridges);
+                messageBoard.broadcastCartridges(Page.State.rapi.cartridges);
                 $('#cartridges').show();
             }
         }, 1000);
@@ -56,9 +55,6 @@ var ConnectionParams = function ($scope, messageBoard) {
             }
         }, 15000);
     };
-    
-    var processCartridges = function (brokerCarts) {
-    };
 };
 ConnectionParams.$inject = ['$scope', 'messageBoard'];
 
@@ -66,9 +62,12 @@ ConnectionParams.$inject = ['$scope', 'messageBoard'];
 var Cartridges = function ($scope, messageBoard) {
     $scope.cartridges = [];
     $scope.$on('newCartridgesListed', function () {
-        $scope.cartridges = messageBoard.cartridges;
-        console.log(messageBoard.cartridges);
+        $scope.cartridges = processCartridges(messageBoard.cartridges);
     });
+    
+    var processCartridges = function (brokerCarts) {
+        return brokerCarts;
+    };
 };
 Cartridges.$inject = ['$scope', 'messageBoard'];
 
