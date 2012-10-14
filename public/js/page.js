@@ -96,10 +96,18 @@ var Cartridges = function ($scope, messageBoard) {
     $scope.$on('newCartridgesListed', function () {
         var i;
         for (i = 0; i < messageBoard.cartridges.length; i = i + 1) {
-            messageBoard.cartridges[i].img = 'http://placehold.it/100x100';
+            messageBoard.cartridges[i].img = 'http://placehold.it/120x80';
         }
         $scope.cartridges = messageBoard.cartridges;
-        $scope.$digest();
+        setTimeout(function () {
+            $scope.$digest();
+            $("[rel=popover]").popover({
+                animation: true,
+                trigger: 'hover',
+                offset: 10,
+                placement: 'top'
+            }).click(function(e) {e.preventDefault()});
+        }, 300);
     });
 };
 Cartridges.$inject = ['$scope', 'messageBoard'];
@@ -107,7 +115,7 @@ Cartridges.$inject = ['$scope', 'messageBoard'];
     
     
 // Main!
-$(function () {
+$(function () { 
     // Get connection parameters for PaaS provider
     $('.connectionParam').click(function () {
         $('#connectionModal').modal('show');

@@ -97,7 +97,7 @@ body > .navbar li:hover {
     top: -40px;
     right: 20px;
     height: 30px;
-    z-index: 9001;
+    z-index: 100;
     color: #ddd;
     padding: 5px;
     background-color: #222;
@@ -135,8 +135,13 @@ body > .navbar li:hover {
 }
 
 #listCartridges > ul > li > img {
-    max-height: 84px;
-    max-width: 168px;
+    max-height: 80px;
+    max-width: 150px;
+}
+
+.popover {
+    z-index: 9001 !important;
+    color: #000;
 }
 
 .modal {
