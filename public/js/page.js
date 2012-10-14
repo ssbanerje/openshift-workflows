@@ -7,6 +7,35 @@ var Page = {
     setError : function SetError(text) {
         $('#errorPlaceHolder').html('<div class="alert alert-error fade in">' + text
                                     + '<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
+    },
+    
+    spinner: undefined,    
+    startSpinner : function () {
+        $('#spinner').html('&nbsp;&nbsp;');
+        if(!this.spinner) {
+            this.spinner = new Spinner({
+                lines: 9, // The number of lines to draw
+                length: 3, // The length of each line
+                width: 3, // The line thickness
+                radius: 4, // The radius of the inner circle
+                corners: 1, // Corner roundness (0..1)
+                rotate: 0, // The rotation offset
+                color: '#fff', // #rgb or #rrggbb
+                speed: 1.3, // Rounds per second
+                trail: 100, // Afterglow percentage
+                shadow: false, // Whether to render a shadow
+                className: 'spinner', // The CSS class to assign to the spinner
+                zIndex: 2e9, // The z-index (defaults to 2000000000)
+                top: '5px', // Top position relative to parent in px
+                left: 'auto' // Left position relative to parent in px
+            }).spin(document.getElementById('spinner'));
+        } else {
+            this.spinner.spin(document.getElementById('spinner'));
+        }
+    },
+    stopSpinner : function () {
+        this.spinner.stop();
+        $('#spinner').html('<i class="icon-cloud"></i>');
     }
 };
 
@@ -34,6 +63,10 @@ var ConnectionParams = function ($scope, messageBoard) {
     $scope.namespace = '';
     
     $scope.submit = function () { // Check the connection details and get the cartridge list
+        Page.State.connected = false;
+        $('#connection').css('color', '#d00');
+        $('#cartridges').hide();
+        Page.startSpinner();
         var restObj = new Rest($scope.host);
         restObj.getApi();
         restObj.authenticate($scope.username, $scope.password);
@@ -45,6 +78,7 @@ var ConnectionParams = function ($scope, messageBoard) {
                 $('#connection').css('color', '#0d0');
                 messageBoard.broadcastCartridges(Page.State.rapi.cartridges);
                 $('#cartridges').show();
+                Page.stopSpinner()
             }
         }, 1000);
         $('#connectionModal').modal('hide');
@@ -88,7 +122,6 @@ $(function () {
 
     // Get connection parameters for PaaS provider
     $('.connectionParam').click(function () {
-        //$('#listCartridges').hide();
         $('#connectionModal').modal('show');
     });
     
