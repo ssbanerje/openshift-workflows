@@ -1,33 +1,29 @@
+/**
+*
+* Controlling the WebApp
+* ~~ Here be Dragons ~~
+*
+*/
+
 var Page = {
-    State : {
+    State : { // The page state
         rapi: undefined,
         connected: false
     },
 
-    setError : function SetError(text) {
+    setError : function SetError(text) { // Set the global error in the application
         $('#errorPlaceHolder').html('<div class="alert alert-error fade in">' + text
                                     + '<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
     },
     
-    spinner: undefined,    
+    spinner: undefined, // Show a spinner to indicate busy status
     startSpinner : function () {
         $('#spinner').html('&nbsp;&nbsp;');
         if(!this.spinner) {
             this.spinner = new Spinner({
-                lines: 9, // The number of lines to draw
-                length: 3, // The length of each line
-                width: 3, // The line thickness
-                radius: 4, // The radius of the inner circle
-                corners: 1, // Corner roundness (0..1)
-                rotate: 0, // The rotation offset
-                color: '#fff', // #rgb or #rrggbb
-                speed: 1.3, // Rounds per second
-                trail: 100, // Afterglow percentage
-                shadow: false, // Whether to render a shadow
-                className: 'spinner', // The CSS class to assign to the spinner
-                zIndex: 2e9, // The z-index (defaults to 2000000000)
-                top: '5px', // Top position relative to parent in px
-                left: 'auto' // Left position relative to parent in px
+                lines: 9, length: 3, width: 3, radius: 4, corners: 1, rotate: 0,
+                color: '#fff', speed: 1.3, trail: 100, shadow: false, className: 'spinner',
+                zIndex: 2e9, top: '5px', left: 'auto'
             }).spin(document.getElementById('spinner'));
         } else {
             this.spinner.spin(document.getElementById('spinner'));
@@ -64,7 +60,9 @@ var ConnectionParams = function ($scope, messageBoard) {
     
     $scope.submit = function () { // Check the connection details and get the cartridge list
         Page.State.connected = false;
+        $(".alert").alert('close');
         $('#connection').css('color', '#d00');
+        messageBoard.broadcastCartridges([]);
         $('#cartridges').hide();
         Page.startSpinner();
         var restObj = new Rest($scope.host);
@@ -78,7 +76,7 @@ var ConnectionParams = function ($scope, messageBoard) {
                 $('#connection').css('color', '#0d0');
                 messageBoard.broadcastCartridges(Page.State.rapi.cartridges);
                 $('#cartridges').show();
-                Page.stopSpinner()
+                Page.stopSpinner();
             }
         }, 1000);
         $('#connectionModal').modal('hide');
@@ -94,8 +92,7 @@ ConnectionParams.$inject = ['$scope', 'messageBoard'];
 
 // The AngularJS Controller for the listed cartridges
 var Cartridges = function ($scope, messageBoard) {
-    $scope.cartridges = [{img : 'http://placehold.it/100x100'}];
-    
+    $scope.cartridges = [];
     $scope.$on('newCartridgesListed', function () {
         var i;
         for (i = 0; i < messageBoard.cartridges.length; i = i + 1) {
@@ -111,15 +108,6 @@ Cartridges.$inject = ['$scope', 'messageBoard'];
     
 // Main!
 $(function () {
-    // Check current connection
-    setInterval(function () {
-        if (!Page.State.connected) {
-            $('#cartridges').hide();
-            $('#connection').css('color', '#d00');
-            Page.setError('<strong>Configure</strong> the system by setting <strong>connection</strong> parameters.');
-        }
-    }, 1000);
-
     // Get connection parameters for PaaS provider
     $('.connectionParam').click(function () {
         $('#connectionModal').modal('show');
