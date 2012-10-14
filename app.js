@@ -15,9 +15,9 @@ var program = require('commander'),
     routes = require('./routes');
 
 program
-   .version(JSON.parse(fs.readFileSync(__dirname+'/package.json', 'utf-8')).version)
-   .option('-b, --browser', 'Open the app in a browser window')
-   .parse(process.argv);
+    .version(JSON.parse(fs.readFileSync(__dirname + '/package.json', 'utf-8')).version)
+    .option('-b, --browser', 'Open the app in a browser window')
+    .parse(process.argv);
 
 var app = express();
 
