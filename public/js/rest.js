@@ -3,7 +3,7 @@
 * The REST interface to OpenShift
 *
 */
-var Rest = function(dom) {
+var Rest = function (dom) {
     var domain = dom; // Domain of openshift broker
     this.authString = undefined; // The authstring which needs to be passed to OpenShift
     this.connected = false; // Is this connected to the server?
@@ -27,7 +27,7 @@ var Rest = function(dom) {
 
     this.getApi = function () { // Get the API reference
         var data = {
-            uri: domain+'/broker/rest/api',
+            uri: domain + '/broker/rest/api',
             headers: {
                 accept: 'application/json'
             },
@@ -42,7 +42,7 @@ var Rest = function(dom) {
     this.authenticate = function (username, password) { // Authenticate user on domain
         var auth = 'Basic ' + window.btoa(username + ':' + password);
         var data = {
-            uri: domain+'/broker/rest/user',
+            uri: domain + '/broker/rest/user',
             headers: {
                 accept: 'application/json',
                 Authorization: auth
@@ -58,15 +58,15 @@ var Rest = function(dom) {
 
     this.getCartridges = function () { // Get a list of cartrdges from the broker
         var data = {
-            uri: domain+'/broker/rest/cartridges',
+            uri: domain + '/broker/rest/cartridges',
             headers: {
-                accept: 'application/json',
+                accept: 'application/json'
             },
             method: 'GET'
         };
-        var callback=function (d, _this) {
+        var callback = function (d, _this) {
             _this.cartridges = d.data;
         };
-        this.proxify(data,callback);
+        this.proxify(data, callback);
     };
 };

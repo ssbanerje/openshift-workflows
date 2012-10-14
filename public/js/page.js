@@ -5,21 +5,21 @@ var Page = {
     },
 
     setError : function SetError(text) {
-        $('#errorPlaceHolder').html('<div class="alert alert-error fade in">'+text
-                                    +'<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
+        $('#errorPlaceHolder').html('<div class="alert alert-error fade in">' + text
+                                    + '<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
     }
-}
+};
 
 // Communicate between controllers
 var angApp = angular.module('workflows', []);
-angApp.factory('messageBoard', function($rootScope) {
-    var board = {};    
+angApp.factory('messageBoard', function ($rootScope) {
+    var board = {};
     board.cartridges = [];
-    board.broadcastCartridges = function(cartridges) {
+    board.broadcastCartridges = function (cartridges) {
         this.cartridges = cartridges;
         this.pushCartridges();
     };
-    board.pushCartridges = function() {
+    board.pushCartridges = function () {
         $rootScope.$broadcast('newCartridgesListed');
     };
     return board;
@@ -38,12 +38,12 @@ var ConnectionParams = function ($scope, messageBoard) {
         restObj.getApi();
         restObj.authenticate($scope.username, $scope.password);
         var interval = setInterval(function () {
-            if(restObj.connected) {
+            if (restObj.connected) {
                 Page.State.connected = true;
                 restObj.getCartridges();
                 Page.State.rapi = restObj;
                 var cartridges = []; // <<<<<<< Set cartridges from broker
-                $('#connection').css('color','#0d0');
+                $('#connection').css('color', '#0d0');
                 messageBoard.broadcastCartridges(cartridges);
                 $('#cartridges').show();
             }
@@ -51,22 +51,25 @@ var ConnectionParams = function ($scope, messageBoard) {
         $('#connectionModal').modal('hide');
         setTimeout(function () {
             window.clearInterval(interval);
-            if(!Page.State.rapi || !Page.State.connected) {
+            if (!Page.State.rapi || !Page.State.connected) {
                 Page.setError('<strong>Incorrect</strong> connection parameters.');
             }
         }, 15000);
     };
-}
+    
+    var processCartridges = function (brokerCarts) {
+    };
+};
 ConnectionParams.$inject = ['$scope', 'messageBoard'];
 
 // The AngularJS Controller for the listed cartridges
 var Cartridges = function ($scope, messageBoard) {
     $scope.cartridges = [];
-    $scope.$on('newCartridgesListed', function() {
+    $scope.$on('newCartridgesListed', function () {
         $scope.cartridges = messageBoard.cartridges;
         console.log(messageBoard.cartridges);
     });
-}
+};
 Cartridges.$inject = ['$scope', 'messageBoard'];
 
     
@@ -75,9 +78,9 @@ Cartridges.$inject = ['$scope', 'messageBoard'];
 $(function () {
     // Check current connection
     setInterval(function () {
-        if(!Page.State.connected) {
+        if (!Page.State.connected) {
             $('#cartridges').hide();
-            $('#connection').css('color','#d00');
+            $('#connection').css('color', '#d00');
             Page.setError('<strong>Configure</strong> the system by setting <strong>connection</strong> parameters.');
         }
     }, 1000);
@@ -90,7 +93,7 @@ $(function () {
     
     // Connect to PaaS provider and get all data
     $('#reconnect').click(function () {
-        $('#connection').css('color','#0d0');
+        $('#connection').css('color', '#0d0');
     });
     
     // All features for node tags
@@ -104,13 +107,13 @@ $(function () {
     $('#showCartridges').click(function () {
         $('#listCartridges').slideToggle('slow', function () {
             var text = '<div class="realtive">';
-            if($(this).is(":hidden")) {
+            if ($(this).is(":hidden")) {
                 text += 'Cartridges <i class="icon-chevron-up"></i>';
             } else {
                 text += 'Cartridges <i class="icon-chevron-down"></i>';
             }
             text += '</div>';
-            $('#showCartridges').html(text)
+            $('#showCartridges').html(text);
         });
     });
 });
