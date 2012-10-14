@@ -102,9 +102,10 @@
                 </div>
             </div>
             <div id="listCartridges" style="display: none;" ng-controller="Cartridges">
+                {{cartridges}}
                 <ul>
                     <li ng-repeat="c in cartridges">
-                        <img src="{{c.src}}">
+                        <img src="{{c.img}}">
                     </li>
                 </ul>
             </div>

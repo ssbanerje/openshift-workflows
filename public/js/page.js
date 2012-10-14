@@ -27,7 +27,7 @@ angApp.factory('messageBoard', function ($rootScope) {
 
 // The AngularJS Controller for the connection parameters
 var ConnectionParams = function ($scope, messageBoard) {
-    $scope.host = '';
+    $scope.host = 'https://openshift.redhat.com';
     $scope.username = '';
     $scope.password = '';
     $scope.appName = '';
@@ -37,10 +37,10 @@ var ConnectionParams = function ($scope, messageBoard) {
         var restObj = new Rest($scope.host);
         restObj.getApi();
         restObj.authenticate($scope.username, $scope.password);
+        restObj.getCartridges();
         var interval = setInterval(function () {
-            if (restObj.connected) {
+            if (restObj.connected && !Page.State.connected) {
                 Page.State.connected = true;
-                restObj.getCartridges();
                 Page.State.rapi = restObj;
                 $('#connection').css('color', '#0d0');
                 messageBoard.broadcastCartridges(Page.State.rapi.cartridges);
@@ -61,13 +61,14 @@ ConnectionParams.$inject = ['$scope', 'messageBoard'];
 // The AngularJS Controller for the listed cartridges
 var Cartridges = function ($scope, messageBoard) {
     $scope.cartridges = [];
-    $scope.$on('newCartridgesListed', function () {
-        $scope.cartridges = processCartridges(messageBoard.cartridges);
-    });
     
-    var processCartridges = function (brokerCarts) {
-        return brokerCarts;
-    };
+    $scope.$on('newCartridgesListed', function () {
+        var i, carts = messageBoard.cartridges;
+        for (i = 0; i < carts.length; i = i + 1) {
+            carts[i].img = 'http://placehold.it/100x100';
+        }
+        $scope.cartridges = carts;
+    });
 };
 Cartridges.$inject = ['$scope', 'messageBoard'];
 
