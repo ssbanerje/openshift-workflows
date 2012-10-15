@@ -5,13 +5,16 @@
 *
 */
 
-function setError(text) { // Set the global error in the application
+// Set the global error in the application
+function setError(text) {
     $('#errorPlaceHolder').html('<div class="alert alert-error fade in">' + text
                                 + '<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
 }
 
+// The angular module for the page
 var workflows = angular.module('workflows', []);
 
+// The main angular controller for the page
 var App = function ($scope, $http) {
     // Page related objects 
     var Busy = {  // Show a spinner to indicate busy status
@@ -19,7 +22,7 @@ var App = function ($scope, $http) {
         
         start : function () {
             $('#spinner').html('&nbsp;&nbsp;');
-            if(!this.spinner) {
+            if (!this.spinner) {
                 this.spinner = new Spinner({
                     lines: 9, length: 3, width: 3, radius: 4, corners: 1, rotate: 0,
                     color: '#fff', speed: 1.3, trail: 100, shadow: false, className: 'spinner',
@@ -34,6 +37,14 @@ var App = function ($scope, $http) {
             this.spinner.stop();
             $('#spinner').html('<i class="icon-cloud"></i>');
         }
+    };
+    var proxify = function (options, successCallback, failureCallback) { // Make call to the openshift broker
+        $http({ // Proxify!
+            url: '/proxy',
+            method: 'POST',
+            dataType: 'json',
+            data: { options: JSON.stringify(options) }
+        }).success(successCallback).error(failureCallback);
     };
     
     // Variables related to the connection parameters
@@ -58,56 +69,44 @@ var App = function ($scope, $http) {
         $scope.cartridges = [];
         var errorCallback = function (data, status, headers, config) {
             Busy.stop();
-            switch(status) {
-                    case 401:
-                        setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
-                        break;
-                    default:
-                        setError('Error in contacting server!');
-                        break;
+            switch (status) {
+            case 401:
+                setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
+                break;
+            default:
+                setError('Error in contacting server!');
+                break;
             }
         };
-        $http({ // Authenticate user
-            url: '/proxy',
-            method: 'POST',
-            dataType: 'json',
-            data: {
-                options: JSON.stringify({
-                    uri: $scope.host + '/broker/rest/user',
+        proxify({ // Authenticate user
+            uri: $scope.host + '/broker/rest/user',
+            headers: {
+                accept: 'application/json',
+                Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
+            },
+            method: 'GET'
+        },
+            function (data, status, headers, config) {
+                $scope.authString = 'Basic ' + window.btoa($scope.username + ':' + $scope.password);
+                $scope.connected = true;
+                proxify({ // Get list of cartridges
+                    uri: $scope.host + '/broker/rest/cartridges',
                     headers: {
-                        accept: 'application/json',
-                        Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
+                        accept: 'application/json'
                     },
                     method: 'GET'
-                })
-            }
-        }).success(function (data, status, headers, config) {
-            $scope.authString = 'Basic ' + window.btoa($scope.username + ':' + $scope.password);
-            $scope.connected = true;
-            $http({ // Get the list of cartridges
-                url: '/proxy',
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    options: JSON.stringify({
-                        uri: $scope.host + '/broker/rest/cartridges',
-                        headers: {
-                            accept: 'application/json'
-                        },
-                        method: 'GET'
-                    })
-                }
-            }).success(function (data, status, headers, config) {
-                var i;
-                for (i = 0; i < data.data.length; i = i + 1) {
-                    data.data[i].img = 'http://placehold.it/120x80'
-                }
-                $scope.cartridges = data.data;
-                $('#connection').css('color', '#0d0');
-                $('#cartridges').show();
-                Busy.stop();
-            }).error(errorCallback);
-        }).error(errorCallback);
+                },
+                    function (data, status, headers, config) {
+                        var i;
+                        for (i = 0; i < data.data.length; i = i + 1) {
+                            data.data[i].img = 'http://placehold.it/120x80';
+                        }
+                        $scope.cartridges = data.data;
+                        $('#connection').css('color', '#0d0');
+                        $('#cartridges').show();
+                        Busy.stop();
+                    }, errorCallback);
+            }, errorCallback);
     };
 };
 
@@ -145,6 +144,6 @@ $(function () {
             trigger: 'click',
             offset: 10,
             placement: 'top'
-        }).click(function(e) {e.preventDefault()});
+        }).click(function (e) { e.preventDefault(); });
     }, 1000);
 });
