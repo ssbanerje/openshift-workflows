@@ -60,10 +60,10 @@ var ConnectionParams = function ($scope, messageBoard) {
 
     $scope.submit = function () { // Check the connection details and get the cartridge list
         Page.State.connected = false;
+        $('#cartridges').hide();
         $(".alert").alert('close');
         $('#connection').css('color', '#d00');
         messageBoard.broadcastCartridges([]);
-        $('#cartridges').hide();
         Page.startSpinner();
         var restObj = new Rest($scope.host);
         restObj.getApi();
@@ -73,8 +73,8 @@ var ConnectionParams = function ($scope, messageBoard) {
             if (restObj.connected && !Page.State.connected) {
                 Page.State.connected = true;
                 Page.State.rapi = restObj;
-                $('#connection').css('color', '#0d0');
                 messageBoard.broadcastCartridges(Page.State.rapi.cartridges);
+                $('#connection').css('color', '#0d0');
                 $('#cartridges').show();
                 Page.stopSpinner();
             }
