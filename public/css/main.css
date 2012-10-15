@@ -52,7 +52,7 @@ body > .navbar li:hover {
     min-height: 30px;
     max-width: 345px;
     max-height: 345px;
-    overflow: scroll;
+    overflow: none;
 }
 
 .node > .subnode {
@@ -118,7 +118,7 @@ body > .navbar li:hover {
 
 #listCartridges > ul {
     display: inline-block;
-    overflow: auto;
+    overflow-x: scroll;
     overflow-y: hidden;
     max-width: 100%;
     white-space: nowrap;
@@ -130,7 +130,7 @@ body > .navbar li:hover {
     padding: 3px;
     position: relative;
     vertical-align:middle;
-    overflow:scroll;
+    overflow: none;
     border: 1px solid #000;
 }
 
@@ -146,7 +146,7 @@ body > .navbar li:hover {
 
 .modal {
     background: #444 url('../img/bg/grid_tile.png');
-    color: #ddd;  
+    color: #ddd;
 }
 
 .modal-header, .modal-body {
