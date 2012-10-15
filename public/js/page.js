@@ -73,6 +73,12 @@ var App = function ($scope, $http) {
             case 401:
                 setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
                 break;
+            case 403:
+                setError('The Openshift server is refusing to respond');
+                break;
+            case 500:
+                setError('The server is broker! Retry in a while');
+                break;
             default:
                 setError('Error in contacting server!');
                 break;
