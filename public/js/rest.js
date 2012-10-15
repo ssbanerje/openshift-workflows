@@ -45,7 +45,7 @@ var Rest = function (dom) {
             method: 'GET'
         };
         var callback = function (d, _this) {
-            _this.api = d;
+            _this.api = d.data;
         };
         this.proxify(data, callback);
     };
