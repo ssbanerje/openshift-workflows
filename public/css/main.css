@@ -42,11 +42,11 @@ body > .navbar li:hover {
     border: 2px  solid rgba(0,0,0,0.5);
     border-radius: 4px; padding: 8px;
     -moz-box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
-					0 25px 50px 0 rgba(0, 0, 0, 0.15);
+        0 25px 50px 0 rgba(0, 0, 0, 0.15);
     -webkit-box-shadow:0 2px 6px 0 rgba(0, 0, 0, 0.2),
-					0 25px 50px 0 rgba(0, 0, 0, 0.15);
+        0 25px 50px 0 rgba(0, 0, 0, 0.15);
     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
-					0 25px 50px 0 rgba(0, 0, 0, 0.15);
+        0 25px 50px 0 rgba(0, 0, 0, 0.15);
     z-index: 0;
     overflow: scroll;
 }

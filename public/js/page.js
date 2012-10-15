@@ -15,7 +15,7 @@ var Page = {
         $('#errorPlaceHolder').html('<div class="alert alert-error fade in">' + text
                                     + '<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
     },
-    
+
     spinner: undefined, // Show a spinner to indicate busy status
     startSpinner : function () {
         $('#spinner').html('&nbsp;&nbsp;');
@@ -57,7 +57,7 @@ var ConnectionParams = function ($scope, messageBoard) {
     $scope.password = '';
     $scope.appName = '';
     $scope.namespace = '';
-    
+
     $scope.submit = function () { // Check the connection details and get the cartridge list
         Page.State.connected = false;
         $(".alert").alert('close');
@@ -112,22 +112,22 @@ var Cartridges = function ($scope, messageBoard) {
 };
 Cartridges.$inject = ['$scope', 'messageBoard'];
 
-    
-    
+
+
 // Main!
-$(function () { 
+$(function () {
     // Get connection parameters for PaaS provider
     $('.connectionParam').click(function () {
         $('#connectionModal').modal('show');
     });
-    
+
     // All features for node tags
     $('.node').hover(function () {
         $(this).find('.controller').show();
     }, function () {
         $(this).find('.controller').hide();
     });
-    
+
     // Show Cartridges
     $('#showCartridges').click(function () {
         $('#listCartridges').slideToggle('slow', function () {
