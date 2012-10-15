@@ -48,10 +48,6 @@ body > .navbar li:hover {
     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
 					0 25px 50px 0 rgba(0, 0, 0, 0.15);
     z-index: 0;
-    min-width: 80px;
-    min-height: 30px;
-    max-width: 345px;
-    max-height: 345px;
     overflow: scroll;
 }
 
@@ -71,9 +67,7 @@ body > .navbar li:hover {
     top: 0;
     right: 0;
     height: 25px;
-    z-index: 1;
     padding: 3px;
-    display: block;
 }
 
 #cartridges {
@@ -82,7 +76,6 @@ body > .navbar li:hover {
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #fff;
     z-index: 9000;
     border-top: 1px solid #AAA;
 }
@@ -98,7 +91,6 @@ body > .navbar li:hover {
     right: 20px;
     height: 30px;
     z-index: 100;
-    color: #ddd;
     padding: 5px;
     background-color: #222;
     cursor: pointer;
@@ -111,8 +103,6 @@ body > .navbar li:hover {
 
 #listCartridges {
     width: 100%;
-    height: 100px;
-    color: #000;
     background: #222 url('../img/bg/grid_tile.png');
 }
 
@@ -131,12 +121,7 @@ body > .navbar li:hover {
     position: relative;
     vertical-align:middle;
     overflow:scroll;
-    border: 1px solid #000;
-}
-
-#listCartridges > ul > li > img {
-    max-height: 80px;
-    max-width: 150px;
+    border: 1px solid #474747;
 }
 
 .popover {
@@ -146,11 +131,6 @@ body > .navbar li:hover {
 
 .modal {
     background: #444 url('../img/bg/grid_tile.png');
-    color: #ddd;  
-}
-
-.modal-header, .modal-body {
-    border: none;
 }
 
 .modal-header > .close {

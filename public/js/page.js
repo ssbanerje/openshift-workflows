@@ -103,7 +103,7 @@ var Cartridges = function ($scope, messageBoard) {
             $scope.$digest();
             $("[rel=popover]").popover({
                 animation: true,
-                trigger: 'hover',
+                trigger: 'click',
                 offset: 10,
                 placement: 'top'
             }).click(function(e) {e.preventDefault()});
@@ -119,11 +119,6 @@ $(function () {
     // Get connection parameters for PaaS provider
     $('.connectionParam').click(function () {
         $('#connectionModal').modal('show');
-    });
-    
-    // Connect to PaaS provider and get all data
-    $('#reconnect').click(function () {
-        $('#connection').css('color', '#0d0');
     });
     
     // All features for node tags
