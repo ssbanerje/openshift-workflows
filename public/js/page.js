@@ -5,145 +5,171 @@
 *
 */
 
-var Page = {
-    State : { // The page state
-        rapi: undefined,
-        connected: false
-    },
+// The angular module for the page
+var workflows = angular.module('workflows', []);
 
-    setError : function SetError(text) { // Set the global error in the application
-        $('#errorPlaceHolder').html('<div class="alert alert-error fade in">' + text
-                                    + '<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
-    },
-    
-    spinner: undefined, // Show a spinner to indicate busy status
-    startSpinner : function () {
-        $('#spinner').html('&nbsp;&nbsp;');
-        if(!this.spinner) {
-            this.spinner = new Spinner({
-                lines: 9, length: 3, width: 3, radius: 4, corners: 1, rotate: 0,
-                color: '#fff', speed: 1.3, trail: 100, shadow: false, className: 'spinner',
-                zIndex: 2e9, top: '5px', left: 'auto'
-            }).spin(document.getElementById('spinner'));
-        } else {
-            this.spinner.spin(document.getElementById('spinner'));
+// The main angular controller for the page
+var App = function ($scope, $http) {
+    // Page related objects
+    var Busy = {  // Show a spinner to indicate busy status
+        spinner: undefined,
+
+        start : function () {
+            $('#spinner').html('&nbsp;&nbsp;');
+            if (!this.spinner) {
+                this.spinner = new Spinner({
+                    lines: 9, length: 3, width: 3, radius: 4, corners: 1, rotate: 0,
+                    color: '#fff', speed: 1.3, trail: 100, shadow: false, className: 'spinner',
+                    zIndex: 2e9, top: '5px', left: 'auto'
+                }).spin(document.getElementById('spinner'));
+            } else {
+                this.spinner.spin(document.getElementById('spinner'));
+            }
+        },
+
+        stop : function () {
+            this.spinner.stop();
+            $('#spinner').html('<i class="icon-cloud"></i>');
         }
-    },
-    stopSpinner : function () {
-        this.spinner.stop();
-        $('#spinner').html('<i class="icon-cloud"></i>');
-    }
-};
-
-// Communicate between controllers
-var angApp = angular.module('workflows', []);
-angApp.factory('messageBoard', function ($rootScope) {
-    var board = {};
-    board.cartridges = [];
-    board.broadcastCartridges = function (cartridges) {
-        this.cartridges = cartridges;
-        this.pushCartridges();
     };
-    board.pushCartridges = function () {
-        $rootScope.$broadcast('newCartridgesListed');
+    var proxify = function (options, successCallback, failureCallback) { // Make call to the openshift broker
+        $http({ // Proxify!
+            url: '/proxy',
+            method: 'POST',
+            dataType: 'json',
+            data: { options: JSON.stringify(options) }
+        }).success(successCallback).error(failureCallback);
     };
-    return board;
-});
 
-// The AngularJS Controller for the connection parameters
-var ConnectionParams = function ($scope, messageBoard) {
+    // Variables related to the connection parameters
     $scope.host = 'https://openshift.redhat.com';
     $scope.username = '';
     $scope.password = '';
+    $scope.authString = '';
     $scope.appName = '';
     $scope.namespace = '';
-    
-    $scope.submit = function () { // Check the connection details and get the cartridge list
-        Page.State.connected = false;
+    $scope.connected = false;
+
+    // Variables related to the cartridges
+    $scope.cartridges = [];
+
+    // Functions dealing with the connection parameters
+    $scope.submit = function () { // Authenticate user and get the list of cartridges
+        Busy.start();
+        $('#connectionModal').modal('hide');
+        $('#cartridges').hide();
         $(".alert").alert('close');
         $('#connection').css('color', '#d00');
-        messageBoard.broadcastCartridges([]);
-        $('#cartridges').hide();
-        Page.startSpinner();
-        var restObj = new Rest($scope.host);
-        restObj.getApi();
-        restObj.authenticate($scope.username, $scope.password);
-        restObj.getCartridges();
-        var interval = setInterval(function () {
-            if (restObj.connected && !Page.State.connected) {
-                Page.State.connected = true;
-                Page.State.rapi = restObj;
-                $('#connection').css('color', '#0d0');
-                messageBoard.broadcastCartridges(Page.State.rapi.cartridges);
-                $('#cartridges').show();
-                Page.stopSpinner();
+        $scope.cartridges = [];
+        var errorCallback = function (data, status, headers, config) {
+            Busy.stop();
+            switch (status) {
+            case 401:
+                setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
+                break;
+            case 403:
+                setError('The Openshift server is refusing to respond');
+                break;
+            case 500:
+                setError('The server is broker! Retry in a while');
+                break;
+            default:
+                setError('Error in contacting server!');
+                break;
             }
-        }, 1000);
-        $('#connectionModal').modal('hide');
-        setTimeout(function () {
-            window.clearInterval(interval);
-            if (!Page.State.rapi || !Page.State.connected) {
-                Page.setError('<strong>Incorrect</strong> connection parameters.');
-            }
-        }, 15000);
+        };
+        proxify({ // Authenticate user
+            uri: $scope.host + '/broker/rest/user',
+            headers: {
+                accept: 'application/json',
+                Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
+            },
+            method: 'GET'
+        },
+            function (data, status, headers, config) {
+                $scope.authString = 'Basic ' + window.btoa($scope.username + ':' + $scope.password);
+                $scope.connected = true;
+                proxify({ // Get list of cartridges
+                    uri: $scope.host + '/broker/rest/cartridges',
+                    headers: {
+                        accept: 'application/json'
+                    },
+                    method: 'GET'
+                },
+                    function (data, status, headers, config) {
+                        var i;
+                        for (i = 0; i < data.data.length; i = i + 1) {
+                            switch(data.data[i].display_name) {
+                                case 'Node.js 0.6':
+                                    data.data[i].img = '/img/icons/nodejs.png';
+                                    break;
+                                case 'Zend Server 5.6':
+                                    data.data[i].img= '/img/icons/zend.png';
+                                    break;
+                                case 'Ruby 1.9':
+                                    data.data[i].img= '/img/icons/ruby.png';
+                                    break;
+                                case 'JBoss Application Server 7.1':
+                                    data.data[i].img= '/img/icons/jboss.png';
+                                    break;
+                                case 'Python 2.6':
+                                    data.data[i].img= '/img/icons/python.png';
+                                    break;
+                                case 'Jenkins Server 1.4':
+                                    data.data[i].img= '/img/icons/jenkins.png';
+                                    break;
+                                case 'Ruby 1.8':
+                                    data.data[i].img= '/img/icons/ruby.png';
+                                    break;
+                                case 'JBoss Enterprise Application Platform 6.0':
+                                    data.data[i].img= '/img/icons/jboss.png';
+                                    break;
+                                case 'PHP 5.3':
+                                    data.data[i].img= '/img/icons/php.png';
+                                    break;
+                                case 'Perl 5.10':
+                                    data.data[i].img= '/img/icons/perl.png';
+                                    break;
+                                case 'MongoDB NoSQL Database 2.0':
+                                    data.data[i].img= '/img/icons/mongodb.png';
+                                    break;
+                                case 'Cron 1.4':
+                                    data.data[i].img= '/img/icons/cron.png';
+                                    break;
+                                case 'MySQL Database 5.1':
+                                    data.data[i].img= '/img/icons/mysql.png';
+                                    break;
+                                case 'PostgreSQL Database 8.4':
+                                    data.data[i].img= '/img/icons/postgresql.png';
+                                    break;
+                                case 'HAProxy 1.4':
+                                    data.data[i].img= '/img/icons/haproxy.png';
+                                    break;
+                                case '10gen Mongo Monitoring Service Agent 0.1':
+                                    data.data[i].img= '/img/icons/mongodb.png';
+                                    break;
+                                case 'phpMyAdmin 3.4':
+                                    data.data[i].img= '/img/icons/php.png';
+                                    break;
+                                case 'OpenShift Metrics 0.1':
+                                    data.data[i].img= '/img/icons/openshift.png';
+                                    break;
+                                case 'RockMongo 1.1':
+                                    data.data[i].img= '/img/icons/mongodb.png';
+                                    break;
+                                case 'Jenkins Client 1.4':
+                                    data.data[i].img= '/img/icons/jenkins.png';
+                                    break;
+                                default:
+                                    data.data[i].img = 'http://placehold.it/120x80';
+                                    break;
+                            }
+                        }
+                        $scope.cartridges = data.data;
+                        $('#connection').css('color', '#0d0');
+                        $('#cartridges').show();
+                        Busy.stop();
+                    }, errorCallback);
+            }, errorCallback);
     };
 };
-ConnectionParams.$inject = ['$scope', 'messageBoard'];
-
-// The AngularJS Controller for the listed cartridges
-var Cartridges = function ($scope, messageBoard) {
-    $scope.cartridges = [];
-    $scope.$on('newCartridgesListed', function () {
-        var i;
-        for (i = 0; i < messageBoard.cartridges.length; i = i + 1) {
-            messageBoard.cartridges[i].img = 'http://placehold.it/120x80';
-        }
-        $scope.cartridges = messageBoard.cartridges;
-        setTimeout(function () {
-            $scope.$digest();
-            $("[rel=popover]").popover({
-                animation: true,
-                trigger: 'hover',
-                offset: 10,
-                placement: 'top'
-            }).click(function(e) {e.preventDefault()});
-        }, 300);
-    });
-};
-Cartridges.$inject = ['$scope', 'messageBoard'];
-
-    
-    
-// Main!
-$(function () { 
-    // Get connection parameters for PaaS provider
-    $('.connectionParam').click(function () {
-        $('#connectionModal').modal('show');
-    });
-    
-    // Connect to PaaS provider and get all data
-    $('#reconnect').click(function () {
-        $('#connection').css('color', '#0d0');
-    });
-    
-    // All features for node tags
-    $('.node').hover(function () {
-        $(this).find('.controller').show();
-    }, function () {
-        $(this).find('.controller').hide();
-    });
-    
-    // Show Cartridges
-    $('#showCartridges').click(function () {
-        $('#listCartridges').slideToggle('slow', function () {
-            var text = '<div class="realtive">';
-            if ($(this).is(":hidden")) {
-                text += 'Cartridges <i class="icon-chevron-up"></i>';
-            } else {
-                text += 'Cartridges <i class="icon-chevron-down"></i>';
-            }
-            text += '</div>';
-            $('#showCartridges').html(text);
-        });
-    });
-});

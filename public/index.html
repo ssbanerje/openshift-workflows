@@ -4,162 +4,173 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <html ng-app="workflows" lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Visual Workflows for OpenShift</title>
-    <meta name="description" content="Building visual workflows for openshift">
-    <meta name="viewport" content="width=device-width">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Visual Workflows for OpenShift</title>
+        <meta name="description" content="Building visual workflows for openshift">
+        <meta name="viewport" content="width=device-width">
 
-    <style type="text/css">
-        body {
-            padding-top: 60px;
-            padding-bottom: 40px;
-        }
-    </style>
+        <style type="text/css">
+            body {
+                padding-top: 60px;
+                padding-bottom: 40px;
+            }
+        </style>
 
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
-    <link rel="stylesheet" href="css/font-awesome.css">
-    <link rel="stylesheet" href="css/gh-fork-ribbon.css">
-    <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="css/font-awesome.css">
+        <link rel="stylesheet" href="css/gh-fork-ribbon.css">
+        <link rel="stylesheet" href="css/main.css">
 
-    <script src="js/vendor/modernizr-2.6.1-respond-1.1.0.min.js"></script>
-</head>
+        <script src="js/vendor/modernizr-2.6.1-respond-1.1.0.min.js"></script>
+    </head>
 
-<body>
-    <!--[if lt IE 7]>
-        <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
-    <![endif]-->
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="navbar-inner">
-            <div class="container">
-                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                    <span><i class="icon-align-justify"></i></span>
-                </a>
-                <a class="brand" href="#">
-                    <span id="spinner" style="width:20px;"><i class="icon-cloud"></i></span> OpenShift Workflows
-                </a>
-                <div class="nav-collapse collapse">
-                    <ul class="nav pull-right">
-                        <li><a href="https://openshift.redhat.com/app/"><img src="img/icons/openshift_logo.png" style="width:15px;"> OpenShift</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i id="connection" class="icon-signal" style="font-size:13pt;color:#d00;"></i> Connect<b class="caret"></b>
+    <body ng-controller="App">
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+        <![endif]-->
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span><i class="icon-align-justify"></i></span>
+                    </a>
+                    <a class="brand" href="#">
+                        <span id="spinner" style="width:20px;"><i class="icon-cloud"></i></span> OpenShift Workflows
+                    </a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right">
+                            <li><a href="https://openshift.redhat.com/app/"><img src="img/icons/openshift_logo.png" style="width:15px;"> OpenShift</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i id="connection" class="icon-signal" style="font-size:13pt;color:#d00;"></i> Connect<b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="connectionParam"><a href="#"><i class="icon-wrench"></i> Connection Parameters</a></li>
+                                    <li id="reconnect" ng-click="submit()"><a href="#"><i class="icon-refresh"></i> Reconnect</a></li>
+                                    <li id="deploy"><a href="#"><i class="icon-magic"></i> Deploy</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#"><i class="icon-question-sign"></i> Help</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class=relative>
+                <div class="github-fork-ribbon-wrapper right">
+                <div class="github-fork-ribbon">
+                    <a href="https://github.com/subszero/openshift-workflows"> Fork me on GitHub</a>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="container">
+            <div id="errorPlaceHolder">
+                <div class="alert alert-error fade in">
+                    <strong>Configure</strong> the system by setting <strong>connection</strong> parameters.
+                    <a class="close" data-dismiss="alert" href="#">&times;</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="drawingBoard">
+            <div class="node" id="n1" style="left:25%;top:300px;">
+                <div class="controller" style="display: none">
+                    <button class="btn btn-success btn-mini"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
+                    <button class="btn btn-danger btn-mini"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></button>
+                    <button class="btn btn-info btn-mini connectionParam"><i class="icon-wrench"></i></button>
+                </div>
+                <div class="subnode">
+                    <img src="img/user.png" draggable="false">
+                </div>
+            </div>
+            <div class="node" id="n2" style="left:55%;top:300px;">
+                <div class="controller" style="display: none">
+                    <button class="btn btn-success btn-mini"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
+                    <button class="btn btn-danger btn-mini"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></button>
+                    <button class="btn btn-info btn-mini connectionParam"><i class="icon-wrench"></i></button>
+                </div>
+                <div class="subnode">
+                    <img src="img/user.png" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <div id="cartridges" style="display:none;">
+            <div class="relative">
+                <div id="showCartridges">
+                    <div class="realtive">
+                        Cartridges <span><i class="icon-chevron-up"></i></span>
+                    </div>
+                </div>
+                <div id="listCartridges" style="display: none;">
+                    <ul>
+                        <li ng-repeat="c in cartridges">
+                            <a href="#"  rel="popover" data-content="{{c.description}}" data-original-title="{{c.display_name}}">
+                                <img src="{{c.img}}" alt="{{c.display_name}}">
                             </a>
-                            <ul class="dropdown-menu">
-                                <li class="connectionParam"><a href="#"><i class="icon-wrench"></i> Connection Parameters</a></li>
-                                <!--<li id="reconnect"><a href="#"><i class="icon-refresh"></i> Reconnect</a></li>-->
-                                <li id="deploy"><a href="#"><i class="icon-magic"></i> Deploy</a></li>
-                            </ul>
                         </li>
-                        <li><a href="#"><i class="icon-question-sign"></i> Help</a></li>
                     </ul>
                 </div>
             </div>
         </div>
-        <div class=relative>
-            <div class="github-fork-ribbon-wrapper right">
-            <div class="github-fork-ribbon">
-                <a href="https://github.com/subszero/openshift-workflows"> Fork me on GitHub</a>
-            </div>
-        </div>
-    </div>
-    </div>
 
-    <div class="container">
-        <div id="errorPlaceHolder">
-            <div class="alert alert-error fade in">
-                <strong>Configure</strong> the system by setting <strong>connection</strong> parameters.
-                <a class="close" data-dismiss="alert" href="#">&times;</a>
+        <div class="modal hide fade" id="connectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Connection Parameters</h3>
             </div>
-        </div>
-    </div>
-
-    <div id="drawingboard">
-        <div class="node" draggable="true" style="left:45%;top:300px;">
-            <div class="controller" style="display: none">
-                <button class="btn btn-success btn-mini"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
-                <button class="btn btn-danger btn-mini"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></button>
-                <button class="btn btn-info btn-mini connectionParam"><i class="icon-wrench"></i></button>
-            </div>
-            <div class="subnode">
-                <img src="img/user.png" draggable="false">
-            </div>
-        </div>
-    </div>
-
-    <div id="cartridges" style="display:none;" ng-controller="Cartridges">
-        <div class="relative">
-            <div id="showCartridges">
-                <div class="realtive">
-                    Cartridges <span><i class="icon-chevron-up"></i></span>
-                </div>
-            </div>
-            <div id="listCartridges" style="display: none;">
-                <ul>
-                    <li ng-repeat="c in cartridges">
-                        <a href="#"  rel="popover" data-content="{{c.description}}" data-original-title="{{c.display_name}}">
-                            <img src="{{c.img}}" alt="{{c.display_name}}">
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal hide fade" id="connectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="ConnectionParams">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3>Connection Parameters</h3>
-        </div>
-        <div class="modal-body">
-            <form class="form-horizontal">
-                <div class="control-group">
-                    <label class="control-label" for="inputHost"><i class="icon-cloud"></i></label>
-                    <div class="controls">
-                        <input type="text" id="inputHost" placeholder="Host" ng-model="host">
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="inputHost"><i class="icon-cloud"></i></label>
+                        <div class="controls">
+                            <input type="text" id="inputHost" placeholder="Host" ng-model="host">
+                        </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="inputUsername"><i class="icon-user"></i></label>
-                    <div class="controls">
-                        <input type="text" id="inputUserame" placeholder="Username" ng-model="username">
+                    <div class="control-group">
+                        <label class="control-label" for="inputUsername"><i class="icon-user"></i></label>
+                        <div class="controls">
+                            <input type="text" id="inputUserame" placeholder="Username" ng-model="username">
+                        </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="inputPassword"><i class="icon-key"></i></label>
-                    <div class="controls">
-                        <input type="password" id="inputPassword" placeholder="Password" ng-model="password">
+                    <div class="control-group">
+                        <label class="control-label" for="inputPassword"><i class="icon-key"></i></label>
+                        <div class="controls">
+                            <input type="password" id="inputPassword" placeholder="Password" ng-model="password">
+                        </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="inputApp"><i class="icon-pencil"></i></label>
-                    <div class="controls">
-                        <input type="text" id="inputApp" placeholder="App Name" ng-model="appName">
+                    <div class="control-group">
+                        <label class="control-label" for="inputApp"><i class="icon-pencil"></i></label>
+                        <div class="controls">
+                            <input type="text" id="inputApp" placeholder="App Name" ng-model="appName">
+                        </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="inputNamespace"><i class="icon-inbox"></i></label>
-                    <div class="controls">
-                        <input type="text" id="inputNamespace" placeholder="Namespace" ng-model="namespace">
+                    <div class="control-group">
+                        <label class="control-label" for="inputNamespace"><i class="icon-inbox"></i></label>
+                        <div class="controls">
+                            <input type="text" id="inputNamespace" placeholder="Namespace" ng-model="namespace">
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" ng-click="submit()"><i class="icon-save"></i> Submit</button>
+            </div>
         </div>
-        <div class="modal-footer">
-            <button class="btn" ng-click="submit()"><i class="icon-save"></i> Submit</button>
-        </div>
-    </div>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.1.min.js"><\/script>')</script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
-    <script>window.angular || document.write('<script src="js/vendor/angular.min.js"><\/script>')</script>
-    <script src="js/vendor/bootstrap.min.js"></script>
-    <script src="js/vendor/spin.min.js"></script>
-    <script src="js/page.js"></script>
-    <script src="js/rest.js"></script>
-</body>
-
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.1.min.js"><\/script>')</script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
+        <script>window.angular || document.write('<script src="js/vendor/angular.min.js"><\/script>')</script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/vendor/jquery-ui.min.js"></script>
+        <script src="js/vendor/jsPlumb.min.js"></script>
+        <script src="js/vendor/spin.min.js"></script>
+        <script src="js/ui.js"></script>
+        <script src="js/page.js"></script>
+    </body>
 </html>
