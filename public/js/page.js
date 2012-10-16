@@ -9,7 +9,7 @@
 var workflows = angular.module('workflows', []);
 
 // The main angular controller for the page
-var App = function ($scope, $http) {
+var App = function ($scope, $http) {    
     // Page related objects
     var Busy = {  // Show a spinner to indicate busy status
         spinner: undefined,
