@@ -48,7 +48,11 @@ body > .navbar li:hover {
     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
         0 25px 50px 0 rgba(0, 0, 0, 0.15);
     z-index: 0;
-    overflow: scroll;
+    min-width: 80px;
+    min-height: 30px;
+    max-width: 345px;
+    max-height: 345px;
+    overflow: none;
 }
 
 .node > .subnode {
@@ -113,7 +117,7 @@ body > .navbar li:hover {
 
 #listCartridges > ul {
     display: inline-block;
-    overflow: auto;
+    overflow-x: scroll;
     overflow-y: hidden;
     max-width: 100%;
     white-space: nowrap;
@@ -125,8 +129,9 @@ body > .navbar li:hover {
     padding: 3px;
     position: relative;
     vertical-align:middle;
-    overflow:scroll;
     border: 1px solid #474747;
+    overflow: none;
+    border: 1px solid #000;
 }
 
 .popover {
@@ -136,6 +141,7 @@ body > .navbar li:hover {
 
 .modal {
     background: #444 url('../img/bg/grid_tile.png');
+    color: #ddd;
 }
 
 .modal-header > .close {

@@ -10,10 +10,10 @@ var workflows = angular.module('workflows', []);
 
 // The main angular controller for the page
 var App = function ($scope, $http) {
-    // Page related objects 
+    // Page related objects
     var Busy = {  // Show a spinner to indicate busy status
         spinner: undefined,
-        
+
         start : function () {
             $('#spinner').html('&nbsp;&nbsp;');
             if (!this.spinner) {
@@ -26,7 +26,7 @@ var App = function ($scope, $http) {
                 this.spinner.spin(document.getElementById('spinner'));
             }
         },
-        
+
         stop : function () {
             this.spinner.stop();
             $('#spinner').html('<i class="icon-cloud"></i>');
@@ -40,7 +40,7 @@ var App = function ($scope, $http) {
             data: { options: JSON.stringify(options) }
         }).success(successCallback).error(failureCallback);
     };
-    
+
     // Variables related to the connection parameters
     $scope.host = 'https://openshift.redhat.com';
     $scope.username = '';
@@ -49,10 +49,10 @@ var App = function ($scope, $http) {
     $scope.appName = '';
     $scope.namespace = '';
     $scope.connected = false;
-    
+
     // Variables related to the cartridges
     $scope.cartridges = [];
-    
+
     // Functions dealing with the connection parameters
     $scope.submit = function () { // Authenticate user and get the list of cartridges
         Busy.start();
@@ -99,7 +99,71 @@ var App = function ($scope, $http) {
                     function (data, status, headers, config) {
                         var i;
                         for (i = 0; i < data.data.length; i = i + 1) {
-                            data.data[i].img = 'http://placehold.it/120x80';
+                            switch(data.data[i].display_name) {
+                                case 'Node.js 0.6':
+                                    data.data[i].img = '/img/icons/nodejs.png';
+                                    break;
+                                case 'Zend Server 5.6':
+                                    data.data[i].img= '/img/icons/zend.png';
+                                    break;
+                                case 'Ruby 1.9':
+                                    data.data[i].img= '/img/icons/ruby.png';
+                                    break;
+                                case 'JBoss Application Server 7.1':
+                                    data.data[i].img= '/img/icons/jboss.png';
+                                    break;
+                                case 'Python 2.6':
+                                    data.data[i].img= '/img/icons/python.png';
+                                    break;
+                                case 'Jenkins Server 1.4':
+                                    data.data[i].img= '/img/icons/jenkins.png';
+                                    break;
+                                case 'Ruby 1.8':
+                                    data.data[i].img= '/img/icons/ruby.png';
+                                    break;
+                                case 'JBoss Enterprise Application Platform 6.0':
+                                    data.data[i].img= '/img/icons/jboss.png';
+                                    break;
+                                case 'PHP 5.3':
+                                    data.data[i].img= '/img/icons/php.png';
+                                    break;
+                                case 'Perl 5.10':
+                                    data.data[i].img= '/img/icons/perl.png';
+                                    break;
+                                case 'MongoDB NoSQL Database 2.0':
+                                    data.data[i].img= '/img/icons/mongodb.png';
+                                    break;
+                                case 'Cron 1.4':
+                                    data.data[i].img= '/img/icons/cron.png';
+                                    break;
+                                case 'MySQL Database 5.1':
+                                    data.data[i].img= '/img/icons/mysql.png';
+                                    break;
+                                case 'PostgreSQL Database 8.4':
+                                    data.data[i].img= '/img/icons/postgresql.png';
+                                    break;
+                                case 'HAProxy 1.4':
+                                    data.data[i].img= '/img/icons/haproxy.png';
+                                    break;
+                                case '10gen Mongo Monitoring Service Agent 0.1':
+                                    data.data[i].img= '/img/icons/mongodb.png';
+                                    break;
+                                case 'phpMyAdmin 3.4':
+                                    data.data[i].img= '/img/icons/php.png';
+                                    break;
+                                case 'OpenShift Metrics 0.1':
+                                    data.data[i].img= '/img/icons/openshift.png';
+                                    break;
+                                case 'RockMongo 1.1':
+                                    data.data[i].img= '/img/icons/mongodb.png';
+                                    break;
+                                case 'Jenkins Client 1.4':
+                                    data.data[i].img= '/img/icons/jenkins.png';
+                                    break;
+                                default:
+                                    data.data[i].img = 'http://placehold.it/120x80';
+                                    break;
+                            }
                         }
                         $scope.cartridges = data.data;
                         $('#connection').css('color', '#0d0');
