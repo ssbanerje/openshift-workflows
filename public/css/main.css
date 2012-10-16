@@ -111,7 +111,7 @@ body > .navbar li:hover {
 
 #listCartridges {
     width: 100%;
-    height: 100px;
+    height: 110px;
     color: #000;
     background: #222 url('../img/bg/grid_tile.png');
 }
