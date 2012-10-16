@@ -172,4 +172,13 @@ var App = function ($scope, $http) {
                     }, errorCallback);
             }, errorCallback);
     };
+    
+    // Variables used in the Graph
+    $scope.ctr = 0;
+    $scope.graph = new Graph();
+    $scope.graph.addVertex('node0');
+    $scope.addnode = function(ident) {
+        $scope.ctr = $scope.ctr + 1;
+        $scope.graph.addVertexWithParent('node'+$scope.ctr++, 'node'+ident);
+    };
 };
