@@ -1,6 +1,6 @@
 /**
 *
-* Set UI elements for the App
+* The View Elements relating to the App
 *
 */
 
@@ -47,7 +47,43 @@ $(function () {
         }).click(function (e) { e.preventDefault(); });
     }, 1000);
     
-    jsPlumb.bind("ready", function() {
-        $(".node").draggable();
+    
+    
+    
+    
+    jsPlumb.bind("ready", function () {
+        jsPlumb.setRenderMode(jsPlumb.SVG);
+    
+        jsPlumb.Defaults.Anchors = ["TopCenter", "TopCenter"];
+        var endpoint = {
+            connectorStyle:{ lineWidth:7, strokeStyle:"#bbb", dashstyle:"2 2" },
+            isSource: true,
+            maxConnections: 10,
+            isTarget: true,
+            dropOptions: {
+                tolerance: "touch",
+                hoverClass: "dropHover"
+            }
+        };
+
+        jsPlumb.Defaults.DragOptions = {
+            cursor: 'wait',
+            zIndex: 20
+        };
+        jsPlumb.Defaults.Connector = ["Bezier", {curviness: 90}];
+    
+        var e1 = jsPlumb.addEndpoint("n1", endpoint);
+        var e2 = jsPlumb.addEndpoint("n2", endpoint);
+        
+        jsPlumb.connect({
+            source: e1,
+            target: e2
+        });
+        jsPlumb.draggable(jsPlumb.getSelector(".node"));
     });
+    
+    
+    
+    
+    
 });
