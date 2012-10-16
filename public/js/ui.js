@@ -47,33 +47,13 @@ $(function () {
         }).click(function (e) { e.preventDefault(); });
     }, 1000);
     
-    
-    
-    
-    
     jsPlumb.bind("ready", function () {
         jsPlumb.setRenderMode(jsPlumb.SVG);
         jsPlumb.Defaults.Anchors = ["TopCenter", "TopCenter"];
-        var endpoint = {
-            connectorStyle:{ lineWidth:7, strokeStyle:"#bbb", dashstyle:"2 2" },
-            isSource: true,
-            maxConnections: 10,
-            isTarget: true,
-            dropOptions: {
-                tolerance: "touch",
-                hoverClass: "dropHover"
-            }
-        };
         jsPlumb.Defaults.DragOptions = {
             cursor: 'wait',
             zIndex: 20
         };
         jsPlumb.Defaults.Connector = ["Bezier", {curviness: 90}];
-        jsPlumb.draggable(jsPlumb.getSelector(".node"));
     });
-    
-    
-    
-    
-    
 });

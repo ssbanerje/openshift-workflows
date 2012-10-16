@@ -179,6 +179,6 @@ var App = function ($scope, $http) {
     $scope.graph.addVertex('node0');
     $scope.addnode = function(ident) {
         $scope.ctr = $scope.ctr + 1;
-        $scope.graph.addVertexWithParent('node'+$scope.ctr++, 'node'+ident);
+        $scope.graph.addVertexWithParent('node'+$scope.ctr, 'node'+ident);
     };
 };

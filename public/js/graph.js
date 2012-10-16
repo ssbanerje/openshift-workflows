@@ -6,24 +6,12 @@
 
 // The vertex object
 var Vertex = function (div_id) {
-    this.img = 'http://placehold.it/150x150';
+    this.img = '/img/user.png';
     this.identifier = div_id;
     var _this = this;
+    
     setTimeout(function () {
-        _this.endpoint = jsPlumb.addEndpoint(div_id, {
-            connectorStyle:{
-                lineWidth:7,
-                strokeStyle:"#bbb",
-                dashstyle:"2 2"
-            },
-            isSource: true,
-            maxConnections: 10,
-            isTarget: true,
-            dropOptions: {
-                tolerance: "touch",
-                hoverClass: "dropHover"
-            }
-        });
+        _this.endpoint = jsPlumb.addEndpoint(div_id);
         jsPlumb.draggable(jsPlumb.getSelector(".node"));
     }, 150);
 };
@@ -43,8 +31,6 @@ var Graph = function () {
     this.renderGraph = function () { // Render the connections of the graph
         for (i in this.edges) {
             if (!this.edges[i].rendered) {
-                console.log(this.edges[i].source.endpoint);
-                console.log(this.edges[i].target.endpoint);
                 jsPlumb.connect({
                     source: this.edges[i].source.endpoint,
                     target: this.edges[i].target.endpoint
