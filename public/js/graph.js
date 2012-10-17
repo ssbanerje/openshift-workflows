@@ -14,9 +14,9 @@ var Vertex = function (div_id) {
         var endpoint = jsPlumb.addEndpoint(div_id, {
             connectorStyle: {lineWidth: 7, strokeStyle: "#ddd"},   
             paintStyle: { fillStyle: "#aaa", outlineColor: "black", outlineWidth: 1 },
-            isSource: true,
+            isSource: false,
             maxConnections: 10,
-            isTarget: true,
+            isTarget: false,
             dropOptions: { tolerance: "touch", hoverClass: "dropHover" },
             anchors: anc
         });
