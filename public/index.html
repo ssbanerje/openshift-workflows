@@ -89,7 +89,7 @@
             </div>
         </div>
 
-        <div id="cartridges" style="display:none;">
+        <div id="cartridges" ui-if="connected">
             <div class="relative">
                 <div id="showCartridges">
                     <div class="realtive">
@@ -114,7 +114,7 @@
                 <h3>Connection Parameters</h3>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal">
+                <form class="form-horizontal"  ui-keypress="{enter : 'submit()'}">
                     <div class="control-group">
                         <label class="control-label" for="inputHost"><i class="icon-cloud"></i></label>
                         <div class="controls">
@@ -156,6 +156,7 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.1.min.js"><\/script>')</script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
         <script>window.angular || document.write('<script src="js/vendor/angular.min.js"><\/script>')</script>
+        <script src="js/vendor/angular-ui.min.js"></script>
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="js/vendor/jquery-ui.min.js"></script>
         <script src="js/vendor/jsPlumb.min.js"></script>

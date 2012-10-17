@@ -12,34 +12,10 @@ function setError(text) {
 
 // Main!
 $(function () {
-    setInterval(function () {
-        // Enable popovers
-        $("[rel=popover]").popover({
-            animation: true,
-            trigger: 'click',
-            offset: 10,
-            placement: 'top'
-        }).click(function (e) { e.preventDefault(); });
-        
-        // All features for node tags
-        $('.node').hover(function () {
-            $(this).find('.controller').show();
-        }, function () {
-            $(this).find('.controller').hide();
-        });
-        
-        // Make all nodes draggable
-        jsPlumb.draggable(jsPlumb.getSelector(".node"));
-    }, 500);
-    
-    // Get connection parameters for PaaS provider
-    $('.connectionParam').click(function () {
-        $('#connectionModal').modal('show');
-    });
-    
     // Show Cartridges
-    $('#showCartridges').click(function () {
-        $('#listCartridges').slideToggle('slow', function () {
+    $(document).on('click', '#showCartridges', function () {
+        console.log('test');
+        $('#listCartridges').slideToggle('fast', function () {
             var text = '<div class="realtive">';
             if ($(this).is(":hidden")) {
                 text += 'Cartridges <i class="icon-chevron-up"></i>';
@@ -49,6 +25,32 @@ $(function () {
             text += '</div>';
             $('#showCartridges').html(text);
         });
+    });
+    
+    // All features for node tags
+    $(document).on('mouseenter', '.node', function () {
+        $(this).find('.controller').show();
+    });
+    $(document).on('mouseleave', '.node', function () {
+        $(this).find('.controller').hide();
+    });
+    
+    setInterval(function () {   
+        // Enable popovers
+        $("[rel=popover]").popover({
+            animation: true,
+            trigger: 'click',
+            offset: 10,
+            placement: 'top'
+        }).click(function (e) { e.preventDefault(); });
+        
+        // Make all nodes draggable
+        jsPlumb.draggable($(".node"));
+    }, 500);
+    
+    // Get connection parameters for PaaS provider
+    $('.connectionParam').click(function () {
+        $('#connectionModal').modal('show');
     });
     
     jsPlumb.bind("ready", function () {

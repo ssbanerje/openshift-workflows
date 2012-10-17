@@ -6,10 +6,14 @@
 */
 
 // The angular module for the page
-var workflows = angular.module('workflows', []);
+var workflows = angular.module('workflows', ['ui']);
 
 // The main angular controller for the page
 var App = function ($scope, $http) {
+    
+    $scope.test = function() {
+        alert('hello world');
+    }
     // Page related objects
     var Busy = {  // Show a spinner to indicate busy status
         spinner: undefined,
@@ -56,8 +60,8 @@ var App = function ($scope, $http) {
     // Functions dealing with the connection parameters
     $scope.submit = function () { // Authenticate user and get the list of cartridges
         Busy.start();
+        $scope.connected = false;
         $('#connectionModal').modal('hide');
-        $('#cartridges').hide();
         $(".alert").alert('close');
         $('#connection').css('color', '#d00');
         $scope.cartridges = [];
@@ -88,7 +92,6 @@ var App = function ($scope, $http) {
         },
             function (data, status, headers, config) {
                 $scope.authString = 'Basic ' + window.btoa($scope.username + ':' + $scope.password);
-                $scope.connected = true;
                 proxify({ // Get list of cartridges
                     uri: $scope.host + '/broker/rest/cartridges',
                     headers: {
@@ -167,8 +170,8 @@ var App = function ($scope, $http) {
                         });
                         $scope.cartridges = data.data;
                         $('#connection').css('color', '#0d0');
-                        $('#cartridges').show();
                         Busy.stop();
+                        $scope.connected = true;
                     }, errorCallback);
             }, errorCallback);
     };
