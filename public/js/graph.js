@@ -11,9 +11,16 @@ var Vertex = function (div_id) {
     var _this = this;
     
     setTimeout(function () {
-        _this.endpoint = jsPlumb.addEndpoint(div_id);
+        _this.endpoint = jsPlumb.addEndpoint(div_id, {
+            connectorStyle: { lineWidth:7, strokeStyle:"#ddd", dashstyle:"2 2" },   
+            paintStyle:{ fillStyle:"#aaa", outlineColor:"black", outlineWidth:1 },
+            isSource: true,
+            maxConnections: 10,
+            isTarget: true,
+            dropOptions: { tolerance:"touch",hoverClass:"dropHover" }
+        });
         jsPlumb.draggable(jsPlumb.getSelector(".node"));
-    }, 150);
+    }, 50);
 };
 
 // The edge object
@@ -46,7 +53,7 @@ var Graph = function () {
         var _this = this;
         setTimeout(function () {
             _this.renderGraph();
-        }, 500);
+        }, 100);
         return edge;
     };
     
