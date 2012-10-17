@@ -184,4 +184,7 @@ var App = function ($scope, $http) {
         $scope.ctr = $scope.ctr + 1;
         $scope.graph.addVertexWithParent('node' + $scope.ctr, 'node' + ident);
     };
+    $scope.removenode = function (ident) { // Remove a node from the Graph
+        $scope.graph.removeVertex('node' + ident);
+    }
 };

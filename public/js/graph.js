@@ -29,6 +29,7 @@ var Vertex = function (div_id) {
 var Edge = function (s, t) {
     this.source = s; // The source vertex
     this.target = t; // The target vertex
+    this.connection = undefined;
     this.rendered = false;
 };
 
@@ -42,7 +43,7 @@ var Graph = function () {
             if (!ele.rendered) {
                 var eSource = ele.source.addEndpoint([[0.2, 0, 0, -1], [1, 0.2, 1, 0], [0.8, 1, 0, 1], [0, 0.8, -1, 0]]);
                 var eTarget = ele.target.addEndpoint([[0.6, 0, 0, -1], [1, 0.6, 1, 0], [0.4, 1, 0, 1], [0, 0.4, -1, 0]]);
-                jsPlumb.connect({
+                ele.connection = jsPlumb.connect({
                     source: eSource,
                     target: eTarget
                 });
@@ -58,6 +59,29 @@ var Graph = function () {
     };
     
     this.removeVertex = function (div_id) { // Delete a vertex
+        var i;
+        // Delete all related edges
+        var dels = [];
+        for (i = 0; i < this.edges.length; i = i + 1) {
+            if(this.edges[i].source.identifier === div_id || this.edges[i].target.identifier === div_id) {
+                this.edges[i].connection.endpoints.forEach(function (ele, j, arr) {
+                    jsPlumb.deleteEndpoint(ele);
+                });
+                dels.push(i);
+            }
+        }
+        for (i = 0; i < dels.length; i = i + 1) {
+            console.log(dels[i]);
+            this.edges.remove(dels[i]);
+        };
+        // Delete vertex
+        for (i = 0; i < this.vertices.length; i = i + 1) {
+            if(this.vertices[i].identifier === div_id) {
+                this.vertices.remove(i);
+                break;
+            }
+        }
+        
     }
     
     this.addEdge = function (source, target) { // Add an edge to the graph (Expects vertex objects)
