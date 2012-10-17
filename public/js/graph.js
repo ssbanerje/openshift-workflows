@@ -12,17 +12,17 @@ var Vertex = function (div_id) {
     
     this.addEndpoint = function(anc) { // Add an endpoint to the vertex
         var endpoint = jsPlumb.addEndpoint(div_id, {
-            connectorStyle: { lineWidth:7, strokeStyle:"#ddd" },   
-            paintStyle:{ fillStyle:"#aaa", outlineColor:"black", outlineWidth:1 },
+            connectorStyle: {lineWidth: 7, strokeStyle: "#ddd"},   
+            paintStyle: { fillStyle: "#aaa", outlineColor: "black", outlineWidth: 1 },
             isSource: true,
             maxConnections: 10,
             isTarget: true,
-            dropOptions: { tolerance:"touch",hoverClass:"dropHover" },
+            dropOptions: { tolerance: "touch", hoverClass: "dropHover" },
             anchors: anc
         });
         this.endpoints.push(endpoint);
         return endpoint;
-    }
+    };
 };
 
 // The edge object
@@ -68,17 +68,18 @@ var Graph = function () {
     };
     
     this.addVertexWithParent = function (div_id, parentId) {
-        var parent = undefined, i;
+        var parent, i;
         this.vertices.forEach(function (ele, i, arr) {
             if (ele.identifier === parentId) {
                 parent = ele;
                 return;
             }
         });
-        if (!parent)
+        if (!parent) {
             return null;
+        }
         var vert = this.addVertex(div_id);
         this.addEdge(parent, vert);
         return vert;
     };
-}
+};
