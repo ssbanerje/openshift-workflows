@@ -8,19 +8,21 @@
 var Vertex = function (div_id) {
     this.img = '/img/user.png';
     this.identifier = div_id;
-    var _this = this;
+    this.endpoints = new Array();
     
-    setTimeout(function () {
-        _this.endpoint = jsPlumb.addEndpoint(div_id, {
+    this.addEndpoint = function(anc) { // Add an endpoint to the vertex
+        var endpoint = jsPlumb.addEndpoint(div_id, {
             connectorStyle: { lineWidth:7, strokeStyle:"#ddd", dashstyle:"2 2" },   
             paintStyle:{ fillStyle:"#aaa", outlineColor:"black", outlineWidth:1 },
             isSource: true,
             maxConnections: 10,
             isTarget: true,
-            dropOptions: { tolerance:"touch",hoverClass:"dropHover" }
+            dropOptions: { tolerance:"touch",hoverClass:"dropHover" },
+            anchors: anc
         });
-        jsPlumb.draggable(jsPlumb.getSelector(".node"));
-    }, 50);
+        this.endpoints.push(endpoint);
+        return endpoint;
+    }
 };
 
 // The edge object
@@ -38,9 +40,11 @@ var Graph = function () {
     this.renderGraph = function () { // Render the connections of the graph
         for (i in this.edges) {
             if (!this.edges[i].rendered) {
+                var eSource = this.edges[i].source.addEndpoint([[0.2, 0, 0, -1], [1, 0.2, 1, 0], [0.8, 1, 0, 1], [0, 0.8, -1, 0]]);
+                var eTarget = this.edges[i].target.addEndpoint([[0.6, 0, 0, -1], [1, 0.6, 1, 0], [0.4, 1, 0, 1], [0, 0.4, -1, 0]]);
                 jsPlumb.connect({
-                    source: this.edges[i].source.endpoint,
-                    target: this.edges[i].target.endpoint
+                    source: eSource,
+                    target: eTarget
                 });
                 this.edges[i].rendered = true;
             }

@@ -12,18 +12,31 @@ function setError(text) {
 
 // Main!
 $(function () {
+    setInterval(function () {
+        // Enable popovers
+        $("[rel=popover]").popover({
+            animation: true,
+            trigger: 'click',
+            offset: 10,
+            placement: 'top'
+        }).click(function (e) { e.preventDefault(); });
+        
+        // All features for node tags
+        $('.node').hover(function () {
+            $(this).find('.controller').show();
+        }, function () {
+            $(this).find('.controller').hide();
+        });
+        
+        // Make all nodes draggable
+        jsPlumb.draggable(jsPlumb.getSelector(".node"));
+    }, 500);
+    
     // Get connection parameters for PaaS provider
     $('.connectionParam').click(function () {
         $('#connectionModal').modal('show');
     });
-
-    // All features for node tags
-    $('.node').hover(function () {
-        $(this).find('.controller').show();
-    }, function () {
-        $(this).find('.controller').hide();
-    });
-
+    
     // Show Cartridges
     $('#showCartridges').click(function () {
         $('#listCartridges').slideToggle('slow', function () {
@@ -38,18 +51,8 @@ $(function () {
         });
     });
     
-    setInterval(function () {
-        $("[rel=popover]").popover({
-            animation: true,
-            trigger: 'click',
-            offset: 10,
-            placement: 'top'
-        }).click(function (e) { e.preventDefault(); });
-    }, 1000);
-    
     jsPlumb.bind("ready", function () {
         jsPlumb.setRenderMode(jsPlumb.SVG);
-        jsPlumb.Defaults.Anchors = ["TopCenter", "TopCenter"];
         jsPlumb.Defaults.DragOptions = {
             cursor: 'wait',
             zIndex: 20

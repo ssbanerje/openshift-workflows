@@ -74,10 +74,18 @@ body > .navbar li:hover {
     padding: 3px;
 }
 
-._jsPlumb_overlay { z-index:51; }
-._jsPlumb_endpoint { z-index:50; cursor:move; }
-._jsPlumb_connector { z-index:1; }
-.dropHover { border:1px solid orange; }
+._jsPlumb_overlay { 
+    z-index:51;
+}
+
+._jsPlumb_endpoint {
+    z-index:50;
+    cursor:move;
+}
+
+._jsPlumb_connector {
+    z-index:1;
+}
 
 #cartridges {
     position: fixed;
