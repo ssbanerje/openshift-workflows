@@ -12,21 +12,10 @@ function setError(text) {
 
 // Main!
 $(function () {
-    // Get connection parameters for PaaS provider
-    $('.connectionParam').click(function () {
-        $('#connectionModal').modal('show');
-    });
-
-    // All features for node tags
-    $('.node').hover(function () {
-        $(this).find('.controller').show();
-    }, function () {
-        $(this).find('.controller').hide();
-    });
-
     // Show Cartridges
-    $('#showCartridges').click(function () {
-        $('#listCartridges').slideToggle('slow', function () {
+    $(document).on('click', '#showCartridges', function () {
+        console.log('test');
+        $('#listCartridges').slideToggle('fast', function () {
             var text = '<div class="realtive">';
             if ($(this).is(":hidden")) {
                 text += 'Cartridges <i class="icon-chevron-up"></i>';
@@ -37,53 +26,39 @@ $(function () {
             $('#showCartridges').html(text);
         });
     });
-    
+
+    // All features for node tags
+    $(document).on('mouseenter', '.node', function () {
+        $(this).find('.controller').show();
+    });
+    $(document).on('mouseleave', '.node', function () {
+        $(this).find('.controller').hide();
+    });
+
     setInterval(function () {
+        // Enable popovers
         $("[rel=popover]").popover({
             animation: true,
             trigger: 'click',
             offset: 10,
             placement: 'top'
         }).click(function (e) { e.preventDefault(); });
-    }, 1000);
-    
-    
-    
-    
-    
+
+        // Make all nodes draggable
+        jsPlumb.draggable($(".node"));
+    }, 500);
+
+    // Get connection parameters for PaaS provider
+    $('.connectionParam').click(function () {
+        $('#connectionModal').modal('show');
+    });
+
     jsPlumb.bind("ready", function () {
         jsPlumb.setRenderMode(jsPlumb.SVG);
-
-        jsPlumb.Defaults.Anchors = ["TopCenter", "TopCenter"];
-        var endpoint = {
-            connectorStyle:{ lineWidth:7, strokeStyle:"#bbb", dashstyle:"2 2" },
-            isSource: true,
-            maxConnections: 10,
-            isTarget: true,
-            dropOptions: {
-                tolerance: "touch",
-                hoverClass: "dropHover"
-            }
-        };
-
         jsPlumb.Defaults.DragOptions = {
             cursor: 'wait',
             zIndex: 20
         };
         jsPlumb.Defaults.Connector = ["Bezier", {curviness: 90}];
-
-        var e1 = jsPlumb.addEndpoint("n1", endpoint);
-        var e2 = jsPlumb.addEndpoint("n2", endpoint);
-
-        jsPlumb.connect({
-            source: e1,
-            target: e2
-        });
-        jsPlumb.draggable(jsPlumb.getSelector(".node"));
     });
-    
-    
-    
-    
-    
 });
