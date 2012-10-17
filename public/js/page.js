@@ -182,9 +182,9 @@ var App = function ($scope, $http) {
     
     $scope.addnode = function (ident) { // Add a node to the Graph
         $scope.ctr = $scope.ctr + 1;
-        $scope.graph.addVertexWithParent('node' + $scope.ctr, 'node' + ident);
+        $scope.graph.addVertexWithParent('node' + $scope.ctr, ident);
     };
     $scope.removenode = function (ident) { // Remove a node from the Graph
-        $scope.graph.removeVertex('node' + ident);
+        $scope.graph.removeVertex(ident);
     }
 };

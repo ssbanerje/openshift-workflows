@@ -71,7 +71,6 @@ var Graph = function () {
             }
         }
         for (i = 0; i < dels.length; i = i + 1) {
-            console.log(dels[i]);
             this.edges.remove(dels[i]);
         };
         // Delete vertex
