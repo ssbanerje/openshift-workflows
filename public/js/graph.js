@@ -94,9 +94,6 @@ var Graph = function () {
         return edge;
     };
     
-    this.removeEdge = function(sourceDiv_id, targetDiv_id) {
-    }
-    
     this.addVertexWithParent = function (div_id, parentId) { // Add a vertex along with an edge to the parent
         var parent, i;
         this.vertices.forEach(function (ele, i, arr) {
