@@ -12,7 +12,7 @@ var Vertex = function (div_id) {
     
     this.addEndpoint = function(anc) { // Add an endpoint to the vertex
         var endpoint = jsPlumb.addEndpoint(div_id, {
-            connectorStyle: { lineWidth:7, strokeStyle:"#ddd", dashstyle:"2 2" },   
+            connectorStyle: { lineWidth:7, strokeStyle:"#ddd" },   
             paintStyle:{ fillStyle:"#aaa", outlineColor:"black", outlineWidth:1 },
             isSource: true,
             maxConnections: 10,
@@ -38,17 +38,17 @@ var Graph = function () {
     this.edges = []; // Edges of the graph
     
     this.renderGraph = function () { // Render the connections of the graph
-        for (i in this.edges) {
-            if (!this.edges[i].rendered) {
-                var eSource = this.edges[i].source.addEndpoint([[0.2, 0, 0, -1], [1, 0.2, 1, 0], [0.8, 1, 0, 1], [0, 0.8, -1, 0]]);
-                var eTarget = this.edges[i].target.addEndpoint([[0.6, 0, 0, -1], [1, 0.6, 1, 0], [0.4, 1, 0, 1], [0, 0.4, -1, 0]]);
+        this.edges.forEach(function (ele, i, arr) {
+            if (!ele.rendered) {
+                var eSource = ele.source.addEndpoint([[0.2, 0, 0, -1], [1, 0.2, 1, 0], [0.8, 1, 0, 1], [0, 0.8, -1, 0]]);
+                var eTarget = ele.target.addEndpoint([[0.6, 0, 0, -1], [1, 0.6, 1, 0], [0.4, 1, 0, 1], [0, 0.4, -1, 0]]);
                 jsPlumb.connect({
                     source: eSource,
                     target: eTarget
                 });
-                this.edges[i].rendered = true;
+                ele.rendered = true;
             }
-        }
+        });
     };
     
     this.addEdge = function (source, target) { // Add an edge to the graph
@@ -69,12 +69,12 @@ var Graph = function () {
     
     this.addVertexWithParent = function (div_id, parentId) {
         var parent = undefined, i;
-        for (i in this.vertices) {
-            if (this.vertices[i].identifier === parentId) {
-                parent = this.vertices[i];
-                break;
+        this.vertices.forEach(function (ele, i, arr) {
+            if (ele.identifier === parentId) {
+                parent = ele;
+                return;
             }
-        }
+        });
         if (!parent)
             return null;
         var vert = this.addVertex(div_id);

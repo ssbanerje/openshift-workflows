@@ -160,6 +160,15 @@
         <script src="js/vendor/jquery-ui.min.js"></script>
         <script src="js/vendor/jsPlumb.min.js"></script>
         <script src="js/vendor/spin.min.js"></script>
+        <script>
+            if ( !Array.prototype.forEach ) {
+                Array.prototype.forEach = function(fn, scope) {
+                    for(var i = 0, len = this.length; i < len; ++i) {
+                        fn.call(scope || this, this[i], i, this);
+                    }
+                }
+            }
+        </script>
         <script src="js/ui.js"></script>
         <script src="js/graph.js"></script>
         <script src="js/page.js"></script>

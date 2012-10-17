@@ -98,73 +98,73 @@ var App = function ($scope, $http) {
                 },
                     function (data, status, headers, config) {
                         var i;
-                        for (i = 0; i < data.data.length; i = i + 1) {
-                            switch(data.data[i].display_name) {
+                        data.data.forEach (function (ele, i, arr) {
+                            switch(ele.display_name) {
                                 case 'Node.js 0.6':
-                                    data.data[i].img = '/img/icons/nodejs.png';
+                                    ele.img = '/img/icons/nodejs.png';
                                     break;
                                 case 'Zend Server 5.6':
-                                    data.data[i].img= '/img/icons/zend.png';
+                                    ele.img= '/img/icons/zend.png';
                                     break;
                                 case 'Ruby 1.9':
-                                    data.data[i].img= '/img/icons/ruby.png';
+                                    ele.img= '/img/icons/ruby.png';
                                     break;
                                 case 'JBoss Application Server 7.1':
-                                    data.data[i].img= '/img/icons/jboss.png';
+                                    ele.img= '/img/icons/jboss.png';
                                     break;
                                 case 'Python 2.6':
-                                    data.data[i].img= '/img/icons/python.png';
+                                    ele.img= '/img/icons/python.png';
                                     break;
                                 case 'Jenkins Server 1.4':
-                                    data.data[i].img= '/img/icons/jenkins.png';
+                                    ele.img= '/img/icons/jenkins.png';
                                     break;
                                 case 'Ruby 1.8':
-                                    data.data[i].img= '/img/icons/ruby.png';
+                                    ele.img= '/img/icons/ruby.png';
                                     break;
                                 case 'JBoss Enterprise Application Platform 6.0':
-                                    data.data[i].img= '/img/icons/jboss.png';
+                                    ele.img= '/img/icons/jboss.png';
                                     break;
                                 case 'PHP 5.3':
-                                    data.data[i].img= '/img/icons/php.png';
+                                    ele.img= '/img/icons/php.png';
                                     break;
                                 case 'Perl 5.10':
-                                    data.data[i].img= '/img/icons/perl.png';
+                                    ele.img= '/img/icons/perl.png';
                                     break;
                                 case 'MongoDB NoSQL Database 2.0':
-                                    data.data[i].img= '/img/icons/mongodb.png';
+                                    ele.img= '/img/icons/mongodb.png';
                                     break;
                                 case 'Cron 1.4':
-                                    data.data[i].img= '/img/icons/cron.png';
+                                    ele.img= '/img/icons/cron.png';
                                     break;
                                 case 'MySQL Database 5.1':
-                                    data.data[i].img= '/img/icons/mysql.png';
+                                    ele.img= '/img/icons/mysql.png';
                                     break;
                                 case 'PostgreSQL Database 8.4':
-                                    data.data[i].img= '/img/icons/postgresql.png';
+                                    ele.img= '/img/icons/postgresql.png';
                                     break;
                                 case 'HAProxy 1.4':
-                                    data.data[i].img= '/img/icons/haproxy.png';
+                                    ele.img= '/img/icons/haproxy.png';
                                     break;
                                 case '10gen Mongo Monitoring Service Agent 0.1':
-                                    data.data[i].img= '/img/icons/mongodb.png';
+                                    ele.img= '/img/icons/mongodb.png';
                                     break;
                                 case 'phpMyAdmin 3.4':
-                                    data.data[i].img= '/img/icons/php.png';
+                                    ele.img= '/img/icons/php.png';
                                     break;
                                 case 'OpenShift Metrics 0.1':
-                                    data.data[i].img= '/img/icons/openshift.png';
+                                    ele.img= '/img/icons/openshift.png';
                                     break;
                                 case 'RockMongo 1.1':
-                                    data.data[i].img= '/img/icons/mongodb.png';
+                                    ele.img= '/img/icons/mongodb.png';
                                     break;
                                 case 'Jenkins Client 1.4':
-                                    data.data[i].img= '/img/icons/jenkins.png';
+                                    ele.img= '/img/icons/jenkins.png';
                                     break;
                                 default:
-                                    data.data[i].img = 'http://placehold.it/120x80';
+                                    ele.img = 'http://placehold.it/120x80';
                                     break;
                             }
-                        }
+                        });
                         $scope.cartridges = data.data;
                         $('#connection').css('color', '#0d0');
                         $('#cartridges').show();
@@ -172,7 +172,7 @@ var App = function ($scope, $http) {
                     }, errorCallback);
             }, errorCallback);
     };
-    
+
     // Variables used in the Graph
     $scope.ctr = 0;
     $scope.graph = new Graph();
