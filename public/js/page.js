@@ -11,10 +11,8 @@ var workflows = angular.module('workflows', ['ui']);
 // The main angular controller for the page
 var App = function ($scope, $http) {
     
-    $scope.test = function() {
-        alert('hello world');
-    }
     // Page related objects
+    $scope.error = true;
     var Busy = {  // Show a spinner to indicate busy status
         spinner: undefined,
 
@@ -61,12 +59,13 @@ var App = function ($scope, $http) {
     $scope.submit = function () { // Authenticate user and get the list of cartridges
         Busy.start();
         $scope.connected = false;
+        $scope.error = false;
         $('#connectionModal').modal('hide');
-        $(".alert").alert('close');
         $('#connection').css('color', '#d00');
         $scope.cartridges = [];
         var errorCallback = function (data, status, headers, config) {
             Busy.stop();
+            $scope.error = true;
             switch (status) {
             case 401:
                 setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');

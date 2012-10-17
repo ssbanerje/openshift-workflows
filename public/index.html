@@ -69,7 +69,7 @@
 
         <div class="container">
             <div id="errorPlaceHolder">
-                <div class="alert alert-error fade in">
+                <div ui-if="error" class="alert alert-error fade in">
                     <strong>Configure</strong> the system by setting <strong>connection</strong> parameters.
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
                 </div>
@@ -98,9 +98,9 @@
                 </div>
                 <div id="listCartridges" style="display: none;">
                     <ul>
-                        <li ng-repeat="c in cartridges">
+                        <li ng-repeat="c in cartridges" draggable="true" cartridge-id="{{$index}}">
                             <a href="#"  rel="popover" data-content="{{c.description}}" data-original-title="{{c.display_name}}">
-                                <img ng-src="{{c.img}}" alt="{{c.display_name}}">
+                                <img ng-src="{{c.img}}" alt="{{c.display_name}}" draggable="false">
                             </a>
                         </li>
                     </ul>
