@@ -177,7 +177,8 @@ var App = function ($scope, $http) {
     $scope.ctr = 0;
     $scope.graph = new Graph();
     $scope.graph.addVertex('node0');
-    $scope.addnode = function (ident) {
+    
+    $scope.addnode = function (ident) { // Add a node to the Graph
         $scope.ctr = $scope.ctr + 1;
         $scope.graph.addVertexWithParent('node' + $scope.ctr, 'node' + ident);
     };

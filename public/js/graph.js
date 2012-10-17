@@ -51,7 +51,16 @@ var Graph = function () {
         });
     };
     
-    this.addEdge = function (source, target) { // Add an edge to the graph
+    this.addVertex = function(div_id) { // Add a vertex to the graph
+        var vertex = new Vertex(div_id);
+        this.vertices.push(vertex);
+        return vertex;
+    };
+    
+    this.removeVertex = function (div_id) { // Delete a vertex
+    }
+    
+    this.addEdge = function (source, target) { // Add an edge to the graph (Expects vertex objects)
         var edge = new Edge(source, target);
         this.edges.push(edge);
         var _this = this;
@@ -61,13 +70,10 @@ var Graph = function () {
         return edge;
     };
     
-    this.addVertex = function(div_id) {
-        var vertex = new Vertex(div_id);
-        this.vertices.push(vertex);
-        return vertex;
-    };
+    this.removeEdge = function(sourceDiv_id, targetDiv_id) {
+    }
     
-    this.addVertexWithParent = function (div_id, parentId) {
+    this.addVertexWithParent = function (div_id, parentId) { // Add a vertex along with an edge to the parent
         var parent, i;
         this.vertices.forEach(function (ele, i, arr) {
             if (ele.identifier === parentId) {
