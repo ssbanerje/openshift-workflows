@@ -38,8 +38,8 @@ var Graph = function () {
     this.renderGraph = function () { // Render the connections of the graph
         this.edges.forEach(function (ele, i, arr) {
             if (!ele.rendered) {
-                var eSource = ele.source.addEndpoint([ "Perimeter", { shape: 'rectangle', rotation: 0 }]);
-                var eTarget = ele.target.addEndpoint([ "Perimeter", { shape: 'rectangle', rotation: 0 }]);
+                var eSource = ele.source.addEndpoint("Continuous");
+                var eTarget = ele.target.addEndpoint("Continuous");
                 ele.connection = jsPlumb.connect({
                     source: eSource,
                     target: eTarget
