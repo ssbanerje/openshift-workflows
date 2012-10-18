@@ -57,6 +57,7 @@ var App = function ($scope, $http) {
     // Functions dealing with the connection parameters
     $scope.submit = function () { // Authenticate user and get the list of cartridges
         Busy.start();
+        $scope.cleargraph();
         $scope.connected = false;
         $scope.error = false;
         $('#connectionModal').modal('hide');
