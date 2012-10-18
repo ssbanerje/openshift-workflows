@@ -186,4 +186,12 @@ var App = function ($scope, $http) {
     $scope.removenode = function (ident) { // Remove a node from the Graph
         $scope.graph.removeVertex(ident);
     };
+    $scope.cleargraph = function () { // Delete the graph completely
+        $scope.graph.vertices.forEach(function (e, i, arr) {
+            $scope.graph.removeVertex(e.identifier);
+        });
+        $scope.ctr = 0;
+        $scope.graph = new Graph();
+        $scope.graph.addVertex('node0');
+    }
 };

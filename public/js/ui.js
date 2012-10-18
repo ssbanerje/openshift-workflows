@@ -6,7 +6,7 @@
 
 // Set the global error in the application
 function setError(text) {
-    $('#errorPlaceHolder').html('<div class="alert alert-error fade in">' + text
+    $('#errorPlaceHolder').html('<div class="alert alert-error fade in"><i class="icon-exclamation-sign"></i>' + text
                                 + '<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
 }
 

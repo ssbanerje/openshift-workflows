@@ -43,14 +43,23 @@
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right">
                             <li><a href="https://openshift.redhat.com/app/"><img src="img/icons/openshift.png" style="width:15px;"> OpenShift</a></li>
+                            <li class="dropdown" ui-if="connected">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="icon-sitemap"></i> Workflows<b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#"><i class="icon-ok-sign"></i> Validate</a></li>
+                                    <li><a href="#"><i class="icon-magic"></i> Deploy</a></li>
+                                    <li ng-click="cleargraph()"><a href="#"><i class="icon-undo"></i> Reset</a></li>
+                                </ul>
+                            </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i id="connection" class="icon-signal red"></i> Connect<b class="caret"></b>
+                                    <i id="connection" class="icon-signal"></i> Connect<b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li class="connectionParam"><a href="#"><i class="icon-wrench"></i> Connection Parameters</a></li>
-                                    <li id="reconnect" ng-click="submit()"><a href="#"><i class="icon-refresh"></i> Reconnect</a></li>
-                                    <li id="deploy"><a href="#"><i class="icon-magic"></i> Deploy</a></li>
+                                    <li ng-click="submit()"><a href="#"><i class="icon-refresh"></i> Reconnect</a></li>
                                 </ul>
                             </li>
                             <li><a href="#"><i class="icon-question-sign"></i> Help</a></li>
@@ -70,13 +79,13 @@
         <div class="container">
             <div id="errorPlaceHolder">
                 <div ui-if="error" class="alert alert-error fade in">
-                    <strong>Configure</strong> the system by setting <strong>connection</strong> parameters.
+                    <i class="icon-exclamation-sign"></i> <strong>Configure</strong> the system by setting <strong>connection</strong> parameters.
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
                 </div>
             </div>
         </div>
 
-        <div id="drawingBoard">
+        <div id="drawingBoard" ui-if="connected">
             <div class="node" ng-repeat="vertex in graph.vertices" id="{{vertex.identifier}}" style="left:25%;top:300px;">
                 <div class="controller" style="display: none;">
                     <button class="btn btn-success btn-mini" ng-click="addnode(vertex.identifier)"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
