@@ -12,12 +12,9 @@ var Vertex = function (div_id) {
     
     this.addEndpoint = function(anc) { // Add an endpoint to the vertex
         var endpoint = jsPlumb.addEndpoint(div_id, {
-            connectorStyle: {lineWidth: 7, strokeStyle: "#ddd"},   
-            paintStyle: { fillStyle: "#aaa", outlineColor: "black", outlineWidth: 1 },
             isSource: false,
             maxConnections: 10,
             isTarget: false,
-            dropOptions: { tolerance: "touch", hoverClass: "dropHover" },
             anchors: anc
         });
         this.endpoints.push(endpoint);
@@ -41,8 +38,8 @@ var Graph = function () {
     this.renderGraph = function () { // Render the connections of the graph
         this.edges.forEach(function (ele, i, arr) {
             if (!ele.rendered) {
-                var eSource = ele.source.addEndpoint([[0.2, 0, 0, -1], [1, 0.2, 1, 0], [0.8, 1, 0, 1], [0, 0.8, -1, 0]]);
-                var eTarget = ele.target.addEndpoint([[0.6, 0, 0, -1], [1, 0.6, 1, 0], [0.4, 1, 0, 1], [0, 0.4, -1, 0]]);
+                var eSource = ele.source.addEndpoint([ "Perimeter", { shape: 'rectangle', rotation: 0 }]);
+                var eTarget = ele.target.addEndpoint([ "Perimeter", { shape: 'rectangle', rotation: 0 }]);
                 ele.connection = jsPlumb.connect({
                     source: eSource,
                     target: eTarget

@@ -55,10 +55,12 @@ $(function () {
 
     jsPlumb.bind("ready", function () {
         jsPlumb.setRenderMode(jsPlumb.SVG);
-        jsPlumb.Defaults.DragOptions = {
-            cursor: 'wait',
-            zIndex: 20
-        };
-        jsPlumb.Defaults.Connector = ["Bezier", {curviness: 90}];
+        jsPlumb.importDefaults({
+				PaintStyle: { lineWidth:4, strokeStyle:"#ddd" },
+				Endpoint: [ "Dot", { radius:6 } ],
+				EndpointStyle: { fillStyle:"#dde", strokeStyle:"#111" },
+                DragOptions: { cursor: 'wait', zIndex: 20 },
+                Connector: ["Bezier", {curviness: 90}]
+        });
     });
 });
