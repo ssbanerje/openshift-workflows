@@ -111,7 +111,7 @@ var App = function ($scope, $http) {
                                 ele.img = '/img/icons/ruby.png';
                                 break;
                             case 'JBoss Application Server 7.1':
-                                ele.img = '/img/icons/jboss.png';
+                                ele.img = '/img/icons/jboss_as7.png';
                                 break;
                             case 'Python 2.6':
                                 ele.img = '/img/icons/python.png';
@@ -150,7 +150,7 @@ var App = function ($scope, $http) {
                                 ele.img = '/img/icons/mongodb.png';
                                 break;
                             case 'phpMyAdmin 3.4':
-                                ele.img = '/img/icons/php.png';
+                                ele.img = '/img/icons/phpmyadmin.png';
                                 break;
                             case 'OpenShift Metrics 0.1':
                                 ele.img = '/img/icons/openshift.png';
