@@ -42,15 +42,24 @@
                     </a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right">
-                            <li><a href="https://openshift.redhat.com/app/"><img src="img/icons/openshift_logo.png" style="width:15px;"> OpenShift</a></li>
+                            <li><a href="https://openshift.redhat.com/app/"><img src="img/icons/openshift.png" style="width:15px;"> OpenShift</a></li>
+                            <li class="dropdown" ui-if="connected">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="icon-sitemap"></i> Workflows<b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#"><i class="icon-ok-sign"></i> Validate</a></li>
+                                    <li><a href="#"><i class="icon-magic"></i> Deploy</a></li>
+                                    <li ng-click="cleargraph()"><a href="#"><i class="icon-undo"></i> Reset</a></li>
+                                </ul>
+                            </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i id="connection" class="icon-signal" style="font-size:13pt;color:#d00;"></i> Connect<b class="caret"></b>
+                                    <i id="connection" class="icon-signal"></i> Connect<b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li class="connectionParam"><a href="#"><i class="icon-wrench"></i> Connection Parameters</a></li>
-                                    <li id="reconnect" ng-click="submit()"><a href="#"><i class="icon-refresh"></i> Reconnect</a></li>
-                                    <li id="deploy"><a href="#"><i class="icon-magic"></i> Deploy</a></li>
+                                    <li ng-click="submit()"><a href="#"><i class="icon-refresh"></i> Reconnect</a></li>
                                 </ul>
                             </li>
                             <li><a href="#"><i class="icon-question-sign"></i> Help</a></li>
@@ -69,37 +78,27 @@
 
         <div class="container">
             <div id="errorPlaceHolder">
-                <div class="alert alert-error fade in">
-                    <strong>Configure</strong> the system by setting <strong>connection</strong> parameters.
+                <div ui-if="error" class="alert alert-error fade in">
+                    <i class="icon-exclamation-sign"></i> <strong>Configure</strong> the system by setting <strong>connection</strong> parameters.
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
                 </div>
             </div>
         </div>
 
-        <div id="drawingBoard">
-            <div class="node" id="n1" style="left:25%;top:300px;">
-                <div class="controller" style="display: none">
-                    <button class="btn btn-success btn-mini"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
-                    <button class="btn btn-danger btn-mini"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></button>
+        <div id="drawingBoard" ui-if="connected">
+            <div class="node" ng-repeat="vertex in graph.vertices" id="{{vertex.identifier}}" style="left:25%;top:300px;">
+                <div class="controller" style="display: none;">
+                    <button class="btn btn-success btn-mini" ng-click="addnode(vertex.identifier)"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
+                    <button class="btn btn-danger btn-mini" ng-click="removenode(vertex.identifier)"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></button>
                     <button class="btn btn-info btn-mini connectionParam"><i class="icon-wrench"></i></button>
                 </div>
                 <div class="subnode">
-                    <img src="img/user.png" draggable="false">
-                </div>
-            </div>
-            <div class="node" id="n2" style="left:55%;top:300px;">
-                <div class="controller" style="display: none">
-                    <button class="btn btn-success btn-mini"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
-                    <button class="btn btn-danger btn-mini"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></button>
-                    <button class="btn btn-info btn-mini connectionParam"><i class="icon-wrench"></i></button>
-                </div>
-                <div class="subnode">
-                    <img src="img/user.png" draggable="false">
+                    <img ng-src="{{vertex.img}}" draggable="false">
                 </div>
             </div>
         </div>
 
-        <div id="cartridges" style="display:none;">
+        <div id="cartridges" ui-if="connected">
             <div class="relative">
                 <div id="showCartridges">
                     <div class="realtive">
@@ -108,9 +107,9 @@
                 </div>
                 <div id="listCartridges" style="display: none;">
                     <ul>
-                        <li ng-repeat="c in cartridges">
+                        <li ng-repeat="c in cartridges" draggable="true" cartridge-id="{{$index}}">
                             <a href="#"  rel="popover" data-content="{{c.description}}" data-original-title="{{c.display_name}}">
-                                <img ng-src="{{c.img}}" alt="{{c.display_name}}">
+                                <img ng-src="{{c.img}}" alt="{{c.display_name}}" draggable="false">
                             </a>
                         </li>
                     </ul>
@@ -124,7 +123,7 @@
                 <h3>Connection Parameters</h3>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal">
+                <form class="form-horizontal"  ui-keypress="{enter : 'submit()'}">
                     <div class="control-group">
                         <label class="control-label" for="inputHost"><i class="icon-cloud"></i></label>
                         <div class="controls">
@@ -166,11 +165,30 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.1.min.js"><\/script>')</script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
         <script>window.angular || document.write('<script src="js/vendor/angular.min.js"><\/script>')</script>
+        <script src="js/vendor/angular-ui.min.js"></script>
         <script src="js/vendor/bootstrap.min.js"></script>
-        <script src="js/vendor/jquery-ui.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
+        <script>window.jQuery.ui || document.write('<script src="js/vendor/jquery-ui.min.js"><\/script>')</script>
         <script src="js/vendor/jsPlumb.min.js"></script>
         <script src="js/vendor/spin.min.js"></script>
+        <script>
+            if ( !Array.prototype.forEach ) {
+                Array.prototype.forEach = function(fn, scope) {
+                    for(var i = 0, len = this.length; i < len; ++i) {
+                        fn.call(scope || this, this[i], i, this);
+                    }
+                }
+            }
+            if ( !Array.prototype.remove ) {
+                Array.prototype.remove = function(from, to) {
+                    var rest = this.slice((to || from) + 1 || this.length);
+                    this.length = from < 0 ? this.length + from : from;
+                    return this.push.apply(this, rest);
+                };
+            }
+        </script>
         <script src="js/ui.js"></script>
+        <script src="js/graph.js"></script>
         <script src="js/page.js"></script>
     </body>
 </html>
