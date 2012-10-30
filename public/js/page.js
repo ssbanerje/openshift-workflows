@@ -194,5 +194,5 @@ var App = function ($scope, $http) {
         $scope.ctr = 0;
         $scope.graph = new Graph();
         $scope.graph.addVertex('node0');
-    }
+    };
 };
