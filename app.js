@@ -34,6 +34,7 @@ app.configure(function () {
     app.use(express.cookieParser('visualWorkflow@IIITH'));
     app.use(express.session());
     app.use(app.router);
+    app.use(express.compress());
     app.use(express.static(path.join(__dirname, 'public')));
     app.use(function (req, res, next) {
         if (req.accepts('html')) {
