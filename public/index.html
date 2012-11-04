@@ -107,9 +107,9 @@
                 </div>
                 <div id="listCartridges" style="display: none;">
                     <ul>
-                        <li ng-repeat="c in cartridges" draggable="true" cartridge-id="{{$index}}">
+                        <li ng-repeat="c in cartridges" cartridge-id="{{$index}}">
                             <a href="#"  rel="popover" data-content="{{c.description}}" data-original-title="{{c.display_name}}">
-                                <img ng-src="{{c.img}}" alt="{{c.display_name}}" draggable="false">
+                               <img class="cartridgeIcons" ng-src="{{c.img}}" alt="{{c.display_name}}" draggable="true">
                             </a>
                         </li>
                     </ul>
