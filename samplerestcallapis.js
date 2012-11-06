@@ -14,6 +14,7 @@ proxify({ // Authenticate user
                    },
                    method: 'GET'
                },)
+
 // using rest calls.......
 //creating domain
 curl -k -X POST https://openshift.redhat.com/broker/rest/domains/ --user "sandeep.panem870@gmail.com:password" --data "panem"

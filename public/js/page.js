@@ -54,6 +54,25 @@ var App = function ($scope, $http) {
     // Variables related to the cartridges
     $scope.cartridges = [];
 
+//parsing graph and installing nodes.
+    $scope.parsegraph=function() {
+       domainid=""//namespace should be taken from the field.
+
+       proxify({ // authenticate user
+            uri: $scope.host + '/broker/rest/domains/domainid/applications/user',
+            headers: {
+                accept: 'application/json',
+                authorization: 'basic ' + window.btoa($scope.username + ':' + $scope.password)
+            },
+            method: 'get'
+	    },
+   	function (data, status, headers, config) {
+      console.log('successfully installed ');
+      },function (data, status, headers, config) {
+      con  sole.log('error');
+      });
+      };
+
     // Functions dealing with the connection parameters
     $scope.submit = function () { // Authenticate user and get the list of cartridges
         Busy.start();
@@ -98,6 +117,7 @@ var App = function ($scope, $http) {
                     },
                     method: 'GET'
                 },
+
                     function (data, status, headers, config) {
                         var i;
                         data.data.forEach(function (ele, i, arr) {
