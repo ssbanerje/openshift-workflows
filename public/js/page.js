@@ -199,7 +199,10 @@ var App = function ($scope, $http) {
        return {src: list, item:item};
     };
     $scope.acceptTokenInSubnode = function (to, token) {
-       return $.inArray(token.item, to)<0;
+       if(token)
+          return $.inArray(token.item, to)<0;
+       else
+          return false;
     };
     $scope.commitTokenInSubnode = function (to, token) {
        to.push(token.item);
