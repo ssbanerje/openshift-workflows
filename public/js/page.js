@@ -196,15 +196,16 @@ var App = function ($scope, $http) {
         $scope.graph.addVertex('node0');
     };
     $scope.dragCartFromBar = function (item, list) {
-       return {src: list, item:item};
+        return {src: list, item: item};
     };
     $scope.acceptTokenInSubnode = function (to, token) {
-       if(token)
-          return $.inArray(token.item, to)<0;
-       else
-          return false;
+        if (token) {
+            return $.inArray(token.item, to) < 0;
+        } else {
+            return false;
+        }
     };
     $scope.commitTokenInSubnode = function (to, token) {
-       to.push(token.item);
+        to.push(token.item);
     };
 };

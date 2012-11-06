@@ -59,16 +59,16 @@ body > .navbar li:hover {
     float: left;
     margin: 5px;
     padding: 5px;
-        border: 1px solid rgba(0,0,0,0.3);
+    border: 1px solid rgba(0,0,0,0.3);
     text-align: center;
     vertical-align: middle;
 }
 
 .node > span {
-   color: #111;
-   font-size: 20px;
-   position: relative;
-   top: 30px;
+    color: #111;
+    font-size: 20px;
+    position: relative;
+    top: 30px;
 }
 
 .controller {
