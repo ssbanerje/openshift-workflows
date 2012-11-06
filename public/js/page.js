@@ -6,7 +6,7 @@
 */
 
 // The angular module for the page
-var workflows = angular.module('workflows', ['ui']);
+var workflows = angular.module('workflows', ['ui', 'jqui']);
 
 // The main angular controller for the page
 var App = function ($scope, $http) {
@@ -194,5 +194,17 @@ var App = function ($scope, $http) {
         $scope.ctr = 0;
         $scope.graph = new Graph();
         $scope.graph.addVertex('node0');
+    };
+    $scope.dragCartFromBar = function (item, list) {
+       return {src: list, item:item};
+    };
+    $scope.acceptTokenInSubnode = function (to, token) {
+       if(token)
+          return $.inArray(token.item, to)<0;
+       else
+          return false;
+    };
+    $scope.commitTokenInSubnode = function (to, token) {
+       to.push(token.item);
     };
 };
