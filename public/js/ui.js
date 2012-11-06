@@ -46,30 +46,6 @@ $(function () {
 
         // Make all nodes draggable
         jsPlumb.draggable($(".node"));
-
-        // Stuff to do with the drag and drop
-        var cols = document.querySelectorAll('.cartridgeIcons');
-        [].forEach.call(cols, function(col) {
-           col.addEventListener('dragstart', function (e) {
-              var src = e.target.getAttribute('src');
-              var code = '<img src="'+src+'">';
-              e.dataTransfer.setData('Text',code);
-           }, false);
-        });
-
-        cols = document.querySelectorAll('.subnode');
-        [].forEach.call(cols, function(col) {
-            col.addEventListener("dragenter", function (e){e.preventDefault();},false);
-            col.addEventListener("dragover", function(e){e.preventDefault();},false);
-            col.addEventListener("drop", function (e) {
-               e.preventDefault();
-               console.log('hello world');
-               col.innerHTML = e.dataTransfer.getData('Text');
-            },false);
-        });
-
-
-
     }, 500);
 
     // Get connection parameters for PaaS provider
