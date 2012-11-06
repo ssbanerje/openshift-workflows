@@ -6,11 +6,11 @@
 
 // The vertex object
 var Vertex = function (div_id) {
-    this.img = '/img/user.png';
+    this.cartridges = [];//[{ img: '/img/user.png' }];
     this.identifier = div_id;
-    this.endpoints = new Array();
-    
-    this.addEndpoint = function(anc) { // Add an endpoint to the vertex
+    this.endpoints = [];
+
+    this.addEndpoint = function (anc) { // Add an endpoint to the vertex
         var endpoint = jsPlumb.addEndpoint(div_id, {
             isSource: false,
             maxConnections: 10,
@@ -34,7 +34,7 @@ var Edge = function (s, t) {
 var Graph = function () {
     this.vertices = []; // Vertices of the graph
     this.edges = []; // Edges of the graph
-    
+
     this.renderGraph = function () { // Render the connections of the graph
         this.edges.forEach(function (ele, i, arr) {
             if (!ele.rendered) {
@@ -48,19 +48,19 @@ var Graph = function () {
             }
         });
     };
-    
-    this.addVertex = function(div_id) { // Add a vertex to the graph
+
+    this.addVertex = function (div_id) { // Add a vertex to the graph
         var vertex = new Vertex(div_id);
         this.vertices.push(vertex);
         return vertex;
     };
-    
+
     this.removeVertex = function (div_id) { // Delete a vertex
         var i;
         // Delete all related edges
         var dels = [];
         for (i = 0; i < this.edges.length; i = i + 1) {
-            if(this.edges[i].source.identifier === div_id || this.edges[i].target.identifier === div_id) {
+            if (this.edges[i].source.identifier === div_id || this.edges[i].target.identifier === div_id) {
                 this.edges[i].connection.endpoints.forEach(function (ele, j, arr) {
                     jsPlumb.deleteEndpoint(ele);
                 });
@@ -69,17 +69,17 @@ var Graph = function () {
         }
         for (i = 0; i < dels.length; i = i + 1) {
             this.edges.remove(dels[i]);
-        };
+        }
         // Delete vertex
         for (i = 0; i < this.vertices.length; i = i + 1) {
-            if(this.vertices[i].identifier === div_id) {
+            if (this.vertices[i].identifier === div_id) {
                 this.vertices.remove(i);
                 break;
             }
         }
-        
-    }
-    
+
+    };
+
     this.addEdge = function (source, target) { // Add an edge to the graph (Expects vertex objects)
         var edge = new Edge(source, target);
         this.edges.push(edge);
@@ -89,7 +89,7 @@ var Graph = function () {
         }, 100);
         return edge;
     };
-    
+
     this.addVertexWithParent = function (div_id, parentId) { // Add a vertex along with an edge to the parent
         var parent, i;
         this.vertices.forEach(function (ele, i, arr) {

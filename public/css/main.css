@@ -48,22 +48,27 @@ body > .navbar li:hover {
     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
         0 25px 50px 0 rgba(0, 0, 0, 0.15);
     z-index: 0;
-    min-width: 80px;
-    min-height: 30px;
-    max-width: 345px;
-    max-height: 345px;
-    overflow: none;
+    min-width: 100px;
+    min-height: 100px;
+    max-width: 360px;
+    max-height: 360px;
+    overflow: auto;
 }
 
 .node > .subnode {
     float: left;
     margin: 5px;
     padding: 5px;
-    width: 150px;
-    height: 150px;
     border: 1px solid rgba(0,0,0,0.3);
     text-align: center;
     vertical-align: middle;
+}
+
+.node > span {
+    color: #111;
+    font-size: 20px;
+    position: relative;
+    top: 30px;
 }
 
 .controller {
