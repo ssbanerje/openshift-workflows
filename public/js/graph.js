@@ -6,7 +6,7 @@
 
 // The vertex object
 var Vertex = function (div_id) {
-    this.img = '/img/user.png';
+    this.cartridges = [];//[{ img: '/img/user.png' }];
     this.identifier = div_id;
     this.endpoints = [];
 

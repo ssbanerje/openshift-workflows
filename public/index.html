@@ -86,14 +86,15 @@
         </div>
 
         <div id="drawingBoard" ui-if="connected">
-            <div class="node" ng-repeat="vertex in graph.vertices" id="{{vertex.identifier}}" style="left:25%;top:300px;">
+            <div class="node" ng-repeat="vertex in graph.vertices" id="{{vertex.identifier}}" style="left:25%;top:300px;" jqui-drop-accept="acceptTokenInSubnode(vertex.cartridges, $token)" jqui-drop-commit="commitTokenInSubnode(vertex.cartridges, $token)">
                 <div class="controller" style="display: none;">
                     <button class="btn btn-success btn-mini" ng-click="addnode(vertex.identifier)"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
                     <button class="btn btn-danger btn-mini" ng-click="removenode(vertex.identifier)"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></button>
                     <button class="btn btn-info btn-mini connectionParam"><i class="icon-wrench"></i></button>
                 </div>
-                <div class="subnode">
-                    <img ng-src="{{vertex.img}}" draggable="false">
+                <span ui-if="vertex.cartridges.length==0">Drag cartridges here</span>
+                <div ng-repeat="cart in vertex.cartridges" class="subnode">
+                   <img ng-src="{{cart.img}}" draggable="false">
                 </div>
             </div>
         </div>
@@ -109,7 +110,7 @@
                     <ul>
                         <li ng-repeat="c in cartridges" cartridge-id="{{$index}}">
                             <a href="#"  rel="popover" data-content="{{c.description}}" data-original-title="{{c.display_name}}">
-                               <img class="cartridgeIcons" ng-src="{{c.img}}" alt="{{c.display_name}}" draggable="true">
+                               <img ng-src="{{c.img}}" alt="{{c.display_name}}" jqui-drag-start="dragCartFromBar(c, cartridges)">
                             </a>
                         </li>
                     </ul>
@@ -165,6 +166,7 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.1.min.js"><\/script>')</script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
         <script>window.angular || document.write('<script src="js/vendor/angular.min.js"><\/script>')</script>
+        <script src="js/vendor/angular-jquery-ui.js"></script>
         <script src="js/vendor/angular-ui.min.js"></script>
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
