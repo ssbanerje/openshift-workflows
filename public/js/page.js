@@ -199,9 +199,9 @@ var App = function ($scope, $http) {
        return {src: list, item:item};
     };
     $scope.acceptTokenInSubnode = function (to, token) {
-       return true;
+       return $.inArray(token.item, to)<0;
     };
     $scope.commitTokenInSubnode = function (to, token) {
        to.push(token.item);
-    }
+    };
 };
