@@ -50,18 +50,16 @@ body > .navbar li:hover {
     z-index: 0;
     min-width: 80px;
     min-height: 30px;
-    max-width: 345px;
-    max-height: 345px;
-    overflow: none;
+    max-width: 360px;
+    max-height: 360px;
+    overflow: auto;
 }
 
 .node > .subnode {
     float: left;
     margin: 5px;
     padding: 5px;
-    width: 150px;
-    height: 150px;
-    border: 1px solid rgba(0,0,0,0.3);
+        border: 1px solid rgba(0,0,0,0.3);
     text-align: center;
     vertical-align: middle;
 }
