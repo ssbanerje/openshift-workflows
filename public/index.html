@@ -110,7 +110,7 @@
                     <ul>
                         <li ng-repeat="c in cartridges" cartridge-id="{{$index}}">
                             <a href="#"  rel="popover" data-content="{{c.description}}" data-original-title="{{c.display_name}}">
-                               <img ng-src="{{c.img}}" alt="{{c.display_name}}" jqui-drag-start="dragCartFromBar(c, cartridges)">
+                               <img ng-src="{{c.img}}" alt="{{c.display_name}}" jqui-drag-start="dragCartFromBar(c, cartridges)" style="z-index: 10000">
                             </a>
                         </li>
                     </ul>
@@ -175,14 +175,14 @@
         <script src="js/vendor/spin.min.js"></script>
         <script>
             if ( !Array.prototype.forEach ) {
-                Array.prototype.forEach = function(fn, scope) {
+                Array.prototype.forEach = function (fn, scope) {
                     for(var i = 0, len = this.length; i < len; ++i) {
                         fn.call(scope || this, this[i], i, this);
                     }
                 }
             }
             if ( !Array.prototype.remove ) {
-                Array.prototype.remove = function(from, to) {
+                Array.prototype.remove = function (from, to) {
                     var rest = this.slice((to || from) + 1 || this.length);
                     this.length = from < 0 ? this.length + from : from;
                     return this.push.apply(this, rest);

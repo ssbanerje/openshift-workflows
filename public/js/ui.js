@@ -14,7 +14,6 @@ function setError(text) {
 $(function () {
     // Show Cartridges
     $(document).on('click', '#showCartridges', function () {
-        console.log('test');
         $('#listCartridges').slideToggle('fast', function () {
             var text = '<div class="realtive">';
             if ($(this).is(":hidden")) {

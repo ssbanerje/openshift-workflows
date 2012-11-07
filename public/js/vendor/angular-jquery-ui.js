@@ -16,7 +16,7 @@
         link: function (scope, item, attrs) {
           var dragStartExp = attrs.jquiDragStart || '',
             dragEndExp = attrs.jquiDragEnd || '',
-            helperExp = attrs.jquiDragHelper || 'original',
+            helperExp = attrs.jquiDragHelper || 'clone',
             handle = attrs.jquiHandle || false,
             axisExp = attrs.jquiAxis,
             dragStart = evalFn(item, scope, dragStartExp, '$event'),
@@ -34,6 +34,7 @@
             addClass: false,
             handle: handle,
             helper: helper,
+            appendTo: 'body',
             start: function (event, ui) {
               item.draggable({revertDuration: 200,
                 distance: 5,

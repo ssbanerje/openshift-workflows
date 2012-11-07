@@ -71,6 +71,14 @@ body > .navbar li:hover {
     top: 30px;
 }
 
+.jqui-dnd-item-dragging {
+  border-color: green;
+  -webkit-box-shadow: 0 0 5px 3px #666;
+  -moz-box-shadow: 0 0 5px 3px #666;
+  box-shadow: 0 0 5px 3px #666;
+    z-index: 10000;
+}
+
 .controller {
     position: absolute;
     top: 0;
