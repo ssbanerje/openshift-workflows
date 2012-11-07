@@ -196,55 +196,64 @@ var App = function ($scope, $http) {
         $scope.graph = new Graph();
         $scope.graph.addVertex('node0');
     };
-    $scope.dragCartFromBar = function (item, list) {
+    $scope.dragCartFromBar = function (item, list) { // Start the drag event for dragging object from cartridge list
         return {src: list, item: item};
     };
-    $scope.acceptTokenInSubnode = function (to, token) {
+    $scope.acceptTokenInSubnode = function (to, token) { // Check if drag target is acceptable
         if (token) {
             return $.inArray(token.item, to) < 0;
         } else {
             return false;
         }
     };
-    $scope.commitTokenInSubnode = function (to, token) {
+    $scope.commitTokenInSubnode = function (to, token) { // Add cartridge to vertex
         to.push(token.item);
     };
-    $scope.deploy=function(){
-       Busy.start();
-       $scope.graph.vertices.forEach(function (ele, i, arr) {
-          proxify({
-             uri: $scope.host + '/broker/rest/domains/'+$scope.namespace+'/applications',
-             headers: {
-                accept: 'application/json',
-                Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
-             },
-             method: 'POST',
-             form: {
-                name: $scope.appName + i.toString(),
-                cartridge: ele.cartridges[0].name,
-                scale:'false'
-             }
-          }, function (data, status, headers, config) {
-             console.log(JSON.parse(data.error)); // Use this meaningfully!
-             for (var j=1; j<ele.cartridges.length; j++) {
-                proxify({
-                   uri: $scope.host + '/broker/rest/domains/'+$scope.namespace+'/applications/'+$scope.appName+i.toString()+'/cartridges',
-                   headers: {
-                      accept: 'application/json',
-                      Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
-                   },
-                   method: 'POST',
-                   form: {
-                      cartridge: ele.cartridges[j].name
-                   }
-                }, function (data, status, headers, config) {
-                   console.log(JSON.parse(data.error)); // Use this meaningfully!
-                   if (j==ele.cartridges.length-1) {
-                      Busy.stop();
-                   }
-                }, errorCallback);
-             }
-          }, errorCallback);
-       });
+    $scope.deploy=function () { // Deploy the grah to a openshift broker
+        Busy.start();
+        $scope.graph.vertices.forEach(function (ele, i, arr) {
+            proxify({
+                uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
+                },
+                method: 'POST',
+                form: {
+                    name: $scope.appName + i.toString(),
+                    cartridge: ele.cartridges[0].name,
+                    scale:'false'
+                }
+            }, function (data, status, headers, config) {
+                console.log(JSON.parse(data.error)); // Use this meaningfully!
+                for (var j=1; j<ele.cartridges.length; j++) {
+                    proxify({
+                        uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications/' + $scope.appName + i.toString() + '/cartridges',
+                        headers: {
+                            accept: 'application/json',
+                            Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
+                        },
+                        method: 'POST',
+                        form: {
+                            cartridge: ele.cartridges[j].name
+                        }
+                    }, function (data, status, headers, config) {
+                        console.log(JSON.parse(data.error)); // Use this meaningfully!
+                        if (j==ele.cartridges.length-1) {
+                            Busy.stop();
+                        }
+                    }, errorCallback);
+                }
+            }, errorCallback);
+        });
+    };
+    $scope.deleteCartridge = function (cartridge, vertex) { // Delete cartridge from vertex
+        var i;
+        for (i in vertex.cartridges) {
+            if(vertex.cartridges[i] === cartridge) {
+                break;
+            }
+        }
+        vertex.cartridges.splice(i);
     };
 };

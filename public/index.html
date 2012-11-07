@@ -94,7 +94,7 @@
                 </div>
                 <span ui-if="vertex.cartridges.length==0">Drag cartridges here</span>
                 <div ng-repeat="cart in vertex.cartridges" class="subnode">
-                   <img ng-src="{{cart.img}}" draggable="false">
+                   <img ng-src="{{cart.img}}" draggable="false" ui-event="{dblclick: 'deleteCartridge(cart, vertex)'}">
                 </div>
             </div>
         </div>
