@@ -54,6 +54,25 @@ var App = function ($scope, $http) {
     // Variables related to the cartridges
     $scope.cartridges = [];
 
+    // Generic call back to set error for all requests
+    var errorCallback = function (data, status, headers, config) {
+       Busy.stop();
+       $scope.error = true;
+       switch (status) {
+          case 401:
+             setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
+          break;
+          case 403:
+             setError('The Openshift server is refusing to respond');
+          break;
+          case 500:
+             setError('The server is broken! Retry in a while');
+          break;
+          default:
+             setError('Error in contacting server!');
+          break;
+       }
+    };
     // Functions dealing with the connection parameters
     $scope.submit = function () { // Authenticate user and get the list of cartridges
         Busy.start();
@@ -63,24 +82,6 @@ var App = function ($scope, $http) {
         $('#connectionModal').modal('hide');
         $('#connection').css('color', '#d00');
         $scope.cartridges = [];
-        var errorCallback = function (data, status, headers, config) {
-            Busy.stop();
-            $scope.error = true;
-            switch (status) {
-            case 401:
-                setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
-                break;
-            case 403:
-                setError('The Openshift server is refusing to respond');
-                break;
-            case 500:
-                setError('The server is broker! Retry in a while');
-                break;
-            default:
-                setError('Error in contacting server!');
-                break;
-            }
-        };
         proxify({ // Authenticate user
             uri: $scope.host + '/broker/rest/user',
             headers: {
@@ -207,5 +208,43 @@ var App = function ($scope, $http) {
     };
     $scope.commitTokenInSubnode = function (to, token) {
         to.push(token.item);
+    };
+    $scope.deploy=function(){
+       Busy.start();
+       $scope.graph.vertices.forEach(function (ele, i, arr) {
+          proxify({
+             uri: $scope.host + '/broker/rest/domains/'+$scope.namespace+'/applications',
+             headers: {
+                accept: 'application/json',
+                Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
+             },
+             method: 'POST',
+             form: {
+                name: $scope.appName + i.toString(),
+                cartridge: ele.cartridges[0].name,
+                scale:'false'
+             }
+          }, function (data, status, headers, config) {
+             console.log(JSON.parse(data.error)); // Use this meaningfully!
+             for (var j=1; j<ele.cartridges.length; j++) {
+                proxify({
+                   uri: $scope.host + '/broker/rest/domains/'+$scope.namespace+'/applications/'+$scope.appName+i.toString()+'/cartridges',
+                   headers: {
+                      accept: 'application/json',
+                      Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
+                   },
+                   method: 'POST',
+                   form: {
+                      cartridge: ele.cartridges[j].name
+                   }
+                }, function (data, status, headers, config) {
+                   console.log(JSON.parse(data.error)); // Use this meaningfully!
+                   if (j==ele.cartridges.length-1) {
+                      Busy.stop();
+                   }
+                }, errorCallback);
+             }
+          }, errorCallback);
+       });
     };
 };
