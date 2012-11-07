@@ -212,27 +212,39 @@ var App = function ($scope, $http) {
     $scope.deploy=function(){
        Busy.start();
        $scope.graph.vertices.forEach(function (ele, i, arr) {
-          for (var j in ele.cartridges) {
-             if (j==0) { // Create a new application
+          proxify({
+             uri: $scope.host + '/broker/rest/domains/'+$scope.namespace+'/applications',
+             headers: {
+                accept: 'application/json',
+                Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
+             },
+             method: 'POST',
+             form: {
+                name: $scope.appName + i.toString(),
+                cartridge: ele.cartridges[0].name,
+                scale:'false'
+             }
+          }, function (data, status, headers, config) {
+             console.log(JSON.parse(data.error)); // Use this meaningfully!
+             for (var j=1; j<ele.cartridges.length; j++) {
                 proxify({
-                   uri: $scope.host + '/broker/rest/domains/'+$scope.namespace+'/applications',
+                   uri: $scope.host + '/broker/rest/domains/'+$scope.namespace+'/applications/'+$scope.appName+i.toString()+'/cartridges',
                    headers: {
                       accept: 'application/json',
                       Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
                    },
                    method: 'POST',
                    form: {
-                      name: $scope.appName + i.toString(),
-                      cartridge: ele.cartridges[j].name,
-                      scale:'false'
+                      cartridge: ele.cartridges[j].name
                    }
                 }, function (data, status, headers, config) {
-                   console.log(JSON.parse(data.error));
+                   console.log(JSON.parse(data.error)); // Use this meaningfully!
+                   if (j==ele.cartridges.length-1) {
+                      Busy.stop();
+                   }
                 }, errorCallback);
-             } else { // Add cartridges to application
              }
-          }
-          Busy.stop();
+          }, errorCallback);
        });
     };
 };
