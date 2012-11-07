@@ -150,7 +150,6 @@ body > .navbar li:hover {
     padding: 3px;
     position: relative;
     vertical-align:middle;
-    border: 1px solid #474747;
     overflow: none;
     border: 1px solid #000;
 }

@@ -248,12 +248,14 @@ var App = function ($scope, $http) {
         });
     };
     $scope.deleteCartridge = function (cartridge, vertex) { // Delete cartridge from vertex
-        var i;
+        var i = -1;
         for (i in vertex.cartridges) {
             if(vertex.cartridges[i] === cartridge) {
                 break;
             }
         }
-        vertex.cartridges.splice(i);
+        if (i>=0) {
+            vertex.cartridges.splice(i);
+        }
     };
 };
