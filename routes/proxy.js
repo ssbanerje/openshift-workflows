@@ -8,6 +8,10 @@ exports.proxify = function (req, res) {
     if (req.body.options) {
         var options = JSON.parse(req.body.options);
         request(options, function (error, response, body) {
+            if(response === undefined) {
+                res.status(500).send({error: body});
+                return;
+            }
             if (!error && response.statusCode == 200) {
                 res.send(body);
             } else {
