@@ -40,7 +40,8 @@ $(function () {
             animation: true,
             trigger: 'click',
             offset: 10,
-            placement: 'top'
+            placement: 'top',
+            delay: { show: 500, hide: 100 }
         }).click(function (e) { e.preventDefault(); });
 
         // Make all nodes draggable
