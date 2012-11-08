@@ -47,11 +47,11 @@ var App = function ($scope, $http) {
 
     // Variables related to the connection parameters
     $scope.host = 'https://openshift.redhat.com';
-    $scope.username = 'vijayendra.sdm@gmail.com';
-    $scope.password = 'vijayendra';
+    $scope.username = '';
+    $scope.password = '';
     $scope.authString = '';
     $scope.appName = '';
-    $scope.namespace = 'clueless';
+    $scope.namespace = '';
     $scope.connected = false;
 
     // Variables related to the cartridges
@@ -286,8 +286,7 @@ var App = function ($scope, $http) {
                 if (ele.cartridges.length === 1) {
                    Busy.stop();
                 }
-                data=JSON.parse(data.error);
-                console.log(data);
+                data = JSON.parse(data.error);
                 ele.properties.app.git = data.data.git_url;
                 ele.properties.app.app = data.data.app_url;
                 ele.properties.app.ssh = data.data.ssh_url;
@@ -303,12 +302,23 @@ var App = function ($scope, $http) {
                             cartridge: ele.cartridges[j].name
                         }
                     }, function (data, status, headers, config) {
-                        console.log(JSON.parse(data.error)); // Use this meaningfully!
                         if (j==ele.cartridges.length-1) {
                             Busy.stop();
                         }
+                        data = JSON.parse(data.error);
+                        var cartData = {};
+                        cartData.name = data.data.name;
+                        for (var k in data.data.properties) {
+                           var props = data.data.properties;
+                           if (props[k].name === '' || props[k].value === '') {
+                              continue;
+                           }
+                           cartData[props[k].name] = props[k].value;
+                        }
+                        ele.properties.cartridge.push(cartData);
                     }, errorCallback);
                 }
+                Busy.stop()
             }, errorCallback);
         });
     };

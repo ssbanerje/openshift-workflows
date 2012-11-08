@@ -14,7 +14,8 @@ var Vertex = function (div_id) {
     this.properties = {
        size : "small",
        autoScale: false,
-       app : {git:"" ,app:"",ssh:""}
+       app : {git:"" ,app:"",ssh:""},
+       cartridge: []
     };
 
     this.addEndpoint = function (anc) { // Add an endpoint to the vertex
