@@ -5,6 +5,9 @@
 *
 */
 
+// Variable that controls whether connections are repainted or not
+var repaint = false;
+
 // The angular module for the page
 var workflows = angular.module('workflows', ['ui', 'jqui']);
 
@@ -154,6 +157,7 @@ var App = function ($scope, $http) {
     };
     $scope.commitTokenInSubnode = function (to, token) { // Add cartridge to vertex
         to.push(token.item);
+        repaint  = true;
     };
     $scope.deleteCartridge = function (cartridge, vertex) { // Delete cartridge from vertex
         var i = -1;
@@ -165,7 +169,14 @@ var App = function ($scope, $http) {
         if (i>=0) {
             vertex.cartridges.splice(i);
         }
+        repaint = true;
     };
+    setInterval(function () { // Rpaint the edges so that changes in box size dont affect it
+        if (repaint) {
+            jsPlumb.repaintEverything();
+        }
+        repaint = false;
+    }, 100);
     $scope.deploy = function () { // Deploy the graph to a openshift broker
         Busy.start();
         $scope.graph.vertices.forEach(function (ele, i, arr) {
