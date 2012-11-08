@@ -49,9 +49,9 @@ $(function () {
     }, 500);
 
     // Get connection parameters for PaaS provider
-    $('.connectionParam').click(function () {
-        $('#connectionModal').modal('show');
-    });
+    //$('.connectionParam').click(function () {
+    //    $('#connectionModal').modal('show');
+    //});
 
     jsPlumb.bind("ready", function () {
         jsPlumb.setRenderMode(jsPlumb.SVG);

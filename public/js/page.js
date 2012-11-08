@@ -47,11 +47,11 @@ var App = function ($scope, $http) {
 
     // Variables related to the connection parameters
     $scope.host = 'https://openshift.redhat.com';
-    $scope.username = '';
-    $scope.password = '';
+    $scope.username = 'vijayendra.sdm@gmail.com';
+    $scope.password = 'vijayendra';
     $scope.authString = '';
     $scope.appName = '';
-    $scope.namespace = '';
+    $scope.namespace = 'clueless';
     $scope.connected = false;
 
     // Variables related to the cartridges
@@ -144,6 +144,10 @@ var App = function ($scope, $http) {
     $scope.addnode = function (ident) { // Add a node to the Graph
         $scope.ctr = $scope.ctr + 1;
         $scope.graph.addVertexWithParent('node' + $scope.ctr, ident);
+
+
+
+
     };
 
     $scope.removenode = function (ident) { // Remove a node from the Graph
@@ -280,8 +284,13 @@ var App = function ($scope, $http) {
                 }
             }, function (data, status, headers, config) {
                 if (ele.cartridges.length === 1) {
-                    Busy.stop();
+                   Busy.stop();
                 }
+                data=JSON.parse(data.error);
+                console.log(data);
+                ele.properties.app.git = data.data.git_url;
+                ele.properties.app.app = data.data.app_url;
+                ele.properties.app.ssh = data.data.ssh_url;
                 for (var j=1; j<ele.cartridges.length; j++) {
                     proxify({
                         uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications/' + $scope.appName + i.toString() + '/cartridges',

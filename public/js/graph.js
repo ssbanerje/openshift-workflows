@@ -11,6 +11,11 @@ var Vertex = function (div_id) {
     this.endpoints = [];
     this.top = $(window).height()/2 - 100;
     this.left = $(window).width()/2 - 100;
+    this.properties = {
+       size : "small",
+       autoScale: false,
+       app : {git:"" ,app:"",ssh:""}
+    };
 
     this.addEndpoint = function (anc) { // Add an endpoint to the vertex
         var endpoint = jsPlumb.addEndpoint(div_id, {
@@ -23,6 +28,8 @@ var Vertex = function (div_id) {
         return endpoint;
     };
 };
+
+
 
 // The edge object
 var Edge = function (s, t) {

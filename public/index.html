@@ -57,11 +57,11 @@
                                     <i id="connection" class="icon-signal"></i> Connect<b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li class="connectionParam"><a href="#"><i class="icon-wrench"></i> Connection Parameters</a></li>
+                                    <li class="connectionParam"><a href="#connectionModal" role="button" data-toggle="modal"><i class="icon-wrench"></i> Connection Parameters</a></li>
                                     <li ng-click="submit()"><a href="#"><i class="icon-refresh"></i> Reconnect</a></li>
                                 </ul>
                             </li>
-                            <li><a href="#"><i class="icon-question-sign"></i> Help</a></li>
+                            <li><a href="#helpmodal" role="button" data-toggle="modal"><i class="icon-question-sign"></i> Help</a></li>
                         </ul>
                     </div>
                 </div>
@@ -89,8 +89,11 @@
                 <div class="controller" style="display: none;">
                     <button class="btn btn-success btn-mini" ng-click="addnode(vertex.identifier)"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
                     <button class="btn btn-danger btn-mini" ng-click="removenode(vertex.identifier)"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></button>
-                    <button class="btn btn-info btn-mini connectionParam"><i class="icon-wrench"></i></button>
+
+
+                    <button class="btn btn-info btn-mini connectionParam" <a href='#nodeDetails{{$index}}' role="button" data-toggle="modal" >><i class="icon-wrench"></i></button>
                 </div>
+
                 <span ui-if="vertex.cartridges.length==0">Drag cartridges here</span>
                 <div ng-repeat="cart in vertex.cartridges" class="subnode">
                    <img ng-src="{{cart.img}}" draggable="false" ui-event="{dblclick: 'deleteCartridge(cart, vertex)'}">
@@ -117,7 +120,7 @@
             </div>
         </div>
 
-        <div class="modal hide fade" id="connectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal hide fade" id="connectionModal" tabindex="-1" role="dialog" aria-labelledby="connectionModal" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3>Connection Parameters</h3>
@@ -160,6 +163,40 @@
                 <button class="btn" ng-click="submit()"><i class="icon-save"></i> Submit</button>
             </div>
         </div>
+
+
+      <div class="modal hide fade" id="helpmodal" tabindex="-1" role="dialog" aria-labelledby="helpmodal" aria-hidden="true">
+           <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h3>Modal header</h3>
+           </div>
+           <div class="modal-body">
+              <p>One fine body…</p>
+           </div>
+           <div class="modal-footer">
+           </div>
+        </div>
+     </div>
+
+
+     <div class="modal hide fade" ng-repeat = 'node in graph.vertices'  id="nodeDetails{{$index}}" tabindex="-1" role="dialog" aria-labelledby="setConfiguration" aria-hidden="true">
+           <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h3>Details for {{$index}}</h3>
+           </div>
+           <div class="modal-body">
+               <h4>Application Properties</h4>
+               <ul>
+                  <li>git url : {{node.properties.app.git}} </li>
+                  <li>app url : {{node.properties.app.app}} </li>
+                  <li>ssh url : {{node.properties.app.ssh}} </li>
+               </ul>
+           </div>
+           <div class="modal-footer">
+           </div>
+        </div>
+     </div>
+
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.1.min.js"><\/script>')</script>
