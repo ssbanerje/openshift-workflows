@@ -65,6 +65,9 @@ var App = function ($scope, $http) {
           case 403:
              setError('The Openshift server is refusing to respond');
           break;
+          case 422:
+               setError('The request made to the OpenShift Server is semantically incorrect');
+          break;
           case 500:
              setError('The server is broken! Retry in a while');
           break;
@@ -73,6 +76,7 @@ var App = function ($scope, $http) {
           break;
        }
     };
+    
     // Functions dealing with the connection parameters
     $scope.submit = function () { // Authenticate user and get the list of cartridges
         Busy.start();
@@ -176,11 +180,10 @@ var App = function ($scope, $http) {
             }, errorCallback);
     };
 
-    // Variables used in the Graph
+    // Variables and functions used in the Graph
     $scope.ctr = 0;
     $scope.graph = new Graph();
     $scope.graph.addVertex('node0');
-
     $scope.addnode = function (ident) { // Add a node to the Graph
         $scope.ctr = $scope.ctr + 1;
         $scope.graph.addVertexWithParent('node' + $scope.ctr, ident);
@@ -209,8 +212,35 @@ var App = function ($scope, $http) {
     $scope.commitTokenInSubnode = function (to, token) { // Add cartridge to vertex
         to.push(token.item);
     };
-    $scope.deploy=function () { // Deploy the grah to a openshift broker
+    $scope.deleteCartridge = function (cartridge, vertex) { // Delete cartridge from vertex
+        var i = -1;
+        for (i in vertex.cartridges) {
+            if(vertex.cartridges[i] === cartridge) {
+                break;
+            }
+        }
+        if (i>=0) {
+            vertex.cartridges.splice(i);
+        }
+    };
+    var validate = function () { // Validate the graph for dependencies between cartridges
+        return true;
+    };
+    $scope.validateGraph = function () { // Validate the graph ad set UI elements
         Busy.start();
+        if (!validate()) {
+            setError('Semantic Error in Graph');
+        } else {
+            alert ('Graph is valid');
+        }
+        Busy.stop();
+    };
+    $scope.deploy = function () { // Deploy the graph to a openshift broker
+        Busy.start();
+        if (!validate()) {
+            Busy.stop();
+            return;
+        }
         $scope.graph.vertices.forEach(function (ele, i, arr) {
             proxify({
                 uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications',
@@ -226,6 +256,9 @@ var App = function ($scope, $http) {
                 }
             }, function (data, status, headers, config) {
                 console.log(JSON.parse(data.error)); // Use this meaningfully!
+                if (ele.cartridges.length == 1) {
+                    Busy.stop();
+                }
                 for (var j=1; j<ele.cartridges.length; j++) {
                     proxify({
                         uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications/' + $scope.appName + i.toString() + '/cartridges',
@@ -246,16 +279,5 @@ var App = function ($scope, $http) {
                 }
             }, errorCallback);
         });
-    };
-    $scope.deleteCartridge = function (cartridge, vertex) { // Delete cartridge from vertex
-        var i = -1;
-        for (i in vertex.cartridges) {
-            if(vertex.cartridges[i] === cartridge) {
-                break;
-            }
-        }
-        if (i>=0) {
-            vertex.cartridges.splice(i);
-        }
     };
 };
