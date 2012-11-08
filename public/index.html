@@ -86,7 +86,7 @@
         </div>
 
         <div id="drawingBoard" ui-if="connected">
-            <div class="node" ng-repeat="vertex in graph.vertices" id="{{vertex.identifier}}" style="left:25%;top:300px;" jqui-drop-accept="acceptTokenInSubnode(vertex.cartridges, $token)" jqui-drop-commit="commitTokenInSubnode(vertex.cartridges, $token)">
+            <div class="node" ng-repeat="vertex in graph.vertices" id="{{vertex.identifier}}" jqui-drop-accept="acceptTokenInSubnode(vertex.cartridges, $token)" jqui-drop-commit="commitTokenInSubnode(vertex.cartridges, $token)" style="top: {{vertex.top}}px; left: {{vertex.left}}px;">
                 <div class="controller" style="display: none;">
                     <button class="btn btn-success btn-mini" ng-click="addnode(vertex.identifier)"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
                     <button class="btn btn-danger btn-mini" ng-click="removenode(vertex.identifier)"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></button>
