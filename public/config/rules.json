@@ -1,0 +1,5 @@
+{
+   "rockmongo-1.1": ["mongodb-2.2"],
+   "10gen-mms-agent-0.1": ["mongodb-2.2"],
+   "phpmyadmin-3.4": ["mysql-5.1"]
+}

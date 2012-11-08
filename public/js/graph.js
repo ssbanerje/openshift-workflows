@@ -70,12 +70,12 @@ var Graph = function () {
             }
         }
         for (i = 0; i < dels.length; i = i + 1) {
-            this.edges.remove(dels[i]);
+            this.edges.splice(dels[i]);
         }
         // Delete vertex
         for (i = 0; i < this.vertices.length; i = i + 1) {
             if (this.vertices[i].identifier === div_id) {
-                this.vertices.remove(i);
+                this.vertices.splice(i);
                 break;
             }
         }
