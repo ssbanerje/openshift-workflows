@@ -318,6 +318,7 @@ var App = function ($scope, $http) {
                         ele.properties.cartridge.push(cartData);
                     }, errorCallback);
                 }
+                ele.deployed = true;
                 Busy.stop()
             }, errorCallback);
         });

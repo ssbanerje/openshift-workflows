@@ -17,6 +17,7 @@ var Vertex = function (div_id) {
        app : {git:"" ,app:"",ssh:""},
        cartridge: []
     };
+    this.deployed = false;
 
     this.addEndpoint = function (anc) { // Add an endpoint to the vertex
         var endpoint = jsPlumb.addEndpoint(div_id, {

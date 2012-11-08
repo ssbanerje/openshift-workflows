@@ -185,20 +185,23 @@
               <h3>Details for {{$index}}</h3>
            </div>
            <div class="modal-body">
-              <section>
-                 <h4>Application Properties</h4>
-                 <ul>
-                    <li><b>Git URL</b> : {{node.properties.app.git}} </li>
-                    <li><b>App URL</b> : {{node.properties.app.app}} </li>
-                    <li><b>ssh URL</b> : {{node.properties.app.ssh}} </li>
-                 </ul>
+
+              <section ui-if="node.deployed">
+                 <section>
+                    <h4>Application Properties</h4>
+                    <ul>
+                       <li><b>Git URL</b> : {{node.properties.app.git}} </li>
+                       <li><b>App URL</b> : {{node.properties.app.app}} </li>
+                       <li><b>ssh URL</b> : {{node.properties.app.ssh}} </li>
+                    </ul>
+                 </section>
+                 <section ng-repeat="cart in node.properties.cartridge">
+                    <h4>Properties for {{cart.name}}</h4>
+                    <ul>
+                       <li ng-repeat="(key, value) in cart"><b>{{key}}</b> : {{value}}</li>
+                    </ul>
+                 </section>
               </section>
-              <section ng-repeat="cart in node.properties.cartridge">
-                 <h4>Properties for {{cart.name}}</h4>
-                 <ul>
-                    <li ng-repeat="(key, value) in cart"><b>{{key}}</b> : {{value}}</li>
-                 </ul>
-             </section>
            </div>
            <div class="modal-footer">
            </div>
