@@ -44,11 +44,11 @@ var App = function ($scope, $http) {
 
     // Variables related to the connection parameters
     $scope.host = 'https://openshift.redhat.com';
-    $scope.username = '';
-    $scope.password = '';
+    $scope.username = 'sandeep.panem870@gmail.com';
+    $scope.password = 'sachinss';
     $scope.authString = '';
-    $scope.appName = '';
-    $scope.namespace = '';
+    $scope.appName = 'sp';
+    $scope.namespace = 'panem';
     $scope.connected = false;
 
     // Variables related to the cartridges
@@ -58,6 +58,7 @@ var App = function ($scope, $http) {
     var errorCallback = function (data, status, headers, config) {
        Busy.stop();
        $scope.error = true;
+       console.log(JSON.parse(data.error));
        switch (status) {
           case 401:
              setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
@@ -127,13 +128,16 @@ var App = function ($scope, $http) {
     $scope.ctr = 0;
     $scope.graph = new Graph();
     $scope.graph.addVertex('node0');
+
     $scope.addnode = function (ident) { // Add a node to the Graph
         $scope.ctr = $scope.ctr + 1;
         $scope.graph.addVertexWithParent('node' + $scope.ctr, ident);
     };
+
     $scope.removenode = function (ident) { // Remove a node from the Graph
         $scope.graph.removeVertex(ident);
     };
+
     $scope.cleargraph = function () { // Delete the graph completely
         $scope.graph.vertices.forEach(function (e, i, arr) {
             $scope.graph.removeVertex(e.identifier);
@@ -142,19 +146,65 @@ var App = function ($scope, $http) {
         $scope.graph = new Graph();
         $scope.graph.addVertex('node0');
     };
+
     $scope.dragCartFromBar = function (item, list) { // Start the drag event for dragging object from cartridge list
         return {src: list, item: item};
     };
-    $scope.acceptTokenInSubnode = function (to, token) { // Check if drag target is acceptable
-        if (token) {
-            return $.inArray(token.item, to) < 0;
-        } else {
-            return false;
-        }
+
+    $scope.acceptTokenInSubnode = function (targetArray, token) { // Check if drag target is acceptable
+       if (token) {
+          var cartridge = token.item;
+          if(targetArray.length === 0) {
+             if (cartridge.type === 'standalone') {
+                return true;
+             } else {
+                setError('First cartridge must be a standalone one.');
+             }
+          } else {
+             if (cartridge.type != 'standalone') {
+                if ($.inArray(cartridge, targetArray) < 0) {
+                   var thisIsDB = false;
+                   var dbAlreadyAdded = false;
+                   for (var i in cartridge.tags) {
+                      if (cartridge.tags[i] === 'database') {
+                         thisIsDB = true;
+                         break;
+                      }
+                   }
+                   var brk = false;
+                   for (var i in targetArray) {
+                      for (var j in targetArray[i].tags) {
+                         if (targetArray[i].tags[j] === 'database') {
+                            dbAlreadyAdded = brk = true;
+                            break;
+                         }
+                      }
+                      if (brk) {
+                         break;
+                      }
+                   }
+                   if (!(thisIsDB && dbAlreadyAdded)) {
+                      // Hardcode phpmyadmin and rockmongo
+                      return true;
+                   } else {
+                      setError('Only one database cartridge is allowed.');
+                   }
+                } else {
+                   setError('Duplicate cartridges cannot be added.');
+                }
+             } else {
+                setError('Standalone cartridge already exists.');
+             }
+          }
+          return false;
+       }
+       return false;
     };
+
     $scope.commitTokenInSubnode = function (to, token) { // Add cartridge to vertex
         to.push(token.item);
     };
+
     $scope.deleteCartridge = function (cartridge, vertex) { // Delete cartridge from vertex
         var i = -1;
         for (i in vertex.cartridges) {
@@ -166,6 +216,7 @@ var App = function ($scope, $http) {
             vertex.cartridges.splice(i);
         }
     };
+
     $scope.deploy = function () { // Deploy the graph to a openshift broker
         Busy.start();
         $scope.graph.vertices.forEach(function (ele, i, arr) {
@@ -182,7 +233,6 @@ var App = function ($scope, $http) {
                     scale:'false'
                 }
             }, function (data, status, headers, config) {
-                console.log(JSON.parse(data.error)); // Use this meaningfully!
                 if (ele.cartridges.length === 1) {
                     Busy.stop();
                 }
