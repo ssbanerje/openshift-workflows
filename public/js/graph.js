@@ -9,6 +9,8 @@ var Vertex = function (div_id) {
     this.cartridges = [];//[{ img: '/img/user.png' }];
     this.identifier = div_id;
     this.endpoints = [];
+    this.top = $(window).height()/2 - 100;
+    this.left = $(window).width()/2 - 100;
 
     this.addEndpoint = function (anc) { // Add an endpoint to the vertex
         var endpoint = jsPlumb.addEndpoint(div_id, {
@@ -68,12 +70,12 @@ var Graph = function () {
             }
         }
         for (i = 0; i < dels.length; i = i + 1) {
-            this.edges.remove(dels[i]);
+            this.edges.splice(dels[i]);
         }
         // Delete vertex
         for (i = 0; i < this.vertices.length; i = i + 1) {
             if (this.vertices[i].identifier === div_id) {
-                this.vertices.remove(i);
+                this.vertices.splice(i);
                 break;
             }
         }
@@ -102,6 +104,13 @@ var Graph = function () {
             return null;
         }
         var vert = this.addVertex(div_id);
+        var ppos = $('#'+parentId).position();
+        do {
+            var rand=(Math.random()*Math.PI*2)+1;
+            var rad = 200 + (Math.random()*100)+1;
+            vert.top = ppos.top + rad*Math.sin(rand);
+            vert.left = ppos.left + rad*Math.cos(rand);
+        } while (vert.top < 60 || vert.left > $(window).width()-150);
         this.addEdge(parent, vert);
         return vert;
     };
