@@ -53,6 +53,7 @@ var App = function ($scope, $http) {
 
     // Variables related to the cartridges
     $scope.cartridges = [];
+    $scope.rules = {};
 
     // Generic call back to set error for all requests
     var errorCallback = function (data, status, headers, config) {
@@ -103,7 +104,15 @@ var App = function ($scope, $http) {
                 },
                 method: 'GET'
             }, function (data, status, headers, cfg1) {
-                $http({
+                $http({ // Read configuration file for dependencies
+                    url: '/config/rules.json',
+                    method: 'GET'
+                }).success(function (config, st, h, cfg2) {
+                    $scope.rules = config;
+                }).error(function (config, st, h, cfg2) {
+                    setError('Could not get cartridge dependency rules.');
+                });
+                $http({ // Read configuration file for images
                     url: '/config/images.json',
                     method: 'GET'
                 }).success(function (config, st, h, cfg2) {
@@ -151,8 +160,8 @@ var App = function ($scope, $http) {
         return {src: list, item: item};
     };
 
-    $scope.acceptTokenInSubnode = function (targetArray, token) { // Check if drag target is acceptable
-       if (token) {
+    $scope.acceptTokenInSubnode = function (targetArray, token) {       // Check if drag target is acceptable
+          if (token) {
           var cartridge = token.item;
           if(targetArray.length === 0) {
              if (cartridge.type === 'standalone') {
@@ -171,21 +180,47 @@ var App = function ($scope, $http) {
                          break;
                       }
                    }
-                   var brk = false;
+                   var flag = false;
                    for (var i in targetArray) {
                       for (var j in targetArray[i].tags) {
                          if (targetArray[i].tags[j] === 'database') {
-                            dbAlreadyAdded = brk = true;
+                            dbAlreadyAdded = flag = true;
                             break;
                          }
                       }
-                      if (brk) {
+                      if (flag) {
                          break;
                       }
                    }
                    if (!(thisIsDB && dbAlreadyAdded)) {
-                      // Hardcode phpmyadmin and rockmongo
-                      return true;
+                      // Checking if there is a rule for this cartridge
+                      flag = false;
+                      for (var i in Object.keys($scope.rules)) {
+                         if (cartridge.name === Object.keys($scope.rules)[i]) {
+                            flag = true;
+                            break;
+                         }
+                      }
+                      if (!flag) {
+                         return true;
+                      }
+                      // Checking if rules for this cartridge were satsfied
+                      flag = false;
+                      for (var i in Object.keys($scope.rules)) {
+                         if (cartridge.name === Object.keys($scope.rules)[i]) {
+                            for (var j in targetArray) {
+                               if ($.inArray(targetArray[j].name, $scope.rules[Object.keys($scope.rules)[i]]) >= 0) {
+                                  flag = true;
+                                  break
+                               }
+                            }
+                            if (flag) {
+                               return true;
+                            } else {
+                               setError('Install ' + $scope.rules[Object.keys($scope.rules)[i]] + ' first.');
+                            }
+                         }
+                     }
                    } else {
                       setError('Only one database cartridge is allowed.');
                    }
@@ -196,7 +231,6 @@ var App = function ($scope, $http) {
                 setError('Standalone cartridge already exists.');
              }
           }
-          return false;
        }
        return false;
     };
