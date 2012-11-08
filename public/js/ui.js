@@ -48,11 +48,6 @@ $(function () {
         jsPlumb.draggable($(".node"));
     }, 500);
 
-    // Get connection parameters for PaaS provider
-    //$('.connectionParam').click(function () {
-    //    $('#connectionModal').modal('show');
-    //});
-
     jsPlumb.bind("ready", function () {
         jsPlumb.setRenderMode(jsPlumb.SVG);
         jsPlumb.importDefaults({

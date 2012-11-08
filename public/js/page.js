@@ -280,7 +280,8 @@ var App = function ($scope, $http) {
                 form: {
                     name: $scope.appName + i.toString(),
                     cartridge: ele.cartridges[0].name,
-                    scale:'false'
+                    scale: ele.properties.autoScale,
+                    gear_profile: ele.properties.size
                 }
             }, function (data, status, headers, config) {
                 if (ele.cartridges.length === 1) {
