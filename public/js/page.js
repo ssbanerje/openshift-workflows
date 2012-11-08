@@ -76,7 +76,7 @@ var App = function ($scope, $http) {
           break;
        }
     };
-    
+
     // Functions dealing with the connection parameters
     $scope.submit = function () { // Authenticate user and get the list of cartridges
         Busy.start();
@@ -93,91 +93,34 @@ var App = function ($scope, $http) {
                 Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
             },
             method: 'GET'
-        },
-            function (data, status, headers, config) {
-                $scope.authString = 'Basic ' + window.btoa($scope.username + ':' + $scope.password);
-                proxify({ // Get list of cartridges
-                    uri: $scope.host + '/broker/rest/cartridges',
-                    headers: {
-                        accept: 'application/json'
-                    },
-                    method: 'GET'
+        }, function (data, status, headers, config) {
+            $scope.authString = 'Basic ' + window.btoa($scope.username + ':' + $scope.password);
+            proxify({ // Get list of cartridges
+                uri: $scope.host + '/broker/rest/cartridges',
+                headers: {
+                    accept: 'application/json'
                 },
-                    function (data, status, headers, config) {
-                        var i;
-                        data.data.forEach(function (ele, i, arr) {
-                            switch (ele.display_name) {
-                            case 'Node.js 0.6':
-                                ele.img = '/img/icons/nodejs.png';
-                                break;
-                            case 'Zend Server 5.6':
-                                ele.img = '/img/icons/zend.png';
-                                break;
-                            case 'Ruby 1.9':
-                                ele.img = '/img/icons/ruby.png';
-                                break;
-                            case 'JBoss Application Server 7.1':
-                                ele.img = '/img/icons/jboss_as7.png';
-                                break;
-                            case 'Python 2.6':
-                                ele.img = '/img/icons/python.png';
-                                break;
-                            case 'Jenkins Server 1.4':
-                                ele.img = '/img/icons/jenkins.png';
-                                break;
-                            case 'Ruby 1.8':
-                                ele.img = '/img/icons/ruby.png';
-                                break;
-                            case 'JBoss Enterprise Application Platform 6.0':
-                                ele.img = '/img/icons/jboss.png';
-                                break;
-                            case 'PHP 5.3':
-                                ele.img = '/img/icons/php.png';
-                                break;
-                            case 'Perl 5.10':
-                                ele.img = '/img/icons/perl.png';
-                                break;
-                            case 'MongoDB NoSQL Database 2.0':
-                                ele.img = '/img/icons/mongodb.png';
-                                break;
-                            case 'Cron 1.4':
-                                ele.img = '/img/icons/cron.png';
-                                break;
-                            case 'MySQL Database 5.1':
-                                ele.img = '/img/icons/mysql.png';
-                                break;
-                            case 'PostgreSQL Database 8.4':
-                                ele.img = '/img/icons/postgresql.png';
-                                break;
-                            case 'HAProxy 1.4':
-                                ele.img = '/img/icons/haproxy.png';
-                                break;
-                            case '10gen Mongo Monitoring Service Agent 0.1':
-                                ele.img = '/img/icons/mongodb.png';
-                                break;
-                            case 'phpMyAdmin 3.4':
-                                ele.img = '/img/icons/phpmyadmin.png';
-                                break;
-                            case 'OpenShift Metrics 0.1':
-                                ele.img = '/img/icons/openshift.png';
-                                break;
-                            case 'RockMongo 1.1':
-                                ele.img = '/img/icons/mongodb.png';
-                                break;
-                            case 'Jenkins Client 1.4':
-                                ele.img = '/img/icons/jenkins.png';
-                                break;
-                            default:
-                                ele.img = 'http://placehold.it/120x80';
-                                break;
-                            }
-                        });
-                        $scope.cartridges = data.data;
-                        $('#connection').css('color', '#0d0');
-                        Busy.stop();
-                        $scope.connected = true;
-                    }, errorCallback);
+                method: 'GET'
+            }, function (data, status, headers, cfg1) {
+                $http({
+                    url: '/config/images.json',
+                    method: 'GET'
+                }).success(function (config, st, h, cfg2) {
+                    data.data.forEach(function (ele, i, arr) {
+                        ele.img = config[ele.display_name];
+                        if (ele.img === undefined) {
+                            ele.img = config['default'];
+                        }
+                    });
+                }).error(function (config, st, h, cfg2) {
+                    setError('Could not get cartridge image configuration');
+                });
+                $scope.cartridges = data.data;
+                $('#connection').css('color', '#0d0');
+                Busy.stop();
+                $scope.connected = true;
             }, errorCallback);
+        }, errorCallback);
     };
 
     // Variables and functions used in the Graph
@@ -256,7 +199,7 @@ var App = function ($scope, $http) {
                 }
             }, function (data, status, headers, config) {
                 console.log(JSON.parse(data.error)); // Use this meaningfully!
-                if (ele.cartridges.length == 1) {
+                if (ele.cartridges.length === 1) {
                     Busy.stop();
                 }
                 for (var j=1; j<ele.cartridges.length; j++) {

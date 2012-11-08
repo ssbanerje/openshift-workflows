@@ -1,0 +1,23 @@
+{
+    "Node.js 0.6": "/img/icons/nodejs.png",
+    "Zend Server 5.6": "/img/icons/zend.png",
+    "Ruby 1.9": "/img/icons/ruby.png",
+    "JBoss Application Server 7.1": "/img/icons/jboss_as7.png",
+    "Python 2.6": "/img/icons/python.png",
+    "Jenkins Server 1.4": "/img/icons/jenkins.png",
+    "Ruby 1.8": "/img/icons/ruby.png",
+    "JBoss Enterprise Application Platform 6.0": "/img/icons/jboss.png",
+    "PHP 5.3": "/img/icons/php.png",
+    "Perl 5.10": "/img/icons/perl.png",
+    "MongoDB NoSQL Database 2.0": "/img/icons/mongodb.png",
+    "Cron 1.4": "/img/icons/cron.png",
+    "MySQL Database 5.1": "/img/icons/mysql.png",
+    "PostgreSQL Database 8.4": "/img/icons/postgresql.png",
+    "HAProxy 1.4": "/img/icons/haproxy.png",
+    "10gen Mongo Monitoring Service Agent 0.1": "/img/icons/mongodb.png",
+    "phpMyAdmin 3.4": "/img/icons/phpmyadmin.png",
+    "OpenShift Metrics 0.1": "/img/icons/openshift.png",
+    "RockMongo 1.1": "/img/icons/mongodb.png",
+    "Jenkins Client 1.4": "/img/icons/jenkins.png",
+    "default": "http://placehold.it/120x80"
+}
