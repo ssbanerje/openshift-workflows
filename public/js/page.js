@@ -44,11 +44,11 @@ var App = function ($scope, $http) {
 
     // Variables related to the connection parameters
     $scope.host = 'https://openshift.redhat.com';
-    $scope.username = 'sandeep.panem870@gmail.com';
-    $scope.password = 'sachinss';
+    $scope.username = '';
+    $scope.password = '';
     $scope.authString = '';
-    $scope.appName = 'sp';
-    $scope.namespace = 'panem';
+    $scope.appName = '';
+    $scope.namespace = '';
     $scope.connected = false;
 
     // Variables related to the cartridges
