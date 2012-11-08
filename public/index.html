@@ -179,13 +179,35 @@
      </div>
 
 
+
+
      <div class="modal hide fade" ng-repeat = 'node in graph.vertices'  id="nodeDetails{{$index}}" tabindex="-1" role="dialog" aria-labelledby="setConfiguration" aria-hidden="true">
            <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               <h3>Details for {{$index}}</h3>
            </div>
            <div class="modal-body">
-
+              <section>
+                 <h4>Configure Application</h4>
+                 <form class="form-horizontal">
+                    <div class="control-group">
+                       <label class="control-label">Gear Size</label>
+                       <div class="controls">
+                          <select ng-model="node.properties.size">
+                             <option>small</option>
+                             <option>medium</option>
+                             <option>large</option>
+                          </select>
+                       </div>
+                    </div>
+                    <div class="control-group">
+                       <label class="control-label">Autoscale</label>
+                       <div class="controls">
+                          <input type="checkbox" ng-model="node.properties.autoScale">
+                       </div>
+                    </div>
+                 </form>
+              </section>
               <section ui-if="node.deployed">
                  <section>
                     <h4>Application Properties</h4>
