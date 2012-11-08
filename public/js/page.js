@@ -166,24 +166,8 @@ var App = function ($scope, $http) {
             vertex.cartridges.splice(i);
         }
     };
-    var validate = function () { // Validate the graph for dependencies between cartridges
-        return true;
-    };
-    $scope.validateGraph = function () { // Validate the graph ad set UI elements
-        Busy.start();
-        if (!validate()) {
-            setError('Semantic Error in Graph');
-        } else {
-            alert ('Graph is valid');
-        }
-        Busy.stop();
-    };
     $scope.deploy = function () { // Deploy the graph to a openshift broker
         Busy.start();
-        if (!validate()) {
-            Busy.stop();
-            return;
-        }
         $scope.graph.vertices.forEach(function (ele, i, arr) {
             proxify({
                 uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications',
