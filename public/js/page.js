@@ -144,6 +144,10 @@ var App = function ($scope, $http) {
     $scope.addnode = function (ident) { // Add a node to the Graph
         $scope.ctr = $scope.ctr + 1;
         $scope.graph.addVertexWithParent('node' + $scope.ctr, ident);
+
+
+
+
     };
 
     $scope.removenode = function (ident) { // Remove a node from the Graph
@@ -276,12 +280,17 @@ var App = function ($scope, $http) {
                 form: {
                     name: $scope.appName + i.toString(),
                     cartridge: ele.cartridges[0].name,
-                    scale:'false'
+                    scale: ele.properties.autoScale,
+                    gear_profile: ele.properties.size
                 }
             }, function (data, status, headers, config) {
                 if (ele.cartridges.length === 1) {
-                    Busy.stop();
+                   Busy.stop();
                 }
+                data = JSON.parse(data.error);
+                ele.properties.app.git = data.data.git_url;
+                ele.properties.app.app = data.data.app_url;
+                ele.properties.app.ssh = data.data.ssh_url;
                 for (var j=1; j<ele.cartridges.length; j++) {
                     proxify({
                         uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications/' + $scope.appName + i.toString() + '/cartridges',
@@ -294,12 +303,24 @@ var App = function ($scope, $http) {
                             cartridge: ele.cartridges[j].name
                         }
                     }, function (data, status, headers, config) {
-                        console.log(JSON.parse(data.error)); // Use this meaningfully!
                         if (j==ele.cartridges.length-1) {
                             Busy.stop();
                         }
+                        data = JSON.parse(data.error);
+                        var cartData = {};
+                        cartData.name = data.data.name;
+                        for (var k in data.data.properties) {
+                           var props = data.data.properties;
+                           if (props[k].name === '' || props[k].value === '') {
+                              continue;
+                           }
+                           cartData[props[k].name] = props[k].value;
+                        }
+                        ele.properties.cartridge.push(cartData);
                     }, errorCallback);
                 }
+                ele.deployed = true;
+                Busy.stop()
             }, errorCallback);
         });
     };
