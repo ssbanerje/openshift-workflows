@@ -94,8 +94,9 @@ var App = function ($scope, $http) {
         $('#connection').css('color', '#d00');
         $scope.cartridges = [];
         $scope.templates=[];
+
         proxify({ // Authenticate user
-            uri: $scope.host + '/broker/rest/user',
+           uri: $scope.host + '/broker/rest/user',
             headers: {
                 accept: 'application/json',
                 Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
@@ -131,7 +132,8 @@ var App = function ($scope, $http) {
                 }).error(function (config, st, h, cfg2) {
                     setError('Could not get cartridge image configuration');
                 });
-                $scope.cartridges = data.data;
+
+                var temp_cartridges = data.data;
                 proxify({ // Get list of template
                     uri: $scope.host + '/broker/rest/application_template',
                     headers: {
@@ -139,16 +141,40 @@ var App = function ($scope, $http) {
                     },
                     method: 'GET'
                 }, function (data, status, headers, cfg3) {
-                    $http({
-                        url: '/config/template.json',
-                        method: 'GET'
-                    }).success(function (config, st, h, cfg32) {
+                   $http({
+                      url: '/config/template.json',
+                      method: 'GET'
+                   }).success(function (config, st, h, cfg32) {
                             data.data.forEach(function (ele, i, arr) {
                                 ele.type = 'template';
                                 ele.img = config[ele.display_name];
                                 if (ele.img === undefined) {
                                     ele.img = config['default'];
                                 }
+                            });
+                            proxify({ // Get list of cartridges\
+                               uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications',
+                               headers: {
+                                  accept: 'application/json',
+                                  Authorization: $scope.authString
+                               },
+                               method: 'GET'
+                            }, function (data, status, headers, cfg1) {
+                               var nameChecker = new RegExp('^'+$scope.appName.toLowerCase()+'[\\d]+$');
+                               var flag = false;
+                               for (var i in data.data) {
+                                  if (data.data[i].name.match(nameChecker) && data.data[i].name.match(nameChecker).length>0) {
+                                     setError('Application with this prefix already exists.');
+                                     flag = true;
+                                     break;
+                                  }
+                               }
+                               if (!flag) {
+                                  $scope.connected = true;
+                                  $scope.cartridges = temp_cartridges;
+                                  $('#connection').css('color', '#0d0');
+                               }
+                               Busy.stop();
                             });
                     }).error(function (config, st, h, cfg32) {
                             setError('Could not get application template configuration');
@@ -159,7 +185,7 @@ var App = function ($scope, $http) {
                     $('#connection').css('color', '#0d0');
                     Busy.stop();
                     $scope.connected = true;
-                }, errorCallback);
+                    }, errorCallback);
             }, errorCallback);
         }, errorCallback);
     };
