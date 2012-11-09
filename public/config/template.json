@@ -1,0 +1,12 @@
+{
+    "CakePHP": "/img/icons/cakephp.png",
+    "CakePHP (TEST)": "/img/icons/cakephp_Test.png",
+    "Django": "/img/icons/django.png",
+    "Django (Test)": "/img/icons/django_Test.png",
+    "Drupal": "/img/icons/drupal_temp.png",
+    "JavaEE Full Profile Example on JBoss": "/img/icons/jboss_temp.png",
+    "Ruby on Rails": "/img/icons/ruby_temp.png",
+    "Spring Framework on JBoss EAP6": "/img/icons/Spring_temp.png",
+    "WordPress": "/img/icons/wordpress_temp.png",
+    "default": "http://placehold.it/80x80"
+}

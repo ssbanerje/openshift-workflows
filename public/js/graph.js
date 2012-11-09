@@ -110,7 +110,7 @@ var Graph = function () {
             var rad = 200 + (Math.random()*100)+1;
             vert.top = ppos.top + rad*Math.sin(rand);
             vert.left = ppos.left + rad*Math.cos(rand);
-        } while (vert.top < 60 || vert.left > $(window).width()-150);
+        } while (vert.top < 60 || vert.left > $(document).width()-150);
         this.addEdge(parent, vert);
         return vert;
     };
