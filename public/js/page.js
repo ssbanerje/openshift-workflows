@@ -340,11 +340,11 @@ var App = function ($scope, $http) {
                         var cartData = {};
                         cartData.name = data.data.name;
                         for (var k in data.data.properties) {
-                           var props = data.data.properties;
-                           if (props[k].name === '' || props[k].value === '') {
-                              continue;
-                           }
-                           cartData[props[k].name] = props[k].value;
+                            var props = data.data.properties;
+                            if (props[k].name === '' || props[k].value === '') {
+                                continue;
+                            }
+                            cartData[props[k].name] = props[k].value;
                         }
                         ele.properties.cartridge.push(cartData);
                     }, errorCallback);

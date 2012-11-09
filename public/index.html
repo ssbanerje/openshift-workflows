@@ -169,72 +169,65 @@
             </div>
         </div>
 
-
-      <div class="modal hide fade" id="helpmodal" tabindex="-1" role="dialog" aria-labelledby="helpmodal" aria-hidden="true">
-           <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h3>Modal header</h3>
-           </div>
-           <div class="modal-body">
-              <p>One fine body…</p>
-           </div>
-           <div class="modal-footer">
-           </div>
+        <div class="modal hide fade" id="helpmodal" tabindex="-1" role="dialog" aria-labelledby="helpmodal" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>Modal header</h3>
+            </div>
+            <div class="modal-body">
+                <p>One fine body…</p>
+            </div>
+            <div class="modal-footer">
+            </div>
         </div>
-     </div>
 
-
-
-
-     <div class="modal hide fade" ng-repeat = 'node in graph.vertices'  id="nodeDetails{{$index}}" tabindex="-1" role="dialog" aria-labelledby="setConfiguration" aria-hidden="true">
-           <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h3>Details for {{$index}}</h3>
-           </div>
-           <div class="modal-body">
-              <section>
-                 <h4>Configure Application</h4>
-                 <form class="form-horizontal">
-                    <div class="control-group">
-                       <label class="control-label">Gear Size</label>
-                       <div class="controls">
-                          <select ng-model="node.properties.size">
-                             <option>small</option>
-                             <option>medium</option>
-                             <option>large</option>
-                          </select>
-                       </div>
-                    </div>
-                    <div class="control-group">
-                       <label class="control-label">Autoscale</label>
-                       <div class="controls">
-                          <input type="checkbox" ng-model="node.properties.autoScale">
-                       </div>
-                    </div>
-                 </form>
-              </section>
-              <section ui-if="node.deployed">
-                 <section>
-                    <h4>Application Properties</h4>
-                    <ul>
-                       <li><b>Git URL</b> : {{node.properties.app.git}} </li>
-                       <li><b>App URL</b> : {{node.properties.app.app}} </li>
-                       <li><b>ssh URL</b> : {{node.properties.app.ssh}} </li>
-                    </ul>
-                 </section>
-                 <section ng-repeat="cart in node.properties.cartridge">
-                    <h4>Properties for {{cart.name}}</h4>
-                    <ul>
-                       <li ng-repeat="(key, value) in cart"><b>{{key}}</b> : {{value}}</li>
-                    </ul>
-                 </section>
-              </section>
-           </div>
-           <div class="modal-footer">
-           </div>
+        <div class="modal hide fade" ng-repeat = 'node in graph.vertices'  id="nodeDetails{{$index}}" tabindex="-1" role="dialog" aria-labelledby="setConfiguration" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>Details for {{$index}}</h3>
+            </div>
+            <div class="modal-body">
+                <section>
+                    <h4>Configure Application</h4>
+                    <form class="form-horizontal">
+                        <div class="control-group">
+                            <label class="control-label">Gear Size</label>
+                            <div class="controls">
+                                <select ng-model="node.properties.size">
+                                    <option>small</option>
+                                    <option>medium</option>
+                                    <option>large</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Autoscale</label>
+                            <div class="controls">
+                                <input type="checkbox" ng-model="node.properties.autoScale">
+                            </div>
+                        </div>
+                    </form>
+                </section>
+                <section ui-if="node.deployed">
+                    <section>
+                        <h4>Application Properties</h4>
+                        <ul>
+                            <li><b>Git URL</b> : {{node.properties.app.git}} </li>
+                            <li><b>App URL</b> : {{node.properties.app.app}} </li>
+                            <li><b>ssh URL</b> : {{node.properties.app.ssh}} </li>
+                        </ul>
+                    </section>
+                    <section ng-repeat="cart in node.properties.cartridge">
+                        <h4>Properties for {{cart.name}}</h4>
+                        <ul>
+                            <li ng-repeat="(key, value) in cart"><b>{{key}}</b> : {{value}}</li>
+                        </ul>
+                    </section>
+                </section>
+            </div>
+            <div class="modal-footer">
+            </div>
         </div>
-     </div>
-
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.1.min.js"><\/script>')</script>

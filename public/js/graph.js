@@ -12,10 +12,10 @@ var Vertex = function (div_id) {
     this.top = $(window).height()/2 - 100;
     this.left = $(window).width()/2 - 100;
     this.properties = {
-       size : "small",
-       autoScale: false,
-       app : {git:"" ,app:"",ssh:""},
-       cartridge: []
+        size : "small",
+        autoScale: false,
+        app : {git:"" ,app:"",ssh:""},
+        cartridge: []
     };
     this.deployed = false;
 
