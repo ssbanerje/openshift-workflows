@@ -63,25 +63,26 @@ var App = function ($scope, $http) {
 
     // Generic call back to set error for all requests
     var errorCallback = function (data, status, headers, config) {
-       Busy.stop();
-       $scope.error = true;
-       switch (status) {
-          case 401:
-             setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
-          break;
-          case 403:
-             setError('The Openshift server is refusing to respond');
-          break;
-          case 422:
-               setError('The request made to the OpenShift Server is semantically incorrect');
-          break;
-          case 500:
-             setError('The server is broken! Retry in a while');
-          break;
-          default:
-             setError('Error in contacting server!');
-          break;
-       }
+        Busy.stop();
+        $scope.error = true;
+        console.log(data);
+        switch (status) {
+            case 401:
+                setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
+                break;
+            case 403:
+                setError('The Openshift server is refusing to respond');
+                break;
+            case 422:
+                setError(JSON.parse(data.error).messages[0].text);
+                break;
+            case 500:
+                setError('The server is broken! Retry in a while');
+                break;
+            default:
+                setError('Error in contacting server!');
+                break;
+        }
     };
 
     // Functions dealing with the connection parameters
@@ -173,8 +174,6 @@ var App = function ($scope, $http) {
                                 setError('Could not get application template configuration');
                             });
                             $scope.templates = data.data;
-                            console.log($scope.cartridges);
-                            console.log($scope.templates);
                             $('#connection').css('color', '#0d0');
                             $scope.connected = true;
                             Busy.stop();
