@@ -58,6 +58,9 @@ var App = function ($scope, $http) {
     $scope.cartridges = [];
     $scope.rules = {};
 
+    //Variables related to the templates
+    $scope.templates=[];
+
     // Generic call back to set error for all requests
     var errorCallback = function (data, status, headers, config) {
        Busy.stop();
@@ -83,7 +86,7 @@ var App = function ($scope, $http) {
     };
 
     // Functions dealing with the connection parameters
-    $scope.submit = function () { // Authenticate user and get the list of cartridges
+    $scope.submit = function () { // Authenticate user and get the list of cartridges and templates
         Busy.start();
         $scope.cleargraph();
         $scope.connected = false;
@@ -91,6 +94,7 @@ var App = function ($scope, $http) {
         $('#connectionModal').modal('hide');
         $('#connection').css('color', '#d00');
         $scope.cartridges = [];
+        $scope.templates=[];
         proxify({ // Authenticate user
             uri: $scope.host + '/broker/rest/user',
             headers: {
@@ -129,9 +133,35 @@ var App = function ($scope, $http) {
                     setError('Could not get cartridge image configuration');
                 });
                 $scope.cartridges = data.data;
-                $('#connection').css('color', '#0d0');
-                Busy.stop();
-                $scope.connected = true;
+
+                proxify({ // Get list of template
+                    uri: $scope.host + '/broker/rest/application_template',
+                    headers: {
+                        accept: 'application/json'
+                    },
+                    method: 'GET'
+                }, function (data, status, headers, cfg3) {
+
+                    $http({
+                     url: '/config/template.json',
+                     method: 'GET'
+                     }).success(function (config, st, h, cfg32) {
+                     data.data.forEach(function (ele, i, arr) {
+                     ele.img = config[ele.display_name];
+                     if (ele.img === undefined) {
+                     ele.img = config['default'];
+                     }
+                     });
+                     }).error(function (config, st, h, cfg32) {
+                     setError('Could not get application template configuration');
+                     });
+                    $scope.templates = data.data;
+                    console.log($scope.cartridges);
+                    console.log($scope.templates);
+                    $('#connection').css('color', '#0d0');
+                    Busy.stop();
+                    $scope.connected = true;
+                }, errorCallback);
             }, errorCallback);
         }, errorCallback);
     };
