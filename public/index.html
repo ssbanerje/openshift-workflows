@@ -111,8 +111,13 @@
                 <div id="listCartridges" style="display: none;">
                     <ul>
                         <li ng-repeat="c in cartridges" cartridge-id="{{$index}}">
-                            <a href="#"  rel="popover" data-content="{{c.description}}" data-original-title="{{c.display_name}}">
+                            <a href="#"  class="cartridgePopover" rel="popover" data-content="{{c.description}}" data-original-title="{{c.display_name}}">
                                <img ng-src="{{c.img}}" alt="{{c.display_name}}" jqui-drag-start="dragCartFromBar(c, cartridges)" style="z-index: 10000">
+                            </a>
+                        </li>
+                        <li ng-repeat="t in templates" template-id="{{$index}}">
+                            <a href="#"  class="templatePopover" rel="popover" data-content="{{t.metadata.description}}" data-original-title="{{t.display_name}}">
+                                <img ng-src="{{t.img}}" alt="{{t.display_name}}" jqui-drag-start="dragCartFromBar(t, templates)" style="z-index: 10000">
                             </a>
                         </li>
                     </ul>
