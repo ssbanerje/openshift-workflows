@@ -5,6 +5,9 @@
 *
 */
 
+// Variable that controls whether connections are repainted or not
+var repaint = false;
+
 // The angular module for the page
 var workflows = angular.module('workflows', ['ui', 'jqui']);
 
@@ -53,6 +56,7 @@ var App = function ($scope, $http) {
 
     // Variables related to the cartridges
     $scope.cartridges = [];
+    $scope.rules = {};
 
     //Variables related to the templates
     $scope.templates=[];
@@ -61,6 +65,7 @@ var App = function ($scope, $http) {
     var errorCallback = function (data, status, headers, config) {
        Busy.stop();
        $scope.error = true;
+       console.log(JSON.parse(data.error));
        switch (status) {
           case 401:
              setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
@@ -106,7 +111,15 @@ var App = function ($scope, $http) {
                 },
                 method: 'GET'
             }, function (data, status, headers, cfg1) {
-                $http({
+                $http({ // Read configuration file for dependencies
+                    url: '/config/rules.json',
+                    method: 'GET'
+                }).success(function (config, st, h, cfg2) {
+                    $scope.rules = config;
+                }).error(function (config, st, h, cfg2) {
+                    setError('Could not get cartridge dependency rules.');
+                });
+                $http({ // Read configuration file for images
                     url: '/config/images.json',
                     method: 'GET'
                 }).success(function (config, st, h, cfg2) {
@@ -157,13 +170,20 @@ var App = function ($scope, $http) {
     $scope.ctr = 0;
     $scope.graph = new Graph();
     $scope.graph.addVertex('node0');
+
     $scope.addnode = function (ident) { // Add a node to the Graph
         $scope.ctr = $scope.ctr + 1;
         $scope.graph.addVertexWithParent('node' + $scope.ctr, ident);
+
+
+
+
     };
+
     $scope.removenode = function (ident) { // Remove a node from the Graph
         $scope.graph.removeVertex(ident);
     };
+
     $scope.cleargraph = function () { // Delete the graph completely
         $scope.graph.vertices.forEach(function (e, i, arr) {
             $scope.graph.removeVertex(e.identifier);
@@ -172,19 +192,91 @@ var App = function ($scope, $http) {
         $scope.graph = new Graph();
         $scope.graph.addVertex('node0');
     };
+
     $scope.dragCartFromBar = function (item, list) { // Start the drag event for dragging object from cartridge list
         return {src: list, item: item};
     };
-    $scope.acceptTokenInSubnode = function (to, token) { // Check if drag target is acceptable
-        if (token) {
-            return $.inArray(token.item, to) < 0;
-        } else {
-            return false;
-        }
+
+    $scope.acceptTokenInSubnode = function (targetArray, token) {       // Check if drag target is acceptable
+          if (token) {
+          var cartridge = token.item;
+          if(targetArray.length === 0) {
+             if (cartridge.type === 'standalone') {
+                return true;
+             } else {
+                setError('First cartridge must be a standalone one.');
+             }
+          } else {
+             if (cartridge.type != 'standalone') {
+                if ($.inArray(cartridge, targetArray) < 0) {
+                   var thisIsDB = false;
+                   var dbAlreadyAdded = false;
+                   for (var i in cartridge.tags) {
+                      if (cartridge.tags[i] === 'database') {
+                         thisIsDB = true;
+                         break;
+                      }
+                   }
+                   var flag = false;
+                   for (var i in targetArray) {
+                      for (var j in targetArray[i].tags) {
+                         if (targetArray[i].tags[j] === 'database') {
+                            dbAlreadyAdded = flag = true;
+                            break;
+                         }
+                      }
+                      if (flag) {
+                         break;
+                      }
+                   }
+                   if (!(thisIsDB && dbAlreadyAdded)) {
+                      // Checking if there is a rule for this cartridge
+                      flag = false;
+                      for (var i in Object.keys($scope.rules)) {
+                         if (cartridge.name === Object.keys($scope.rules)[i]) {
+                            flag = true;
+                            break;
+                         }
+                      }
+                      if (!flag) {
+                         return true;
+                      }
+                      // Checking if rules for this cartridge were satsfied
+                      flag = false;
+                      for (var i in Object.keys($scope.rules)) {
+                         if (cartridge.name === Object.keys($scope.rules)[i]) {
+                            for (var j in targetArray) {
+                               if ($.inArray(targetArray[j].name, $scope.rules[Object.keys($scope.rules)[i]]) >= 0) {
+                                  flag = true;
+                                  break
+                               }
+                            }
+                            if (flag) {
+                               return true;
+                            } else {
+                               setError('Install ' + $scope.rules[Object.keys($scope.rules)[i]] + ' first.');
+                            }
+                         }
+                     }
+                   } else {
+                      setError('Only one database cartridge is allowed.');
+                   }
+                } else {
+                   setError('Duplicate cartridges cannot be added.');
+                }
+             } else {
+                setError('Standalone cartridge already exists.');
+             }
+          }
+       }
+       return false;
     };
+
     $scope.commitTokenInSubnode = function (to, token) { // Add cartridge to vertex
         to.push(token.item);
+        repaint  = true;
     };
+
     $scope.deleteCartridge = function (cartridge, vertex) { // Delete cartridge from vertex
         var i = -1;
         for (i in vertex.cartridges) {
@@ -195,25 +287,18 @@ var App = function ($scope, $http) {
         if (i>=0) {
             vertex.cartridges.splice(i);
         }
+        repaint = true;
     };
-    var validate = function () { // Validate the graph for dependencies between cartridges
-        return true;
-    };
-    $scope.validateGraph = function () { // Validate the graph ad set UI elements
-        Busy.start();
-        if (!validate()) {
-            setError('Semantic Error in Graph');
-        } else {
-            alert ('Graph is valid');
+
+    setInterval(function () { // Rpaint the edges so that changes in box size dont affect it
+        if (repaint) {
+            jsPlumb.repaintEverything();
         }
-        Busy.stop();
-    };
+        repaint = false;
+    }, 100);
+
     $scope.deploy = function () { // Deploy the graph to a openshift broker
         Busy.start();
-        if (!validate()) {
-            Busy.stop();
-            return;
-        }
         $scope.graph.vertices.forEach(function (ele, i, arr) {
             proxify({
                 uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications',
@@ -225,13 +310,17 @@ var App = function ($scope, $http) {
                 form: {
                     name: $scope.appName + i.toString(),
                     cartridge: ele.cartridges[0].name,
-                    scale:'false'
+                    scale: ele.properties.autoScale,
+                    gear_profile: ele.properties.size
                 }
             }, function (data, status, headers, config) {
-                console.log(JSON.parse(data.error)); // Use this meaningfully!
                 if (ele.cartridges.length === 1) {
-                    Busy.stop();
+                   Busy.stop();
                 }
+                data = JSON.parse(data.error);
+                ele.properties.app.git = data.data.git_url;
+                ele.properties.app.app = data.data.app_url;
+                ele.properties.app.ssh = data.data.ssh_url;
                 for (var j=1; j<ele.cartridges.length; j++) {
                     proxify({
                         uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications/' + $scope.appName + i.toString() + '/cartridges',
@@ -244,12 +333,24 @@ var App = function ($scope, $http) {
                             cartridge: ele.cartridges[j].name
                         }
                     }, function (data, status, headers, config) {
-                        console.log(JSON.parse(data.error)); // Use this meaningfully!
                         if (j==ele.cartridges.length-1) {
                             Busy.stop();
                         }
+                        data = JSON.parse(data.error);
+                        var cartData = {};
+                        cartData.name = data.data.name;
+                        for (var k in data.data.properties) {
+                            var props = data.data.properties;
+                            if (props[k].name === '' || props[k].value === '') {
+                                continue;
+                            }
+                            cartData[props[k].name] = props[k].value;
+                        }
+                        ele.properties.cartridge.push(cartData);
                     }, errorCallback);
                 }
+                ele.deployed = true;
+                Busy.stop()
             }, errorCallback);
         });
     };
