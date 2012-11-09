@@ -14,10 +14,12 @@
     "MySQL Database 5.1": "/img/icons/mysql.png",
     "PostgreSQL Database 8.4": "/img/icons/postgresql.png",
     "HAProxy 1.4": "/img/icons/haproxy.png",
-    "10gen Mongo Monitoring Service Agent 0.1": "/img/icons/mongodb.png",
+    "10gen Mongo Monitoring Service Agent 0.1": "/img/icons/mdbmonitoring.png",
     "phpMyAdmin 3.4": "/img/icons/phpmyadmin.png",
-    "OpenShift Metrics 0.1": "/img/icons/openshift.png",
-    "RockMongo 1.1": "/img/icons/mongodb.png",
+    "OpenShift Metrics 0.1": "/img/icons/openshiftcart.png",
+    "RockMongo 1.1": "/img/icons/rockmongo.png",
     "Jenkins Client 1.4": "/img/icons/jenkins.png",
+    "Do-It-Yourself": "/img/icons/diy.png",
+    "Tomcat (JBoss Enterprise Web Server 1.0)": "/img/icons/tomcat.png",
     "default": "http://placehold.it/120x80"
 }
