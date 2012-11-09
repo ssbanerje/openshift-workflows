@@ -62,7 +62,6 @@ var App = function ($scope, $http) {
     var errorCallback = function (data, status, headers, config) {
        Busy.stop();
        $scope.error = true;
-       console.log(JSON.parse(data.error));
        switch (status) {
           case 401:
              setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
@@ -144,10 +143,6 @@ var App = function ($scope, $http) {
     $scope.addnode = function (ident) { // Add a node to the Graph
         $scope.ctr = $scope.ctr + 1;
         $scope.graph.addVertexWithParent('node' + $scope.ctr, ident);
-
-
-
-
     };
 
     $scope.removenode = function (ident) { // Remove a node from the Graph

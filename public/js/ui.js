@@ -8,6 +8,9 @@
 function setError(text) {
     $('#errorPlaceHolder').html('<div class="alert alert-error fade in"><i class="icon-exclamation-sign"></i>' + text
                                 + '<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
+    setTimeout(function() { // Auto close error message
+        $(".alert").alert('close');
+    }, 10000);
 }
 
 // Main!
