@@ -5,6 +5,9 @@
 *
 */
 
+// Variable that controls whether connections are repainted or not
+var repaint = false;
+
 // The angular module for the page
 var workflows = angular.module('workflows', ['ui', 'jqui']);
 
@@ -44,11 +47,11 @@ var App = function ($scope, $http) {
 
     // Variables related to the connection parameters
     $scope.host = 'https://openshift.redhat.com';
-    $scope.username = 'sandeep.panem870@gmail.com';
-    $scope.password = 'sachinss';
+    $scope.username = '';
+    $scope.password = '';
     $scope.authString = '';
-    $scope.appName = 'sp';
-    $scope.namespace = 'panem';
+    $scope.appName = '';
+    $scope.namespace = '';
     $scope.connected = false;
 
     // Variables related to the cartridges
@@ -88,8 +91,9 @@ var App = function ($scope, $http) {
         $('#connectionModal').modal('hide');
         $('#connection').css('color', '#d00');
         $scope.cartridges = [];
+
         proxify({ // Authenticate user
-            uri: $scope.host + '/broker/rest/user',
+           uri: $scope.host + '/broker/rest/user',
             headers: {
                 accept: 'application/json',
                 Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
@@ -125,10 +129,31 @@ var App = function ($scope, $http) {
                 }).error(function (config, st, h, cfg2) {
                     setError('Could not get cartridge image configuration');
                 });
-                $scope.cartridges = data.data;
-                $('#connection').css('color', '#0d0');
-                Busy.stop();
-                $scope.connected = true;
+                var temp_cartridges = data.data;
+                proxify({ // Get list of cartridges\
+                   uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications',
+                   headers: {
+                      accept: 'application/json',
+                      Authorization: $scope.authString
+                   },
+                   method: 'GET'
+                }, function (data, status, headers, cfg1) {
+                   var nameChecker = new RegExp('^'+$scope.appName.toLowerCase()+'[\\d]+$');
+                   var flag = false;
+                   for (var i in data.data) {
+                      if (data.data[i].name.match(nameChecker) && data.data[i].name.match(nameChecker).length>0) {
+                         setError('Application with this prefix already exists.');
+                         flag = true;
+                         break;
+                      }
+                   }
+                   if (!flag) {
+                      $scope.connected = true;
+                      $scope.cartridges = temp_cartridges;
+                      $('#connection').css('color', '#0d0');
+                   }
+                   Busy.stop();
+                }, errorCallback);
             }, errorCallback);
         }, errorCallback);
     };
@@ -141,6 +166,10 @@ var App = function ($scope, $http) {
     $scope.addnode = function (ident) { // Add a node to the Graph
         $scope.ctr = $scope.ctr + 1;
         $scope.graph.addVertexWithParent('node' + $scope.ctr, ident);
+
+
+
+
     };
 
     $scope.removenode = function (ident) { // Remove a node from the Graph
@@ -237,6 +266,7 @@ var App = function ($scope, $http) {
 
     $scope.commitTokenInSubnode = function (to, token) { // Add cartridge to vertex
         to.push(token.item);
+        repaint  = true;
     };
 
     $scope.deleteCartridge = function (cartridge, vertex) { // Delete cartridge from vertex
@@ -249,7 +279,15 @@ var App = function ($scope, $http) {
         if (i>=0) {
             vertex.cartridges.splice(i);
         }
+        repaint = true;
     };
+
+    setInterval(function () { // Rpaint the edges so that changes in box size dont affect it
+        if (repaint) {
+            jsPlumb.repaintEverything();
+        }
+        repaint = false;
+    }, 100);
 
     $scope.deploy = function () { // Deploy the graph to a openshift broker
         Busy.start();
@@ -264,12 +302,17 @@ var App = function ($scope, $http) {
                 form: {
                     name: $scope.appName + i.toString(),
                     cartridge: ele.cartridges[0].name,
-                    scale:'false'
+                    scale: ele.properties.autoScale,
+                    gear_profile: ele.properties.size
                 }
             }, function (data, status, headers, config) {
                 if (ele.cartridges.length === 1) {
-                    Busy.stop();
+                   Busy.stop();
                 }
+                data = JSON.parse(data.error);
+                ele.properties.app.git = data.data.git_url;
+                ele.properties.app.app = data.data.app_url;
+                ele.properties.app.ssh = data.data.ssh_url;
                 for (var j=1; j<ele.cartridges.length; j++) {
                     proxify({
                         uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications/' + $scope.appName + i.toString() + '/cartridges',
@@ -282,14 +325,25 @@ var App = function ($scope, $http) {
                             cartridge: ele.cartridges[j].name
                         }
                     }, function (data, status, headers, config) {
-                        console.log(JSON.parse(data.error)); // Use this meaningfully!
                         if (j==ele.cartridges.length-1) {
                             Busy.stop();
                         }
+                        data = JSON.parse(data.error);
+                        var cartData = {};
+                        cartData.name = data.data.name;
+                        for (var k in data.data.properties) {
+                            var props = data.data.properties;
+                            if (props[k].name === '' || props[k].value === '') {
+                                continue;
+                            }
+                            cartData[props[k].name] = props[k].value;
+                        }
+                        ele.properties.cartridge.push(cartData);
                     }, errorCallback);
                 }
+                ele.deployed = true;
+                Busy.stop()
             }, errorCallback);
         });
     };
 };
-
