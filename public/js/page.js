@@ -173,7 +173,11 @@ var App = function ($scope, $http) {
     };
 
     $scope.removenode = function (ident) { // Remove a node from the Graph
-        $scope.graph.removeVertex(ident);
+        if ($scope.graph.vertices.length === 1) {
+            $scope.cleargraph();
+        } else {
+            $scope.graph.removeVertex(ident);
+        }
     };
 
     $scope.cleargraph = function () { // Delete the graph completely
