@@ -1,4 +1,3 @@
-/**
 *
 * Controlling the WebApp
 * ~~ Here be Dragons ~~
@@ -63,26 +62,25 @@ var App = function ($scope, $http) {
 
     // Generic call back to set error for all requests
     var errorCallback = function (data, status, headers, config) {
-        Busy.stop();
-        $scope.error = true;
-        console.log(data);
-        switch (status) {
-            case 401:
-                setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
-                break;
-            case 403:
-                setError('The Openshift server is refusing to respond');
-                break;
-            case 422:
-                setError(JSON.parse(data.error).messages[0].text);
-                break;
-            case 500:
-                setError('The server is broken! Retry in a while');
-                break;
-            default:
-                setError('Error in contacting server!');
-                break;
-        }
+       Busy.stop();
+       $scope.error = true;
+       switch (status) {
+          case 401:
+             setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
+          break;
+          case 403:
+             setError('The Openshift server is refusing to respond');
+          break;
+          case 422:
+               setError('The request made to the OpenShift Server is semantically incorrect');
+          break;
+          case 500:
+             setError('The server is broken! Retry in a while');
+          break;
+          default:
+             setError('Error in contacting server!');
+          break;
+       }
     };
 
     // Functions dealing with the connection parameters
@@ -95,9 +93,8 @@ var App = function ($scope, $http) {
         $('#connection').css('color', '#d00');
         $scope.cartridges = [];
         $scope.templates=[];
-
         proxify({ // Authenticate user
-           uri: $scope.host + '/broker/rest/user',
+            uri: $scope.host + '/broker/rest/user',
             headers: {
                 accept: 'application/json',
                 Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
@@ -105,84 +102,66 @@ var App = function ($scope, $http) {
             method: 'GET'
         }, function (data, status, headers, config) {
             $scope.authString = 'Basic ' + window.btoa($scope.username + ':' + $scope.password);
-            proxify({ // Check if application is defined
-                uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications',
+            proxify({ // Get list of cartridges
+                uri: $scope.host + '/broker/rest/cartridges',
                 headers: {
-                    accept: 'application/json',
-                    Authorization: $scope.authString
+                    accept: 'application/json'
                 },
                 method: 'GET'
             }, function (data, status, headers, cfg1) {
-                var nameChecker = new RegExp('^'+$scope.appName.toLowerCase()+'[\\d]+$');
-                var flag = false;
-                for (var i in data.data) {
-                    if (data.data[i].name.match(nameChecker) && data.data[i].name.match(nameChecker).length>0) {
-                        setError('Application with this prefix already exists.');
-                        flag = true;
-                        break;
-                    }
-                }
-                if (!flag) {
-                    proxify({ // Get list of cartridges
-                        uri: $scope.host + '/broker/rest/cartridges',
-                        headers: {
-                            accept: 'application/json'
-                        },
+                $http({ // Read configuration file for dependencies
+                    url: '/config/rules.json',
+                    method: 'GET'
+                }).success(function (config, st, h, cfg2) {
+                    $scope.rules = config;
+                }).error(function (config, st, h, cfg2) {
+                    setError('Could not get cartridge dependency rules.');
+                });
+                $http({ // Read configuration file for images
+                    url: '/config/images.json',
+                    method: 'GET'
+                }).success(function (config, st, h, cfg2) {
+                    data.data.forEach(function (ele, i, arr) {
+                        ele.img = config[ele.display_name];
+                        if (ele.img === undefined) {
+                            ele.img = config['default'];
+                        }
+                    });
+                }).error(function (config, st, h, cfg2) {
+                    setError('Could not get cartridge image configuration');
+                });
+                $scope.cartridges = data.data;
+                proxify({ // Get list of template
+                    uri: $scope.host + '/broker/rest/application_template',
+                    headers: {
+                        accept: 'application/json'
+                    },
+                    method: 'GET'
+                }, function (data, status, headers, cfg3) {
+                    $http({
+                        url: '/config/template.json',
                         method: 'GET'
-                    }, function (data, status, headers, cfg1) {
-                        $http({ // Read configuration file for dependencies
-                            url: '/config/rules.json',
-                            method: 'GET'
-                        }).success(function (config, st, h, cfg2) {
-                            $scope.rules = config;
-                        }).error(function (config, st, h, cfg2) {
-                            setError('Could not get cartridge dependency rules.');
-                        });
-                        $http({ // Read configuration file for images
-                            url: '/config/images.json',
-                            method: 'GET'
-                        }).success(function (config, st, h, cfg2) {
+                    }).success(function (config, st, h, cfg32) {
                             data.data.forEach(function (ele, i, arr) {
+                                ele.type = 'template';
                                 ele.img = config[ele.display_name];
                                 if (ele.img === undefined) {
                                     ele.img = config['default'];
                                 }
                             });
-                        }).error(function (config, st, h, cfg2) {
-                            setError('Could not get cartridge image configuration');
-                        });
-                        $scope.cartridges = data.data;
-                        proxify({ // Get list of templates
-                            uri: $scope.host + '/broker/rest/application_template',
-                            headers: {
-                                accept: 'application/json'
-                            },
-                            method: 'GET'
-                        }, function (data, status, headers, cfg3) {
-                            $http({ // Read configuration file for template images
-                                url: '/config/template.json',
-                                method: 'GET'
-                            }).success(function (config, st, h, cfg3) {
-                                data.data.forEach(function (ele, i, arr) {
-                                    ele.type = 'template';
-                                    ele.img = config[ele.display_name];
-                                    if (ele.img === undefined) {
-                                        ele.img = config['default'];
-                                    }
-                                });
-                            }).error(function (config, st, h, cfg3) {
-                                setError('Could not get application template configuration');
-                            });
-                            $scope.templates = data.data;
-                            $('#connection').css('color', '#0d0');
-                            $scope.connected = true;
-                            Busy.stop();
-                        }, errorCallback);
-                    }, errorCallback);
-                }
-            }, errorCallback)
+                    }).error(function (config, st, h, cfg32) {
+                            setError('Could not get application template configuration');
+                    });
+                    $scope.templates = data.data;
+                    console.log($scope.cartridges);
+                    console.log($scope.templates);
+                    $('#connection').css('color', '#0d0');
+                    Busy.stop();
+                    $scope.connected = true;
+                }, errorCallback);
+            }, errorCallback);
         }, errorCallback);
-    }
+    };
 
     // Variables and functions used in the Graph
     $scope.ctr = 0;
@@ -218,6 +197,8 @@ var App = function ($scope, $http) {
     $scope.acceptTokenInSubnode = function (targetArray, token) {       // Check if drag target is acceptable
           if (token) {
               var cartridge = token.item;
+              var siren = false;
+              var conflicts=[];
               if(targetArray.length === 0) {
                  if (cartridge.type === 'standalone') {
                     return true;
@@ -226,15 +207,46 @@ var App = function ($scope, $http) {
                  } else {
                     setError('First cartridge must be a standalone or template.');
                  }
-              } else {
+
+              }
+              else {
                  if (cartridge.type === 'template') {
                      setError('Can install template in empty application only');
                      return false;
                  }
                  if (cartridge.type != 'standalone') {
-                    if ($.inArray(cartridge, targetArray) < 0) {
-                       var thisIsDB = false;
-                       var dbAlreadyAdded = false;
+                    for (var i in targetArray) {
+                       if(targetArray[i].type === 'template') { // checking if added cartridge was a template
+                          for (var j in Object.keys($scope.rules.template)) { // storing in conflicts which are pre-installed in template that conflict
+                             if (targetArray[i].tags[1] === Object.keys($scope.rules.template)[j]) {
+                                for (var k in $scope.rules.template[Object.keys($scope.rules.template)[j]] ) {
+                                   conflicts[k]=$scope.rules.template[Object.keys($scope.rules.template)[j]][k];
+                                }
+                                siren = true; // siren if true shows that its template
+                                break;
+                              }
+                          }
+                        }
+                        if(siren === true) {
+                           break;
+                        }
+                     }
+                     if ($.inArray(cartridge, targetArray) < 0) {
+                        var thisIsDB = false;
+                        var dbAlreadyAdded = false;
+                        for (var i in $scope.cartridges) { // checking if already a database was installed along with template
+                           for (var j in conflicts ) {
+                              if(conflicts[j] === $scope.cartridges[i].name) {
+                                 if($.inArray('database',$scope.cartridges[i].tags)>=0) {
+                                    dbAlreadyAdded = true;
+                                    break;
+                                 }
+                              }
+                            }
+                            if(dbAlreadyAdded) {
+                               break;
+                            }
+                       }
                        for (var i in cartridge.tags) {
                           if (cartridge.tags[i] === 'database') {
                              thisIsDB = true;
@@ -256,9 +268,11 @@ var App = function ($scope, $http) {
                        if (!(thisIsDB && dbAlreadyAdded)) {
                           // Checking if there is a rule for this cartridge
                           flag = false;
-                          for (var i in Object.keys($scope.rules)) {
-                             if (cartridge.name === Object.keys($scope.rules)[i]) {
+                          var check;
+                          for (var i in Object.keys($scope.rules.cartridge)) {
+                             if (cartridge.name === Object.keys($scope.rules.cartridge)[i]) {
                                 flag = true;
+                                check=i;
                                 break;
                              }
                           }
@@ -267,21 +281,36 @@ var App = function ($scope, $http) {
                           }
                           // Checking if rules for this cartridge were satsfied
                           flag = false;
-                          for (var i in Object.keys($scope.rules)) {
-                             if (cartridge.name === Object.keys($scope.rules)[i]) {
+                          var match=false;
+                          for (var i in Object.keys($scope.rules.cartridge)) {
+                             if (cartridge.name === Object.keys($scope.rules.cartridge)[i]) {
                                 for (var j in targetArray) {
-                                   if ($.inArray(targetArray[j].name, $scope.rules[Object.keys($scope.rules)[i]]) >= 0) {
+                                   if ($.inArray(targetArray[j].name, $scope.rules.cartridge[Object.keys($scope.rules.cartridge)[i]]) >= 0) {
                                       flag = true;
-                                      break
+                                      break;
                                    }
                                 }
-                                if (flag) {
+                                if (flag && !siren) { // checking if dependency was already installed
                                    return true;
-                                } else {
-                                   setError('Install ' + $scope.rules[Object.keys($scope.rules)[i]] + ' first.');
                                 }
+                                else {
+                                   if (siren) {
+                                      for (var k in conflicts) {
+                                            if ($.inArray(conflicts[k],$scope.rules.cartridge[Object.keys($scope.rules.cartridge)[check]]) >= 0) {
+                                               console.log(conflicts);
+                                               console.log($scope.rules.cartridge[Object.keys($scope.rules.cartridge)[check]]);
+                                               match = true;
+                                               break;
+                                            }
+                                         }
+                                      }
+                                      if (match ) {
+                                         return true;
+                                      }
+                                    setError('Install ' + $scope.rules.cartridge[Object.keys($scope.rules.cartridge)[i]] + ' first.');
+                                 }
+                               }
                              }
-                         }
                        } else {
                           setError('Only one database cartridge is allowed.');
                        }
@@ -324,7 +353,6 @@ var App = function ($scope, $http) {
     $scope.deploy = function () { // Deploy the graph to a openshift broker
         Busy.start();
         $scope.graph.vertices.forEach(function (ele, i, arr) {
-            // Create app for node
             var formData = {};
             if (ele.cartridges[0].type === 'standalone') {
                 formData = {
@@ -357,7 +385,7 @@ var App = function ($scope, $http) {
                 ele.properties.app.git = data.data.git_url;
                 ele.properties.app.app = data.data.app_url;
                 ele.properties.app.ssh = data.data.ssh_url;
-                for (var j=1; j<ele.cartridges.length; j++) { // Add cartridges
+                for (var j=1; j<ele.cartridges.length; j++) {
                     proxify({
                         uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications/' + $scope.appName + i.toString() + '/cartridges',
                         headers: {
@@ -383,12 +411,10 @@ var App = function ($scope, $http) {
                             cartData[props[k].name] = props[k].value;
                         }
                         ele.properties.cartridge.push(cartData);
-                        if (j == ele.cartridges.length-1) {
-                            ele.deployed = true;
-                            Busy.stop();
-                        }
                     }, errorCallback);
                 }
+                ele.deployed = true;
+                Busy.stop()
             }, errorCallback);
         });
     };
