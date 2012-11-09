@@ -104,91 +104,86 @@ var App = function ($scope, $http) {
             method: 'GET'
         }, function (data, status, headers, config) {
             $scope.authString = 'Basic ' + window.btoa($scope.username + ':' + $scope.password);
-            proxify({ // Get list of cartridges
-                uri: $scope.host + '/broker/rest/cartridges',
+            proxify({ // Check if application is defined
+                uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications',
                 headers: {
-                    accept: 'application/json'
+                    accept: 'application/json',
+                    Authorization: $scope.authString
                 },
                 method: 'GET'
             }, function (data, status, headers, cfg1) {
-                $http({ // Read configuration file for dependencies
-                    url: '/config/rules.json',
-                    method: 'GET'
-                }).success(function (config, st, h, cfg2) {
-                    $scope.rules = config;
-                }).error(function (config, st, h, cfg2) {
-                    setError('Could not get cartridge dependency rules.');
-                });
-                $http({ // Read configuration file for images
-                    url: '/config/images.json',
-                    method: 'GET'
-                }).success(function (config, st, h, cfg2) {
-                    data.data.forEach(function (ele, i, arr) {
-                        ele.img = config[ele.display_name];
-                        if (ele.img === undefined) {
-                            ele.img = config['default'];
-                        }
-                    });
-                }).error(function (config, st, h, cfg2) {
-                    setError('Could not get cartridge image configuration');
-                });
-
-                var temp_cartridges = data.data;
-                proxify({ // Get list of template
-                    uri: $scope.host + '/broker/rest/application_template',
-                    headers: {
-                        accept: 'application/json'
-                    },
-                    method: 'GET'
-                }, function (data, status, headers, cfg3) {
-                   $http({
-                      url: '/config/template.json',
-                      method: 'GET'
-                   }).success(function (config, st, h, cfg32) {
+                var nameChecker = new RegExp('^'+$scope.appName.toLowerCase()+'[\\d]+$');
+                var flag = false;
+                for (var i in data.data) {
+                    if (data.data[i].name.match(nameChecker) && data.data[i].name.match(nameChecker).length>0) {
+                        setError('Application with this prefix already exists.');
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag) {
+                    proxify({ // Get list of cartridges
+                        uri: $scope.host + '/broker/rest/cartridges',
+                        headers: {
+                            accept: 'application/json'
+                        },
+                        method: 'GET'
+                    }, function (data, status, headers, cfg1) {
+                        $http({ // Read configuration file for dependencies
+                            url: '/config/rules.json',
+                            method: 'GET'
+                        }).success(function (config, st, h, cfg2) {
+                            $scope.rules = config;
+                        }).error(function (config, st, h, cfg2) {
+                            setError('Could not get cartridge dependency rules.');
+                        });
+                        $http({ // Read configuration file for images
+                            url: '/config/images.json',
+                            method: 'GET'
+                        }).success(function (config, st, h, cfg2) {
                             data.data.forEach(function (ele, i, arr) {
-                                ele.type = 'template';
                                 ele.img = config[ele.display_name];
                                 if (ele.img === undefined) {
                                     ele.img = config['default'];
                                 }
                             });
-                            proxify({ // Get list of cartridges\
-                               uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications',
-                               headers: {
-                                  accept: 'application/json',
-                                  Authorization: $scope.authString
-                               },
-                               method: 'GET'
-                            }, function (data, status, headers, cfg1) {
-                               var nameChecker = new RegExp('^'+$scope.appName.toLowerCase()+'[\\d]+$');
-                               var flag = false;
-                               for (var i in data.data) {
-                                  if (data.data[i].name.match(nameChecker) && data.data[i].name.match(nameChecker).length>0) {
-                                     setError('Application with this prefix already exists.');
-                                     flag = true;
-                                     break;
-                                  }
-                               }
-                               if (!flag) {
-                                  $scope.connected = true;
-                                  $scope.cartridges = temp_cartridges;
-                                  $('#connection').css('color', '#0d0');
-                               }
-                               Busy.stop();
+                        }).error(function (config, st, h, cfg2) {
+                            setError('Could not get cartridge image configuration');
+                        });
+                        $scope.cartridges = data.data;
+                        proxify({ // Get list of templates
+                            uri: $scope.host + '/broker/rest/application_template',
+                            headers: {
+                                accept: 'application/json'
+                            },
+                            method: 'GET'
+                        }, function (data, status, headers, cfg3) {
+                            $http({ // Read configuration file for template images
+                                url: '/config/template.json',
+                                method: 'GET'
+                            }).success(function (config, st, h, cfg3) {
+                                data.data.forEach(function (ele, i, arr) {
+                                    ele.type = 'template';
+                                    ele.img = config[ele.display_name];
+                                    if (ele.img === undefined) {
+                                        ele.img = config['default'];
+                                    }
+                                });
+                            }).error(function (config, st, h, cfg3) {
+                                setError('Could not get application template configuration');
                             });
-                    }).error(function (config, st, h, cfg32) {
-                            setError('Could not get application template configuration');
-                    });
-                    $scope.templates = data.data;
-                    console.log($scope.cartridges);
-                    console.log($scope.templates);
-                    $('#connection').css('color', '#0d0');
-                    Busy.stop();
-                    $scope.connected = true;
+                            $scope.templates = data.data;
+                            console.log($scope.cartridges);
+                            console.log($scope.templates);
+                            $('#connection').css('color', '#0d0');
+                            $scope.connected = true;
+                            Busy.stop();
+                        }, errorCallback);
                     }, errorCallback);
-            }, errorCallback);
+                }
+            }, errorCallback)
         }, errorCallback);
-    };
+    }
 
     // Variables and functions used in the Graph
     $scope.ctr = 0;
