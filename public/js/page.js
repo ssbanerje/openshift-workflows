@@ -324,6 +324,7 @@ var App = function ($scope, $http) {
     $scope.deploy = function () { // Deploy the graph to a openshift broker
         Busy.start();
         $scope.graph.vertices.forEach(function (ele, i, arr) {
+            // Create app for node
             var formData = {};
             if (ele.cartridges[0].type === 'standalone') {
                 formData = {
@@ -340,7 +341,7 @@ var App = function ($scope, $http) {
                     gear_profile: ele.properties.size
                 };
             }
-            proxify({
+            proxify({ // Add cartridges
                 uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications',
                 headers: {
                     accept: 'application/json',
@@ -382,10 +383,12 @@ var App = function ($scope, $http) {
                             cartData[props[k].name] = props[k].value;
                         }
                         ele.properties.cartridge.push(cartData);
+                        if (j == ele.cartridges.length-1) {
+                            ele.deployed = true;
+                            Busy.stop();
+                        }
                     }, errorCallback);
                 }
-                ele.deployed = true;
-                Busy.stop()
             }, errorCallback);
         });
     };
