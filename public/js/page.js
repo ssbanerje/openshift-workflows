@@ -62,25 +62,32 @@ var App = function ($scope, $http) {
 
     // Generic call back to set error for all requests
     var errorCallback = function (data, status, headers, config) {
-       Busy.stop();
-       $scope.error = true;
-       switch (status) {
-          case 401:
-             setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
-          break;
-          case 403:
-             setError('The Openshift server is refusing to respond');
-          break;
-          case 422:
-               setError('The request made to the OpenShift Server is semantically incorrect');
-          break;
-          case 500:
-             setError('The server is broken! Retry in a while');
-          break;
-          default:
-             setError('Error in contacting server!');
-          break;
-       }
+        Busy.stop();
+        $scope.error = true;
+        switch (status) {
+            case 401:
+                setError('Incorrect <strong>username</strong> or <strong>password</strong> entered');
+            break;
+            case 403:
+                setError('The Openshift server is refusing to respond');
+            break;
+            case 404:
+                var str = 'Page not found on server';
+                if (data.error) {
+                    var str = JSON.parse(data.error).messages[0].text
+                }
+                setError(str);
+            break;
+            case 422:
+                setError(JSON.parse(data.error).messages[0].text);
+            break;
+            case 500:
+                setError('The server is broken! Retry in a while');
+                break;
+            default:
+                setError('Error in contacting server!');
+            break;
+        }
     };
 
     // Functions dealing with the connection parameters
@@ -349,6 +356,14 @@ var App = function ($scope, $http) {
 
     $scope.deploy = function () { // Deploy the graph to a openshift broker
         Busy.start();
+        for (var i in $scope.graph.vertices) {
+            console.log($scope.graph.vertices[i].cartridges.length);
+            if ($scope.graph.vertices[i].cartridges.length === 0) {
+                setError('First add cartridges to all nodes');
+                Busy.stop();
+                return;
+            }
+        }
         $scope.graph.vertices.forEach(function (ele, i, arr) {
             var formData = {};
             if (ele.cartridges[0].type === 'standalone') {
