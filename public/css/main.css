@@ -32,6 +32,11 @@ body > .navbar li:hover {
     padding: 0.2em 0;
 }
 
+#errorPlaceHolder {
+    width: 60%;
+    margin: 0 auto;
+}
+
 .relative {
     position: relative;
 }
