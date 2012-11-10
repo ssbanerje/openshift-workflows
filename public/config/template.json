@@ -4,9 +4,9 @@
     "Django": "/img/icons/django.png",
     "Django (Test)": "/img/icons/django_Test.png",
     "Drupal": "/img/icons/drupal_temp.png",
-    "JavaEE Full Profile Example on JBoss": "/img/icons/jboss_temp.png",
-    "Ruby on Rails": "/img/icons/ruby_temp.png",
-    "Spring Framework on JBoss EAP6": "/img/icons/Spring_temp.png",
+    "JavaEE Full Profile Example on JBoss": "/img/icons/javaee.png",
+    "Ruby on Rails": "/img/icons/rails.png",
+    "Spring Framework on JBoss EAP6": "/img/icons/spring.png",
     "WordPress": "/img/icons/wordpress_temp.png",
     "default": "http://placehold.it/120x80"
 }
