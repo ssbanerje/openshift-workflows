@@ -179,8 +179,6 @@ var App = function ($scope, $http) {
                                 setError('Could not get application template configuration');
                             });
                             $scope.templates = data.data;
-                            console.log($scope.cartridges);
-                            console.log($scope.templates);
                             $('#connection').css('color', '#0d0');
                             $scope.connected = true;
                             Busy.stop();
@@ -322,8 +320,6 @@ var App = function ($scope, $http) {
                                         if (siren) {
                                             for (var k in conflicts) {
                                                 if ($.inArray(conflicts[k],$scope.rules.cartridge[Object.keys($scope.rules.cartridge)[check]]) >= 0) {
-                                                    console.log(conflicts);
-                                                    console.log($scope.rules.cartridge[Object.keys($scope.rules.cartridge)[check]]);
                                                     match = true;
                                                     break;
                                                 }
@@ -378,7 +374,6 @@ var App = function ($scope, $http) {
     $scope.deploy = function () { // Deploy the graph to a openshift broker
         Busy.start();
         for (var i in $scope.graph.vertices) {
-            console.log($scope.graph.vertices[i].cartridges.length);
             if ($scope.graph.vertices[i].cartridges.length === 0) {
                 setError('First add cartridges to all nodes');
                 Busy.stop();
