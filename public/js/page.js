@@ -386,6 +386,10 @@ var App = function ($scope, $http) {
     };
 
     $scope.deleteCartridge = function (cartridge, vertex) { // Delete cartridge from vertex
+        if (cartridge.type === 'standalone' || cartridge.type === 'template') {
+           vertex.cartridges = [];
+           return;
+        }
         var i = -1;
         for (i in vertex.cartridges) {
             if(vertex.cartridges[i] === cartridge) {
@@ -393,7 +397,20 @@ var App = function ($scope, $http) {
             }
         }
         if (i>=0) {
-            vertex.cartridges.splice(i);
+            var deleted = vertex.cartridges.splice(i, 1)[0];
+            var keys = Object.keys($scope.rules.cartridge);
+            for (var j in keys) {
+               var pos = $.inArray(deleted.name, $scope.rules.cartridge[keys[j]]);
+               console.log(pos);
+               if (pos>=0) {
+               console.log(keys[j]);
+                  for (var k in vertex.cartridges) {
+                     if (vertex.cartridges[k].name === keys[j]) {
+                        vertex.cartridges.splice(k, 1);
+                     }
+                  }
+               }
+            }
         }
         repaint = true;
     };
