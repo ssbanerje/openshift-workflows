@@ -63,6 +63,9 @@ var App = function ($scope, $http) {
     // Generic call back to set error for all requests
     var errorCallback = function (data, status, headers, config) {
         Busy.stop();
+        if ($scope.deleteRequestCount > 0) {
+            return;
+        }
         $scope.error = true;
         switch (status) {
             case 401:
@@ -116,9 +119,11 @@ var App = function ($scope, $http) {
                 },
                 method: 'DELETE'
             }, function (data, status, headers, config) {
-                $scope.deleteRequestCount++;
-                setError('Deleted ' + $scope.appName + i.toString());
-            }, errorCallback);
+                console.log(data.data);
+            }, function (data, status, headers, config) {
+                console.log(data.data);
+            });
+            $scope.deleteRequestCount++;
         }
         Busy.stop();
         $scope.startDeploy = false;
