@@ -108,7 +108,7 @@ var App = function ($scope, $http) {
         proxify({ // Authenticate user
            uri: $scope.host + '/broker/rest/user',
             headers: {
-                accept: 'application/json',
+                accept: 'application/json; version=1.2',
                 Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
             },
             method: 'GET'
@@ -117,7 +117,7 @@ var App = function ($scope, $http) {
             proxify({ // Check if application is defined
                 uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications',
                 headers: {
-                    accept: 'application/json',
+                    accept: 'application/json; version=1.2',
                     Authorization: $scope.authString
                 },
                 method: 'GET'
@@ -135,7 +135,7 @@ var App = function ($scope, $http) {
                     proxify({ // Get list of cartridges
                         uri: $scope.host + '/broker/rest/cartridges',
                         headers: {
-                            accept: 'application/json'
+                            accept: 'application/json; version=1.2'
                         },
                         method: 'GET'
                     }, function (data, status, headers, cfg1) {
@@ -164,7 +164,7 @@ var App = function ($scope, $http) {
                         proxify({ // Get list of templates
                             uri: $scope.host + '/broker/rest/application_template',
                             headers: {
-                                accept: 'application/json'
+                                accept: 'application/json; version=1.2'
                             },
                             method: 'GET'
                         }, function (data, status, headers, cfg3) {
@@ -404,7 +404,7 @@ var App = function ($scope, $http) {
             proxify({
                 uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications',
                 headers: {
-                    accept: 'application/json',
+                    accept: 'application/json; version=1.2',
                     Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
                 },
                 method: 'POST',
@@ -421,7 +421,7 @@ var App = function ($scope, $http) {
                     proxify({
                         uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications/' + $scope.appName + i.toString() + '/cartridges',
                         headers: {
-                            accept: 'application/json',
+                            accept: 'application/json; version=1.2',
                             Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
                         },
                         method: 'POST',
