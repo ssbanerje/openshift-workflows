@@ -74,7 +74,7 @@ var App = function ($scope, $http) {
             case 404:
                 var str = 'Page not found on server';
                 if (data.error) {
-                    var str = JSON.parse(data.error).messages[0].text
+                    str = JSON.parse(data.error).messages[0].text
                 }
                 setError(str);
             break;
@@ -84,25 +84,42 @@ var App = function ($scope, $http) {
             case 500:
                 var str = 'The server is broken! Retry in a while';
                 if (data.error) {
-                    var str = JSON.parse(data.error).messages[0].text
+                    str = JSON.parse(data.error).messages[0].text
                 }
                 setError(str);
             break;
             default:
                 var str = 'Error in contacting server!';
                 if (data.error) {
-                    var str = JSON.parse(data.error).messages[0].text
+                    str = JSON.parse(data.error).messages[0].text
                 }
                 setError(str);
             break;
         }
     };
-    
+
     // Call back to set error for deployment requests
+    $scope.deleteRequestCount = 0;
     var errorCallbackForDeploy = function (data, status, headers, config) {
         errorCallback(data, status, headers, config);
-        // Delete all allications that were made
+        // Delete all applications that were made
+        if($scope.deleteRequestCount != 0) {
+            return false;
+        }
         Busy.start();
+        for (var i = 0; i<$scope.graph.vertices.length; i++) {
+            proxify({ // Check if application is defined
+                uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications/' + $scope.appName + i,
+                headers: {
+                    accept: 'application/json; version=1.2',
+                    Authorization: $scope.authString
+                },
+                method: 'DELETE'
+            }, function (data, status, headers, config) {
+                $scope.deleteRequestCount++;
+                setError('Deleted ' + $scope.appName + i.toString());
+            }, errorCallback);
+        }
         Busy.stop();
         $scope.startDeploy = false;
     };
@@ -121,7 +138,7 @@ var App = function ($scope, $http) {
         proxify({ // Authenticate user
            uri: $scope.host + '/broker/rest/user',
             headers: {
-                accept: 'application/json',
+                accept: 'application/json; version=1.2',
                 Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
             },
             method: 'GET'
@@ -130,7 +147,7 @@ var App = function ($scope, $http) {
             proxify({ // Check if application is defined
                 uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications',
                 headers: {
-                    accept: 'application/json',
+                    accept: 'application/json; version=1.2',
                     Authorization: $scope.authString
                 },
                 method: 'GET'
@@ -148,7 +165,7 @@ var App = function ($scope, $http) {
                     proxify({ // Get list of cartridges
                         uri: $scope.host + '/broker/rest/cartridges',
                         headers: {
-                            accept: 'application/json'
+                            accept: 'application/json; version=1.2'
                         },
                         method: 'GET'
                     }, function (data, status, headers, cfg1) {
@@ -177,7 +194,7 @@ var App = function ($scope, $http) {
                         proxify({ // Get list of templates
                             uri: $scope.host + '/broker/rest/application_template',
                             headers: {
-                                accept: 'application/json'
+                                accept: 'application/json; version=1.2'
                             },
                             method: 'GET'
                         }, function (data, status, headers, cfg3) {
@@ -369,6 +386,10 @@ var App = function ($scope, $http) {
     };
 
     $scope.deleteCartridge = function (cartridge, vertex) { // Delete cartridge from vertex
+        if (cartridge.type === 'standalone' || cartridge.type === 'template') {
+           vertex.cartridges = [];
+           return;
+        }
         var i = -1;
         for (i in vertex.cartridges) {
             if(vertex.cartridges[i] === cartridge) {
@@ -376,7 +397,20 @@ var App = function ($scope, $http) {
             }
         }
         if (i>=0) {
-            vertex.cartridges.splice(i);
+            var deleted = vertex.cartridges.splice(i, 1)[0];
+            var keys = Object.keys($scope.rules.cartridge);
+            for (var j in keys) {
+               var pos = $.inArray(deleted.name, $scope.rules.cartridge[keys[j]]);
+               console.log(pos);
+               if (pos>=0) {
+               console.log(keys[j]);
+                  for (var k in vertex.cartridges) {
+                     if (vertex.cartridges[k].name === keys[j]) {
+                        vertex.cartridges.splice(k, 1);
+                     }
+                  }
+               }
+            }
         }
         repaint = true;
     };
@@ -391,6 +425,7 @@ var App = function ($scope, $http) {
     // Variables and functions relating to deployment
     $scope.startDeploy = false;
     $scope.deploy = function () { // Deploy the graph to a openshift broker
+        $scope.deleteRequestCount = 0;
         Busy.start();
         $scope.startDeploy = true;
         for (var i in $scope.graph.vertices) {
@@ -423,7 +458,7 @@ var App = function ($scope, $http) {
             proxify({
                 uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications',
                 headers: {
-                    accept: 'application/json',
+                    accept: 'application/json; version=1.2',
                     Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
                 },
                 method: 'POST',
@@ -431,7 +466,7 @@ var App = function ($scope, $http) {
             }, function (data, status, headers, config) {
                 $('.deploy_'+ i.toString() + '_0').css('color', '#0d0');
                 if (ele.cartridges.length === 1) {
-                   Busy.stop();
+                    Busy.stop();
                 }
                 data = JSON.parse(data.error);
                 ele.properties.app.git = data.data.git_url;
