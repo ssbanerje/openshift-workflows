@@ -89,15 +89,26 @@
                 <div class="controller" style="display: none;">
                     <button class="btn btn-success btn-mini" ng-click="addnode(vertex.identifier)"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
                     <button class="btn btn-danger btn-mini" ng-click="removenode(vertex.identifier)"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></button>
-
-
-                    <button class="btn btn-info btn-mini connectionParam" <a href='#nodeDetails{{$index}}' role="button" data-toggle="modal" ><i class="icon-wrench"></i></button>
+                    <button class="btn btn-info btn-mini connectionParam" <a href="#nodeDetails{{$index}}" role="button" data-toggle="modal" ><i class="icon-wrench"></i></button>
                 </div>
 
                 <span ui-if="vertex.cartridges.length==0">Drag cartridges here</span>
                 <div ng-repeat="cart in vertex.cartridges" class="subnode">
                    <img ng-src="{{cart.img}}" draggable="false" ui-event="{dblclick: 'deleteCartridge(cart, vertex)'}">
                 </div>
+            </div>
+            <div ui-if="startDeploy" class="node" id="status" style="top: 80px; left: 30px; width: 200px; height: 300px; background: rgba(10,10,10,0.5); color: white;">
+                <h4>Deployment details</h4>
+                <ul>
+                    <li ng-repeat="vert in graph.vertices">
+                        {{appName}}{{$index}}
+                        <ul>
+                            <li class="deploy_{{$parent.$index}}_{{$index}}" ng-repeat="cart in vert.cartridges" style="color: #d00">
+                                {{cart.display_name}}
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
 
@@ -172,10 +183,10 @@
         <div class="modal hide fade" id="helpmodal" tabindex="-1" role="dialog" aria-labelledby="helpmodal" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>Modal header</h3>
+                <h3>Help</h3>
             </div>
             <div class="modal-body">
-                <p>One fine body…</p>
+                <p>Help is on its way…</p>
             </div>
             <div class="modal-footer">
             </div>
