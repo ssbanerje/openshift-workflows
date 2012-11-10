@@ -1,4 +1,4 @@
-*
+/*
 * Controlling the WebApp
 * ~~ Here be Dragons ~~
 *
@@ -194,135 +194,132 @@ var App = function ($scope, $http) {
         return {src: list, item: item};
     };
 
-    $scope.acceptTokenInSubnode = function (targetArray, token) {       // Check if drag target is acceptable
-          if (token) {
-              var cartridge = token.item;
-              var siren = false;
-              var conflicts=[];
-              if(targetArray.length === 0) {
-                 if (cartridge.type === 'standalone') {
+    $scope.acceptTokenInSubnode = function (targetArray, token) { // Check if drag target is acceptable
+        if (token) {
+            var cartridge = token.item;
+            var siren = false;
+            var conflicts=[];
+            if(targetArray.length === 0) {
+                if (cartridge.type === 'standalone') {
                     return true;
-                 } else if (cartridge.type === 'template') {
-                     return true;
-                 } else {
+                } else if (cartridge.type === 'template') {
+                    return true;
+                } else {
                     setError('First cartridge must be a standalone or template.');
-                 }
-
-              }
-              else {
-                 if (cartridge.type === 'template') {
-                     setError('Can install template in empty application only');
-                     return false;
-                 }
-                 if (cartridge.type != 'standalone') {
+                }
+            } else {
+                if (cartridge.type === 'template') {
+                    setError('Can install template in empty application only');
+                    return false;
+                }
+                if (cartridge.type != 'standalone') {
                     for (var i in targetArray) {
-                       if(targetArray[i].type === 'template') { // checking if added cartridge was a template
-                          for (var j in Object.keys($scope.rules.template)) { // storing in conflicts which are pre-installed in template that conflict
-                             if (targetArray[i].tags[1] === Object.keys($scope.rules.template)[j]) {
-                                for (var k in $scope.rules.template[Object.keys($scope.rules.template)[j]] ) {
-                                   conflicts[k]=$scope.rules.template[Object.keys($scope.rules.template)[j]][k];
+                        if(targetArray[i].type === 'template') { // checking if added cartridge was a template
+                            for (var j in Object.keys($scope.rules.template)) { // storing in conflicts which are pre-installed in template that conflict
+                                if (targetArray[i].tags[1] === Object.keys($scope.rules.template)[j]) {
+                                    for (var k in $scope.rules.template[Object.keys($scope.rules.template)[j]]) {
+                                        conflicts[k]=$scope.rules.template[Object.keys($scope.rules.template)[j]][k];
+                                    }
+                                    siren = true; // siren if true shows that its template
+                                    break;
                                 }
-                                siren = true; // siren if true shows that its template
-                                break;
-                              }
-                          }
+                            }
                         }
                         if(siren === true) {
-                           break;
+                            break;
                         }
-                     }
-                     if ($.inArray(cartridge, targetArray) < 0) {
+                    }
+                    if ($.inArray(cartridge, targetArray) < 0) {
                         var thisIsDB = false;
                         var dbAlreadyAdded = false;
                         for (var i in $scope.cartridges) { // checking if already a database was installed along with template
-                           for (var j in conflicts ) {
-                              if(conflicts[j] === $scope.cartridges[i].name) {
-                                 if($.inArray('database',$scope.cartridges[i].tags)>=0) {
-                                    dbAlreadyAdded = true;
-                                    break;
-                                 }
-                              }
+                            for (var j in conflicts ) {
+                                if(conflicts[j] === $scope.cartridges[i].name) {
+                                    if($.inArray('database',$scope.cartridges[i].tags)>=0) {
+                                        dbAlreadyAdded = true;
+                                        break;
+                                    }
+                                }
                             }
                             if(dbAlreadyAdded) {
-                               break;
+                                break;
                             }
-                       }
-                       for (var i in cartridge.tags) {
-                          if (cartridge.tags[i] === 'database') {
-                             thisIsDB = true;
-                             break;
-                          }
-                       }
+                        }
+                        for (var i in cartridge.tags) {
+                            if (cartridge.tags[i] === 'database') {
+                                thisIsDB = true;
+                                break;
+                            }
+                        }
                        var flag = false;
-                       for (var i in targetArray) {
-                          for (var j in targetArray[i].tags) {
-                             if (targetArray[i].tags[j] === 'database') {
-                                dbAlreadyAdded = flag = true;
-                                break;
-                             }
-                          }
-                          if (flag) {
-                             break;
-                          }
-                       }
-                       if (!(thisIsDB && dbAlreadyAdded)) {
-                          // Checking if there is a rule for this cartridge
-                          flag = false;
-                          var check;
-                          for (var i in Object.keys($scope.rules.cartridge)) {
-                             if (cartridge.name === Object.keys($scope.rules.cartridge)[i]) {
-                                flag = true;
-                                check=i;
-                                break;
-                             }
-                          }
-                          if (!flag) {
-                             return true;
-                          }
-                          // Checking if rules for this cartridge were satsfied
-                          flag = false;
-                          var match=false;
-                          for (var i in Object.keys($scope.rules.cartridge)) {
-                             if (cartridge.name === Object.keys($scope.rules.cartridge)[i]) {
-                                for (var j in targetArray) {
-                                   if ($.inArray(targetArray[j].name, $scope.rules.cartridge[Object.keys($scope.rules.cartridge)[i]]) >= 0) {
-                                      flag = true;
-                                      break;
-                                   }
+                        for (var i in targetArray) {
+                            for (var j in targetArray[i].tags) {
+                                if (targetArray[i].tags[j] === 'database') {
+                                    dbAlreadyAdded = flag = true;
+                                    break;
                                 }
-                                if (flag && !siren) { // checking if dependency was already installed
-                                   return true;
+                            }
+                            if (flag) {
+                                break;
+                            }
+                        }
+                        if (!(thisIsDB && dbAlreadyAdded)) {
+                            // Checking if there is a rule for this cartridge
+                            flag = false;
+                            var check;
+                            for (var i in Object.keys($scope.rules.cartridge)) {
+                                if (cartridge.name === Object.keys($scope.rules.cartridge)[i]) {
+                                    flag = true;
+                                    check=i;
+                                    break;
                                 }
-                                else {
-                                   if (siren) {
-                                      for (var k in conflicts) {
-                                            if ($.inArray(conflicts[k],$scope.rules.cartridge[Object.keys($scope.rules.cartridge)[check]]) >= 0) {
-                                               console.log(conflicts);
-                                               console.log($scope.rules.cartridge[Object.keys($scope.rules.cartridge)[check]]);
-                                               match = true;
-                                               break;
+                            }
+                            if (!flag) {
+                                return true;
+                            }
+                            // Checking if rules for this cartridge were satsfied
+                            flag = false;
+                            var match=false;
+                            for (var i in Object.keys($scope.rules.cartridge)) {
+                                if (cartridge.name === Object.keys($scope.rules.cartridge)[i]) {
+                                    for (var j in targetArray) {
+                                        if ($.inArray(targetArray[j].name, $scope.rules.cartridge[Object.keys($scope.rules.cartridge)[i]]) >= 0) {
+                                            flag = true;
+                                            break;
+                                        }
+                                    }
+                                    if (flag && !siren) { // checking if dependency was already installed
+                                        return true;
+                                    } else {
+                                        if (siren) {
+                                            for (var k in conflicts) {
+                                                if ($.inArray(conflicts[k],$scope.rules.cartridge[Object.keys($scope.rules.cartridge)[check]]) >= 0) {
+                                                    console.log(conflicts);
+                                                    console.log($scope.rules.cartridge[Object.keys($scope.rules.cartridge)[check]]);
+                                                    match = true;
+                                                    break;
+                                                }
                                             }
-                                         }
-                                      }
-                                      if (match ) {
-                                         return true;
-                                      }
-                                    setError('Install ' + $scope.rules.cartridge[Object.keys($scope.rules.cartridge)[i]] + ' first.');
-                                 }
-                               }
-                             }
-                       } else {
-                          setError('Only one database cartridge is allowed.');
-                       }
+                                        }
+                                        if (match ) {
+                                            return true;
+                                        }
+                                        setError('Install ' + $scope.rules.cartridge[Object.keys($scope.rules.cartridge)[i]] + ' first.');
+                                    }
+                                }
+                            }
+                        } else {
+                            setError('Only one database cartridge is allowed.');
+                        }
                     } else {
-                       setError('Duplicate cartridges cannot be added.');
+                        setError('Duplicate cartridges cannot be added.');
                     }
-                 } else {
+                } else {
                     setError('Cannot add this to application. Standalone cartridge or template already added.');
-                 }
-              }
-       }
-       return false;
+                }
+            }
+        }
+        return false;
     };
 
     $scope.commitTokenInSubnode = function (to, token) { // Add cartridge to vertex
