@@ -74,7 +74,7 @@ var App = function ($scope, $http) {
             case 404:
                 var str = 'Page not found on server';
                 if (data.error) {
-                    var str = JSON.parse(data.error).messages[0].text
+                    str = JSON.parse(data.error).messages[0].text
                 }
                 setError(str);
             break;
@@ -84,25 +84,42 @@ var App = function ($scope, $http) {
             case 500:
                 var str = 'The server is broken! Retry in a while';
                 if (data.error) {
-                    var str = JSON.parse(data.error).messages[0].text
+                    str = JSON.parse(data.error).messages[0].text
                 }
                 setError(str);
             break;
             default:
                 var str = 'Error in contacting server!';
                 if (data.error) {
-                    var str = JSON.parse(data.error).messages[0].text
+                    str = JSON.parse(data.error).messages[0].text
                 }
                 setError(str);
             break;
         }
     };
-    
+
     // Call back to set error for deployment requests
+    $scope.deleteRequestCount = 0;
     var errorCallbackForDeploy = function (data, status, headers, config) {
         errorCallback(data, status, headers, config);
-        // Delete all allications that were made
+        // Delete all applications that were made
+        if($scope.deleteRequestCount != 0) {
+           return false;
+        }
         Busy.start();
+        for (var i = 0; i<$scope.graph.vertices.length; i++) {
+           proxify({ // Check if application is defined
+              uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications/' + $scope.appName + i,
+              headers: {
+                 accept: 'application/json; version=1.2',
+                 Authorization: $scope.authString
+              },
+              method: 'DELETE'
+           }, function (data, status, headers, config) {
+              $scope.deleteRequestCount++;
+              setError('Deleted ' + $scope.appName + i.toString());
+           }, errorCallback);
+        }
         Busy.stop();
         $scope.startDeploy = false;
     };
@@ -391,6 +408,7 @@ var App = function ($scope, $http) {
     // Variables and functions relating to deployment
     $scope.startDeploy = false;
     $scope.deploy = function () { // Deploy the graph to a openshift broker
+        $scope.deleteRequestCount = 0;
         Busy.start();
         $scope.startDeploy = true;
         for (var i in $scope.graph.vertices) {
