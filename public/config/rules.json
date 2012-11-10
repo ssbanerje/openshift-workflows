@@ -1,5 +1,13 @@
 {
-   "rockmongo-1.1": ["mongodb-2.2"],
-   "10gen-mms-agent-0.1": ["mongodb-2.2"],
-   "phpmyadmin-3.4": ["mysql-5.1"]
+    "cartridge": {
+        "rockmongo-1.1": ["mongodb-2.2"],
+        "10gen-mms-agent-0.1": ["mongodb-2.2"],
+        "phpmyadmin-3.4": ["mysql-5.1"]
+    },
+    "template": {
+        "cakephp": ["mysql-5.1"],
+        "drupal": ["mysql-5.1"],
+        "rails": ["mysql-5.1"],
+        "wordpress": ["mysql-5.1"]
+    }
 }
