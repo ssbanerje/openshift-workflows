@@ -85,7 +85,11 @@ var App = function ($scope, $http) {
                 setError('The server is broken! Retry in a while');
                 break;
             default:
-                setError('Error in contacting server!');
+                var str = 'Error in contacting server!';
+                if (data.error) {
+                    var str = JSON.parse(data.error).messages[0].text
+                }
+                setError(str);
             break;
         }
     };
@@ -374,7 +378,7 @@ var App = function ($scope, $http) {
     $scope.deploy = function () { // Deploy the graph to a openshift broker
         Busy.start();
         for (var i in $scope.graph.vertices) {
-            if ($scope.graph.vertices[i].cartridges.length === 0) {
+            if ($scope.graph.vertices[i].cartridges && $scope.graph.vertices[i].cartridges.length === 0) {
                 setError('First add cartridges to all nodes');
                 Busy.stop();
                 return;
