@@ -5,12 +5,17 @@
 */
 
 // Set the global error in the application
+var errorQueue = [];
 function setError(text) {
+    errorQueue.forEach(function (ele, i, arr) {
+        clearTimeout(ele);
+    });
+    errorQueue = [];
     $('#errorPlaceHolder').html('<div class="alert alert-error fade in"><i class="icon-exclamation-sign"></i>' + text
                                 + '<a class="close" data-dismiss="alert" href="#">&times;</a></div>');
-    setTimeout(function() { // Auto close error message
+    errorQueue.push(setTimeout(function() { // Auto close error message
         $(".alert").alert('close');
-    }, 10000);
+    }, 10000));
 }
 
 // Main!
