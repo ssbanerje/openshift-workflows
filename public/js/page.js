@@ -485,7 +485,7 @@ var App = function ($scope, $http) {
                     proxify({
                         uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications/' + $scope.appName + i.toString() + '/cartridges',
                         headers: {
-                            accept: 'application/json',
+                            accept: 'application/json; version=1.2',
                             Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
                         },
                         method: 'POST',
