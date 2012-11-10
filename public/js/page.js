@@ -96,6 +96,14 @@ var App = function ($scope, $http) {
                 setError(str);
             break;
         }
+    };
+    
+    // Call back to set error for deployment requests
+    var errorCallbackForDeploy = function (data, status, headers, config) {
+        errorCallback(data, status, headers, config);
+        // Delete all allications that were made
+        Busy.start();
+        Busy.stop();
         $scope.startDeploy = false;
     };
 
@@ -380,6 +388,7 @@ var App = function ($scope, $http) {
         repaint = false;
     }, 100);
 
+    // Variables and functions relating to deployment
     $scope.startDeploy = false;
     $scope.deploy = function () { // Deploy the graph to a openshift broker
         Busy.start();
@@ -420,6 +429,7 @@ var App = function ($scope, $http) {
                 method: 'POST',
                 form: formData
             }, function (data, status, headers, config) {
+                $('.deploy_'+ i.toString() + '_0').css('color', '#0d0');
                 if (ele.cartridges.length === 1) {
                    Busy.stop();
                 }
@@ -439,6 +449,7 @@ var App = function ($scope, $http) {
                             cartridge: ele.cartridges[j].name
                         }
                     }, function (data, status, headers, config) {
+                        $('.deploy_'+ i.toString() + '_' + j.toString()).css('color', '#0d0')
                         if (j==ele.cartridges.length-1) {
                             Busy.stop();
                         }
@@ -453,14 +464,14 @@ var App = function ($scope, $http) {
                             cartData[props[k].name] = props[k].value;
                         }
                         ele.properties.cartridge.push(cartData);
-                    }, errorCallback);
+                    }, errorCallbackForDeploy);
                 }
                 ele.deployed = true;
                 if (i === $scope.graph.vertices.length) {
                     Busy.stop();
                     $scope.startDeploy = false;
                 }
-            }, errorCallback);
+            }, errorCallbackForDeploy);
         });
     };
 };
