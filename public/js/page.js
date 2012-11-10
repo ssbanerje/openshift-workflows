@@ -438,33 +438,35 @@ var App = function ($scope, $http) {
                 ele.properties.app.app = data.data.app_url;
                 ele.properties.app.ssh = data.data.ssh_url;
                 for (var j=1; j<ele.cartridges.length; j++) {
-                    proxify({
-                        uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications/' + $scope.appName + i.toString() + '/cartridges',
-                        headers: {
-                            accept: 'application/json',
-                            Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
-                        },
-                        method: 'POST',
-                        form: {
-                            cartridge: ele.cartridges[j].name
-                        }
-                    }, function (data, status, headers, config) {
-                        $('.deploy_'+ i.toString() + '_' + j.toString()).css('color', '#0d0')
-                        if (j==ele.cartridges.length-1) {
-                            Busy.stop();
-                        }
-                        data = JSON.parse(data.error);
-                        var cartData = {};
-                        cartData.name = data.data.name;
-                        for (var k in data.data.properties) {
-                            var props = data.data.properties;
-                            if (props[k].name === '' || props[k].value === '') {
-                                continue;
+                    setTimeout(function (ele, i, j) {
+                        proxify({
+                            uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications/' + $scope.appName + i.toString() + '/cartridges',
+                            headers: {
+                                accept: 'application/json',
+                                Authorization: 'Basic ' + window.btoa($scope.username + ':' + $scope.password)
+                            },
+                            method: 'POST',
+                            form: {
+                                cartridge: ele.cartridges[j].name
                             }
-                            cartData[props[k].name] = props[k].value;
-                        }
-                        ele.properties.cartridge.push(cartData);
-                    }, errorCallbackForDeploy);
+                        }, function (data, status, headers, config) {
+                            $('.deploy_'+ i.toString() + '_' + j.toString()).css('color', '#0d0')
+                            if (j==ele.cartridges.length-1) {
+                                Busy.stop();
+                            }
+                            data = JSON.parse(data.error);
+                            var cartData = {};
+                            cartData.name = data.data.name;
+                            for (var k in data.data.properties) {
+                                var props = data.data.properties;
+                                if (props[k].name === '' || props[k].value === '') {
+                                    continue;
+                                }
+                                cartData[props[k].name] = props[k].value;
+                            }
+                            ele.properties.cartridge.push(cartData);
+                        }, errorCallbackForDeploy);
+                    }, 20000*(j-1), $scope.graph.vertices[i], i, j);
                 }
                 ele.deployed = true;
                 if (i === $scope.graph.vertices.length) {
