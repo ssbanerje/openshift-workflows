@@ -110,6 +110,7 @@ var App = function ($scope, $http) {
             return false;
         }
         Busy.start();
+        setError('Rolling back applications created');
         for (var i = 0; i<$scope.graph.vertices.length; i++) {
             proxify({ // Check if application is defined
                 uri: $scope.host + '/broker/rest/domains/' + $scope.namespace + '/applications/' + $scope.appName + i,
@@ -119,7 +120,7 @@ var App = function ($scope, $http) {
                 },
                 method: 'DELETE'
             }, function (data, status, headers, config) {
-                console.log(data.data);
+                $scope.graph.vertices[i].deployed = false;
             }, function (data, status, headers, config) {
                 console.log(data.data);
             });
