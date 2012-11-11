@@ -126,7 +126,7 @@ var App = function ($scope, $http) {
             $scope.deleteRequestCount++;
         }
         Busy.stop();
-        $scope.startDeploy = false;
+        $scope.deployingApp = false;
     };
 
     /// Functions dealing with the connection parameters
@@ -428,11 +428,11 @@ var App = function ($scope, $http) {
     }, 100);
 
     // Variables and functions relating to deployment
-    $scope.startDeploy = false;
+    $scope.deployingApp = false;
     $scope.deploy = function () { // Deploy the graph to a openshift broker
         $scope.deleteRequestCount = 0;
         Busy.start();
-        $scope.startDeploy = true;
+        $scope.deployingApp = true;
         for (var i in $scope.graph.vertices) {
             $scope.graph.vertices[i].deployed = false;
         }
@@ -515,7 +515,7 @@ var App = function ($scope, $http) {
                 ele.deployed = true;
                 if (i === $scope.graph.vertices.length) {
                     Busy.stop();
-                    $scope.startDeploy = false;
+                    $scope.deployingApp = false;
                 }
             }, errorCallbackForDeploy);
         });
