@@ -166,7 +166,10 @@ var App = function ($scope, $http) {
                         break;
                     }
                 }
-                if (!flag) {
+                if (flag) {
+                   Busy.stop();
+                   return;
+                } else {
                     proxify({ // Get list of cartridges
                         uri: $scope.host + '/broker/rest/cartridges',
                         headers: {
@@ -470,9 +473,6 @@ var App = function ($scope, $http) {
                 form: formData
             }, function (data, status, headers, config) {
                 $('.deploy_'+ i.toString() + '_0').css('color', '#0d0');
-                if (ele.cartridges.length === 1) {
-                    Busy.stop();
-                }
                 data = JSON.parse(data.error);
                 ele.properties.app.git = data.data.git_url;
                 ele.properties.app.app = data.data.app_url;
@@ -494,9 +494,6 @@ var App = function ($scope, $http) {
                         }
                     }, function (data, status, headers, config) {
                         $('.deploy_'+ i.toString() + '_' + j.toString()).css('color', '#0d0')
-                        if (j==ele.cartridges.length-1) {
-                            Busy.stop();
-                        }
                         data = JSON.parse(data.error);
                         var cartData = {};
                         cartData.name = data.data.name;
@@ -513,11 +510,25 @@ var App = function ($scope, $http) {
                 };
                 recursiveProxify(1);
                 ele.deployed = true;
-                if (i === $scope.graph.vertices.length) {
-                    Busy.stop();
-                    $scope.startDeploy = false;
-                }
             }, errorCallbackForDeploy);
+            // Check to see if all operations have been finished
+            var int = setInterval(function () {
+               var flag = true;
+               for (var i=0; i<$scope.graph.vertices.length; i++) {
+                  if ($scope.graph.vertices[i].deployed != true) {
+                     flag = false;
+                     break;
+                  }
+               }
+               if (flag) {
+                  Busy.stop();
+                  $scope.startDeploy = false;
+                  clearInterval(int);
+               }
+            }, 1000);
         });
+
+
     };
+
 };
