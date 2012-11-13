@@ -89,7 +89,7 @@
                 <div class="controller" style="display: none;">
                     <button class="btn btn-success btn-mini" ng-click="addnode(vertex.identifier)"><i class="icon-arrow-up"></i> <i class="icon-cog"></i></button>
                     <button class="btn btn-danger btn-mini" ng-click="removenode(vertex.identifier)"><i class="icon-arrow-down"></i> <i class="icon-cog"></i></button>
-                    <button class="btn btn-info btn-mini connectionParam" <a href="#nodeDetails{{$index}}" role="button" data-toggle="modal" ><i class="icon-wrench"></i></button>
+                    <button class="btn btn-info btn-mini" <a href="#nodeDetails{{$index}}" role="button" data-toggle="modal" ><i class="icon-wrench"></i></button>
                 </div>
 
                 <span ui-if="vertex.cartridges.length==0">Drag cartridges here</span>
@@ -217,6 +217,13 @@
                                 <input type="checkbox" ng-model="node.properties.autoScale">
                             </div>
                         </div>
+                        <div class="control-group">
+                             <label class="control-label">Redeploy</label>
+                             <div class="controls">
+                                 <input type="checkbox" ng-model="node.properties.reDeploy">
+                             </div>
+                         </div>
+
                     </form>
                 </section>
                 <section ui-if="node.deployed">

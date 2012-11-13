@@ -15,7 +15,8 @@ var Vertex = function (div_id) {
         size : "small",
         autoScale: false,
         app : {git:"" ,app:"",ssh:""},
-        cartridge: []
+        cartridge: [],
+        redeploy : false
     };
     this.deployed = false;
 
