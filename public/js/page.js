@@ -440,8 +440,8 @@ var App = function ($scope, $http) {
         for (var i in $scope.graph.vertices) {
             $scope.graph.vertices[i].deployed = false;
         }
-        for (var i in $scope.graph.vertices) {
-                if ($scope.graph.vertices[i].cartridges && $scope.graph.vertices[i].cartridges.length === 0) {
+        for (var i in $scope.graph.vertices) {\
+           if ($scope.graph.vertices[i].cartridges && $scope.graph.vertices[i].cartridges.length === 0) {
                 setError('First add cartridges to all nodes');
                 Busy.stop();
                 return;
@@ -522,14 +522,11 @@ var App = function ($scope, $http) {
                     }
                 }
                 if (flag) {
-                    Busy.stop();
                     $scope.deployingApp = false;
+                    Busy.stop();
                     clearInterval(int);
                 }
             }, 1000);
-
-
-
-           });
+        });
     };
 };
