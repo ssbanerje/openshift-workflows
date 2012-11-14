@@ -68,33 +68,6 @@
 %\definecolor{lightblue}{cmyk}{0.83,0.24,0,0.12}
 \definecolor{lightblue}{rgb}{0.145,0.6666,1}
 
-% Draw a video
-\newlength{\FSZ}
-\newcommand{\drawvideo}[3]{% [0 0.25 0.5 0.75 1 1.25 1.5]
-   \noindent\pgfmathsetlength{\FSZ}{\linewidth/#2}
-   \begin{tikzpicture}[outer sep=0pt,inner sep=0pt,x=\FSZ,y=\FSZ]
-   \draw[color=lightblue!50!black] (0,0) node[outer sep=0pt,inner sep=0pt,text width=\linewidth,minimum height=0] (video) {\noindent#3};
-   \path [fill=lightblue!50!black,line width=0pt]
-     (video.north west) rectangle ([yshift=\FSZ] video.north east)
-    \foreach \x in {1,2,...,#2} {
-      {[rounded corners=0.6] ($(video.north west)+(-0.7,0.8)+(\x,0)$) rectangle +(0.4,-0.6)}
-    }
-;
-   \path [fill=lightblue!50!black,line width=0pt]
-     ([yshift=-1\FSZ] video.south west) rectangle (video.south east)
-    \foreach \x in {1,2,...,#2} {
-      {[rounded corners=0.6] ($(video.south west)+(-0.7,-0.2)+(\x,0)$) rectangle +(0.4,-0.6)}
-    }
-;
-   \foreach \x in {1,...,#1} {
-     \draw[color=lightblue!50!black] ([xshift=\x\linewidth/#1] video.north west) -- ([xshift=\x\linewidth/#1] video.south west);
-   }
-   \foreach \x in {0,#1} {
-     \draw[color=lightblue!50!black] ([xshift=\x\linewidth/#1,yshift=1\FSZ] video.north west) -- ([xshift=\x\linewidth/#1,yshift=-1\FSZ] video.south west);
-   }
-   \end{tikzpicture}
-}
-
 \hyphenation{resolution occlusions}
 %%
 \begin{poster}%
@@ -126,78 +99,63 @@
     background=plain,
     linewidth=2pt
   }
-  % Eye Catcher
+  % Lab
   {\includegraphics[height=5em]{images/siel.png}}
   % Title
-  {\bf\textsc{Visual Work-flows for OpenShift}\vspace{0.5em}}
+  {\bf\textsc{Visual Work-Flows for OpenShift}\vspace{0.5em}}
   % Authors
   {\small{\textsc{Sanchit Aggarwal~~~~Sandeep Panem~~~~Subho Banerjee~~~~Vijayendra Grampurohit}}}
   % University logo
-  {% The makebox allows the title to flow into the logo, this is a hack because of the L shaped logo.
-    \includegraphics[height=7.0em]{images/iiith.jpg}
-  }
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Now define the boxes that make up the poster
-%%%---------------------------------------------------------------------------
-%%% Each box has a name and can be placed absolutely or relatively.
-%%% The only inconvenience is that you can only specify a relative position
-%%% towards an already declared box. So if you have a box attached to the
-%%% bottom, one to the top and a third one which should be in between, you
-%%% have to specify the top and bottom boxes before you specify the middle
-%%% box.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  {\includegraphics[height=7.0em]{images/iiith.jpg}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \headerbox{Problem}{name=problem,column=0,row=0}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  Identify enterprise work-flows for a PaaS application and build an application which allows --
+  \noindent Identify enterprise work-flows for deploying applications to Openshift and build a client which provides an interface to the Broker-API for simple deployments as well as more complicated work-flows using --
+  \vspace{-0.2em}
    \begin{enumerate}\compresslist
-      \item Identify and implement more enterprise work-flows
-      \item Implement keystone authentication
+      \item Keystone authentication
+      \item Openshift REST API
       \item Abstract interface to create your own work-flows
    \end{enumerate}
-   \vspace{0.5em}
+   \vspace{0.2em}
  }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \headerbox{Contributions}{name=contribution,column=1,row=0,bottomaligned=problem}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   We designed and implemented a system which can take as an input an enterprise workflow and deploy it to the Openshift broker.
-
-   Some salient features of our project are
-   \begin{enumerate}\compresslist
-   \item \texttt{HTML5} based drag and drop interface for building work-flows.
-   \item Ability to deploy to all Openshift distributions
-   \item Extensible
-   \end{enumerate}
+  \noindent We designed and implemented a system which can take as an input, an enterprise workflow for Openshift and then deploys it to the cloud. Some salient features of our project are
+  \begin{enumerate}\compresslist
+    \item \texttt{HTML5} based drag and drop interface for building work-flows.
+    \item Ability to deploy to all Openshift distributions
+    \item Extensible
+  \end{enumerate}
+  \vspace{0.5em}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \headerbox{User Interactions}{name=interactions,column=2,span=2,row=0}{
+  \headerbox{Architecture}{name=arch,column=2,span=2,row=0}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \vspace{28em}
+  \vspace{29.5em}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \headerbox{Architecture}{name=arch,below=problem,column=0,span=2}{
+  \headerbox{User Interactions}{name=interactions,below=problem,column=0,span=2}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \vspace{30em}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \headerbox{Screenshots}{name=product,below=interactions,column=2,span=2,bottomaligned=arch}{
+  \headerbox{Screenshots}{name=product,below=arch,column=2,span=2,bottomaligned=interactions}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \vspace{0.3em}
   \begin{center}
     \includegraphics[width=22em]{images/screenshot_1.png}
     \includegraphics[width=22em]{images/screenshot_2.png}
   \end{center}
-  \vspace{0.3em}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \headerbox{Technologies Used}{name=tech,column=0,below=arch}{
+  \headerbox{Technologies Used}{name=tech,column=0,below=interactions}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \includegraphics[width=0.4\linewidth]{images/nodejs.png}
   \includegraphics[width=0.1\linewidth]{images/html5.png}
@@ -206,17 +164,28 @@
   \includegraphics[width=0.1\linewidth]{images/bootstrap.png}
   \includegraphics[width=0.4\linewidth]{images/jqueryui.png}
 }
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \headerbox{A Future Direction}{name=questions,column=1,span=2,aligned=references,below=product,bottomaligned=tech}{
+  \headerbox{Future Versions}{name=future,column=1,span=2,aligned=references,below=product,bottomaligned=tech}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \vspace{5em}
+  \begin{multicols}{2}
+    We would like to extend the application to managing deployed apps as well. Particularly, setting auto-scale parameters and controlling the life-cycle.
+
+    We would also like to add a mechanism by which the user can directly deploy his code using our portal rather than having to synchronize \texttt{Git} repositories manually.
+  \end{multicols}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \headerbox{Source Code}{name=references,column=3,aligned=tech,below=product,bottomaligned=tech}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  The source code for the back and front end is available available at \\
-  \url{https://github.com/subszero/openshift-workflows}
+  \noindent\begin{tabular}{cc}
+    \begin{minipage}{0.8\linewidth}
+      The source code for the back and front end is available available at\\ \url{https://github.com/subszero/openshift-workflows}
+    \end{minipage}&
+    \begin{minipage}{0.2\linewidth}
+      \includegraphics[width=0.7\linewidth]{images/github.png}
+    \end{minipage}
+  \end{tabular}\\[1em]
   \vspace{0.3em}
 }
 
