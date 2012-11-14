@@ -99,14 +99,14 @@
     background=plain,
     linewidth=2pt
   }
-  % Lab
-  {\includegraphics[height=5em]{images/siel.png}}
+  % Eye Catcher
+  {\includegraphics[height=7em]{images/workflow.png}}
   % Title
   {\bf\textsc{Visual Work-Flows for OpenShift}\vspace{0.5em}}
   % Authors
   {\small{\textsc{Sanchit Aggarwal~~~~Sandeep Panem~~~~Subho Banerjee~~~~Vijayendra Grampurohit}}}
   % University logo
-  {\includegraphics[height=7.0em]{images/iiith.jpg}}
+  {\includegraphics[height=6em]{images/siel.png}\includegraphics[height=6em]{images/cloud.png}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \headerbox{Problem}{name=problem,column=0,row=0}{
@@ -124,7 +124,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \headerbox{Contributions}{name=contribution,column=1,row=0,bottomaligned=problem}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \noindent We designed and implemented a system which can take as an input, an enterprise workflow for Openshift and then deploys it to the cloud. Some salient features of our project are
+  \noindent We designed and implemented a system which can take as an input, an enterprise workflow for Openshift and then deploys it to the cloud. Some salient features of our project are --
   \begin{enumerate}\compresslist
     \item \texttt{HTML5} based drag and drop interface for building work-flows.
     \item Ability to deploy to all Openshift distributions
@@ -136,22 +136,30 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \headerbox{Architecture}{name=arch,column=2,span=2,row=0}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \vspace{29.5em}
+  \noindent\begin{tabular}{cc}
+    \begin{minipage}{0.5\linewidth}
+      \includegraphics[width=0.85\linewidth]{images/arch.pdf}
+    \end{minipage}&
+    \begin{minipage}{0.5\linewidth}
+      \includegraphics[width=0.9\linewidth]{images/class.png}
+    \end{minipage}
+  \end{tabular}\\[1em]
+  \vspace{0.3em}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \headerbox{User Interactions}{name=interactions,below=problem,column=0,span=2}{
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \vspace{30em}
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \headerbox{Screenshots}{name=product,below=arch,column=2,span=2,bottomaligned=interactions}{
+  \headerbox{Screenshots}{name=product,below=arch,column=2,span=2}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{center}
     \includegraphics[width=22em]{images/screenshot_1.png}
     \includegraphics[width=22em]{images/screenshot_2.png}
   \end{center}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \headerbox{User Interactions}{name=interactions,below=problem,column=0,span=2,bottomaligned=product}{
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \includegraphics[width=0.9\linewidth]{images/interactions.png}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -166,7 +174,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \headerbox{Future Versions}{name=future,column=1,span=2,aligned=references,below=product,bottomaligned=tech}{
+  \headerbox{Future Work}{name=future,column=1,span=2,aligned=references,below=product,bottomaligned=tech}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{multicols}{2}
     We would like to extend the application to managing deployed apps as well. Particularly, setting auto-scale parameters and controlling the life-cycle.
