@@ -87,8 +87,10 @@ The configuration file has two parts, the cartridge hash, which stores the depen
 * [Openshift User Guide](https://openshift.redhat.com/community/sites/default/files/documents/OpenShift-2.0-User_Guide-en-US.pdf)
 * [Openshift REST API Guide](https://openshift.redhat.com/community/sites/default/files/documents/OpenShift-2.0-REST_API_Guide-en-US_0.pdf)
 
-### Technology reference
-#### Backend
+### Application Architecture
+[Poster](https://github.com/subszero/openshift-workflows/blob/poster/poster_output.pdf)
+
+#### Technologies used in the backend
 * [NodeJS](http://www.nodejs.org/)
 * [ExpressJS](http://expressjs.com/) ( + [Embedded JavaScript](http://embeddedjs.com/) )
 * [RequestJS](https://github.com/mikeal/request)
@@ -96,7 +98,7 @@ The configuration file has two parts, the cartridge hash, which stores the depen
 
 
 
-#### Frontend
+#### Technologies used in the frontend
 * [HTML5 Rocks](http://www.html5rocks.com/en/)
 * [jQuery](http://jquery.com/) ( + [jQuery-UI](http://jqueryui.com/) )
 * [Bootstrap](http://twitter.github.com/bootstrap/)
