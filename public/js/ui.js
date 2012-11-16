@@ -44,13 +44,33 @@ $(function () {
 
     setInterval(function () {
         // Enable popovers
+        var isVisible = false;
+        var clickedAway = false;
+
         $("[rel=popover]").popover({
             animation: true,
             trigger: 'click',
             offset: 10,
             placement: 'top',
             delay: { show: 500, hide: 100 }
-        }).click(function (e) { e.preventDefault(); });
+        }).click(function (e) {
+                $(this).popover('show');
+                clickedAway = false
+                isVisible = true
+                e.preventDefault(); });
+
+
+        $(document).click(function(e) {
+           if(isVisible & clickedAway)
+           {
+               $("[rel=popover]").popover('hide')
+               isVisible = clickedAway = false
+           }
+           else
+           {
+                    clickedAway = true
+           }
+        });
 
         // Make all nodes draggable
         jsPlumb.draggable($(".node"));
