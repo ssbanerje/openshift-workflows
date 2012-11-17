@@ -516,10 +516,7 @@ var App = function ($scope, $http) {
             var int = setInterval(function () {
                 var flag = true;
                 for (var i=0; i<$scope.graph.vertices.length; i++) {
-                    if ($scope.graph.vertices[i].deployed != true) {
-                        flag = false;
-                        break;
-                    }
+                    flag = flag && $scope.graph.vertices[i].deployed;
                 }
                 if (flag) {
                     $scope.deployingApp = false;
