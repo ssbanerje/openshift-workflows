@@ -2,7 +2,9 @@
 A client for the [OpenShift](http://www.github.com/openshift) which provides an interface
 to the Broker-API for simple deployments as well as more complicated workflows.
 
-![Screenshot](https://raw.github.com/subszero/openshift-workflows/master/public/img/screenshot.png)
+![Screenshot](https://raw.github.com/subszero/openshift-workflows/poster/images/screenshot_1.png)
+
+![Screenshot](https://raw.github.com/subszero/openshift-workflows/poster/images/screenshot_2.png)
 
 
 ## Installation
@@ -88,7 +90,7 @@ The configuration file has two parts, the cartridge hash, which stores the depen
 * [Openshift REST API Guide](https://openshift.redhat.com/community/sites/default/files/documents/OpenShift-2.0-REST_API_Guide-en-US_0.pdf)
 
 ### Application Architecture
-[Poster](https://github.com/subszero/openshift-workflows/blob/poster/poster_output.pdf)
+A basic description of the application architecture can be found in this [poster](https://github.com/subszero/openshift-workflows/raw/poster/poster_output.pdf).
 
 #### Technologies used in the backend
 * [NodeJS](http://www.nodejs.org/)
