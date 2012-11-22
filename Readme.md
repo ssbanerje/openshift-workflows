@@ -31,7 +31,7 @@ $ node app.js -b
 ```
 
 ## Configuration files
-This application was built to be used with the FreeShift or MegaShift service provided on the [Red Hat Cloud](https://openshift.redhat.com/). However, it can be used with any deployment of the [Openshift Origin](https://github.com/openshift). If however, you have tweaked this to include non-standard cartridges and templates, it may be required to make changes in the following configuration files -
+This application was built to be used with the FreeShift or MegaShift service provided on the [Red Hat Cloud](https://openshift.redhat.com/). However, it can be used with any deployment of the [Openshift Origin](https://github.com/openshift). If however, your deployment of Openshift is tweaked to include non-standard cartridges and templates, you will be required to make changes in the following configuration files -
 
 * public/conf/images.json - This file controls the images that are used to display cartridges on the screen.
 
@@ -48,7 +48,7 @@ This application was built to be used with the FreeShift or MegaShift service pr
     "PHP 5.3": "/img/icons/php.png"
 }
 ```
-The file stores a hash with the name of the cartridge as key and the location of the corresponding image as value.
+The file stores a hash with the name of the cartridge as key and the location of the corresponding image as value. The images that are shipped with the code are placed in the `/public/img/icons` folder. However, you may give a link to a generic image on the internet.
 
 * public/conf/templates.json - This file controls the images that are used to display templates on the screen.
 
@@ -60,7 +60,7 @@ The file stores a hash with the name of the cartridge as key and the location of
     "Django (Test)": "/img/icons/django_Test.png"
 }
 ```
-The file stores a hash with the name of the template as key and the location of the corresponding image as value.
+The file stores a hash with the name of the template as key and the location of the corresponding image as value. The images that are shipped with the code are placed in the `/public/img/icons` folder. However, you may give a link to a generic image on the internet.
 
 * public/conf/rules.json - This file defines dependencies between cartridges and templates, so that a semantically correct workflow can be defined.
 
@@ -80,7 +80,7 @@ The file stores a hash with the name of the template as key and the location of 
 }
 ```
 
-The configuration file has two parts, the cartridge hash, which stores the dependencies of cartridges, *ie.* `"rockmongo-1.1": ["mongodb-2.2"]` means that RockMongo cannot be installed without MongoDB installed first. The second part of this configuration file, the template hash, stores the embedded cartridges that are installed along with the template, *ie.* `"cakephp": ["mysql-5.1"]` means that CakePHP installs MySQL as one of it's embedded cartridges.
+The configuration file has two parts, the **cartridge hash**, which stores the dependencies of cartridges, *ie.* `"rockmongo-1.1": ["mongodb-2.2"]` means that RockMongo cannot be installed without MongoDB installed first. The second part of this configuration file, the **template hash**, stores the embedded cartridges that are installed along with the template, *ie.* `"cakephp": ["mysql-5.1"]` means that CakePHP installs MySQL as one of it's embedded cartridges.
 
 
 ## Useful Links
