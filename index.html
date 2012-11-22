@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Openshift Workflows by subszero</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Openshift Workflows</h1>
+        <p>Visual Workflows for Openshift</p>
+
+        <p class="view"><a href="https://github.com/subszero/openshift-workflows">View the Project on GitHub <small>subszero/openshift-workflows</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/subszero/openshift-workflows/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/subszero/openshift-workflows/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/subszero/openshift-workflows">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Openshift Workflows</h1>
+
+<p>A client for the <a href="http://www.github.com/openshift">OpenShift</a> which provides an interface
+to the Broker-API for simple deployments as well as more complicated workflows.</p>
+
+<p><img src="https://raw.github.com/subszero/openshift-workflows/poster/images/screenshot_1.png" alt="Screenshot"></p>
+
+<p><img src="https://raw.github.com/subszero/openshift-workflows/poster/images/screenshot_2.png" alt="Screenshot"></p>
+
+<h2>Installation</h2>
+
+<ul>
+<li>Get the latest source code</li>
+</ul><div class="highlight"><pre><span class="nv">$ </span>git clone https://github.com/subszero/openshift-workflows.git
+</pre></div>
+
+<ul>
+<li><p>Install NodeJS and NPM from <a href="http://nodejs.org">here</a></p></li>
+<li><p>Install all dependencies</p></li>
+</ul><div class="highlight"><pre><span class="nv">$ </span>npm install
+</pre></div>
+
+<ul>
+<li><p>Generate new SSL certificates in the <code>certs/</code> folder</p></li>
+<li><p>Run the server and open the page in a browser</p></li>
+</ul><div class="highlight"><pre><span class="nv">$ </span>node app.js -b
+</pre></div>
+
+<h2>Configuration files</h2>
+
+<p>This application was built to be used with the FreeShift or MegaShift service provided on the <a href="https://openshift.redhat.com/">Red Hat Cloud</a>. However, it can be used with any deployment of the <a href="https://github.com/openshift">Openshift Origin</a>. If however, your deployment of Openshift is tweaked to include non-standard cartridges and templates, you will be required to make changes in the following configuration files -</p>
+
+<ul>
+<li>
+<code>public/conf/images.json</code> - This file controls the images that are used to display cartridges on the screen.</li>
+</ul><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">"Node.js 0.6"</span><span class="o">:</span> <span class="s2">"/img/icons/nodejs.png"</span><span class="p">,</span>
+    <span class="s2">"Zend Server 5.6"</span><span class="o">:</span> <span class="s2">"/img/icons/zend.png"</span><span class="p">,</span>
+    <span class="s2">"Ruby 1.9"</span><span class="o">:</span> <span class="s2">"/img/icons/ruby.png"</span><span class="p">,</span>
+    <span class="s2">"JBoss Application Server 7.1"</span><span class="o">:</span> <span class="s2">"/img/icons/jboss_as7.png"</span><span class="p">,</span>
+    <span class="s2">"Python 2.6"</span><span class="o">:</span> <span class="s2">"/img/icons/python.png"</span><span class="p">,</span>
+    <span class="s2">"Jenkins Server 1.4"</span><span class="o">:</span> <span class="s2">"/img/icons/jenkins.png"</span><span class="p">,</span>
+    <span class="s2">"Ruby 1.8"</span><span class="o">:</span> <span class="s2">"/img/icons/ruby.png"</span><span class="p">,</span>
+    <span class="s2">"JBoss Enterprise Application Platform 6.0"</span><span class="o">:</span> <span class="s2">"/img/icons/jboss.png"</span><span class="p">,</span>
+    <span class="s2">"PHP 5.3"</span><span class="o">:</span> <span class="s2">"/img/icons/php.png"</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>The file stores a hash with the name of the cartridge as key and the location of the corresponding image as value. The images that are shipped with the code are placed in the <code>/public/img/icons</code> folder. However, you may give a link to a generic image on the internet.</p>
+
+<ul>
+<li>
+<code>public/conf/templates.json</code> - This file controls the images that are used to display templates on the screen.</li>
+</ul><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">"CakePHP"</span><span class="o">:</span> <span class="s2">"/img/icons/cakephp.png"</span><span class="p">,</span>
+    <span class="s2">"CakePHP (TEST)"</span><span class="o">:</span> <span class="s2">"/img/icons/cakephp_Test.png"</span><span class="p">,</span>
+    <span class="s2">"Django"</span><span class="o">:</span> <span class="s2">"/img/icons/django.png"</span><span class="p">,</span>
+    <span class="s2">"Django (Test)"</span><span class="o">:</span> <span class="s2">"/img/icons/django_Test.png"</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>The file stores a hash with the name of the template as key and the location of the corresponding image as value. The images that are shipped with the code are placed in the <code>/public/img/icons</code> folder. However, you may give a link to a generic image on the internet.</p>
+
+<ul>
+<li>
+<code>public/conf/rules.json</code> - This file defines dependencies between cartridges and templates, so that a semantically correct workflow can be defined.</li>
+</ul><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">"cartridge"</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">"rockmongo-1.1"</span><span class="o">:</span> <span class="p">[</span><span class="s2">"mongodb-2.2"</span><span class="p">],</span>
+        <span class="s2">"10gen-mms-agent-0.1"</span><span class="o">:</span> <span class="p">[</span><span class="s2">"mongodb-2.2"</span><span class="p">],</span>
+        <span class="s2">"phpmyadmin-3.4"</span><span class="o">:</span> <span class="p">[</span><span class="s2">"mysql-5.1"</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">"template"</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">"cakephp"</span><span class="o">:</span> <span class="p">[</span><span class="s2">"mysql-5.1"</span><span class="p">],</span>
+        <span class="s2">"drupal"</span><span class="o">:</span> <span class="p">[</span><span class="s2">"mysql-5.1"</span><span class="p">],</span>
+        <span class="s2">"rails"</span><span class="o">:</span> <span class="p">[</span><span class="s2">"mysql-5.1"</span><span class="p">],</span>
+        <span class="s2">"wordpress"</span><span class="o">:</span> <span class="p">[</span><span class="s2">"mysql-5.1"</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>The configuration file has two parts, the <strong>cartridge hash</strong>, which stores the dependencies of cartridges, <em>ie.</em> <code>"rockmongo-1.1": ["mongodb-2.2"]</code> means that RockMongo cannot be installed without MongoDB installed first. The second part of this configuration file, the <strong>template hash</strong>, stores the embedded cartridges that are installed along with the template, <em>ie.</em> <code>"cakephp": ["mysql-5.1"]</code> means that CakePHP installs MySQL as one of it's embedded cartridges.</p>
+
+<h2>Useful Links</h2>
+
+<h3>Openshift</h3>
+
+<ul>
+<li><a href="https://openshift.redhat.com/community/wiki/architecture-overview">Openshift Architecture Specification</a></li>
+<li><a href="https://openshift.redhat.com/community/sites/default/files/documents/OpenShift-2.0-User_Guide-en-US.pdf">Openshift User Guide</a></li>
+<li><a href="https://openshift.redhat.com/community/sites/default/files/documents/OpenShift-2.0-REST_API_Guide-en-US_0.pdf">Openshift REST API Guide</a></li>
+</ul><h3>Application Architecture</h3>
+
+<p>A basic description of the application architecture can be found in this <a href="https://github.com/subszero/openshift-workflows/raw/poster/poster_output.pdf">poster</a>.</p>
+
+<h4>Technologies used in the backend</h4>
+
+<ul>
+<li><a href="http://www.nodejs.org/">NodeJS</a></li>
+<li>
+<a href="http://expressjs.com/">ExpressJS</a> ( + <a href="http://embeddedjs.com/">Embedded JavaScript</a> )</li>
+<li><a href="https://github.com/mikeal/request">RequestJS</a></li>
+<li><a href="http://visionmedia.github.com/commander.js/">CommanderJS</a></li>
+</ul><h4>Technologies used in the frontend</h4>
+
+<ul>
+<li><a href="http://www.html5rocks.com/en/">HTML5 Rocks</a></li>
+<li>
+<a href="http://jquery.com/">jQuery</a> ( + <a href="http://jqueryui.com/">jQuery-UI</a> )</li>
+<li><a href="http://twitter.github.com/bootstrap/">Bootstrap</a></li>
+<li><a href="http://modernizr.com/">modernizr</a></li>
+<li>
+<a href="http://angularjs.org/">AngularJS</a> ( + <a href="http://angular-ui.github.com/">Angular-UI</a> + <a href="https://github.com/danielzen/angular-jquery-ui">Angular-jQuery-UI</a> )</li>
+<li><a href="https://github.com/danielzen/angular-jquery-ui">jsPlumb</a></li>
+<li><a href="http://fgnass.github.com/spin.js/">SpinJS</a></li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/subszero">subszero</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
